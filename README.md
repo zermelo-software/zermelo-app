@@ -22,8 +22,14 @@ Building
 The App currently supports Android and iOS. Windows support should not be too hard to add, the main problem is that WebSQL is not supported
 on Windows Phone.
 
+Runnign as WebApp
+-----------------
+
+If you want to run the app locally as webapp, you should use a browser that allows requests to file:// URLs. You can start chrome as
+"chrome --allow-file-access-from-files". You also need to skip the "phonegap.js" include, so use index-web.html instead of index.html.
+
 Building using Adobe PhoneGap
---------
+-----------------------------
 
 The easiest way to build the app both for Android and iOS is using [PhoneGap Build](https://build.phonegap.com). You should create an account
 and add signing keys for the platforms you are interested in. Then you can ZIP the contents of the "www" directory (without actually having
