@@ -22,7 +22,7 @@ Building
 The App currently supports Android and iOS. Windows support should not be too hard to add, the main problem is that WebSQL is not supported
 on Windows Phone.
 
-Runnign as WebApp
+Running as WebApp
 -----------------
 
 If you want to run the app locally as webapp, you should use a browser that allows requests to file:// URLs. You can start chrome as
