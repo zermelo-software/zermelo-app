@@ -111,7 +111,7 @@ Ext.define('Zermelo.view.Login', {
                         }]
                     }]
                 }, {
-                    //below code shows textfield and password icon conatiner
+                    //below code shows the numberfield (for entering the code out of the portal) and password icon container
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
@@ -122,8 +122,8 @@ Ext.define('Zermelo.view.Login', {
                         xtype: 'fieldset',
                         flex: 1,
                         items: [{
-                            // code for textfield
-                            xtype: 'textfield',
+                            // code for numberfield
+                            xtype: 'numberfield',
                             name: 'cdoe',
                             id: 'number_login_code',
                             locales: {
