@@ -41,7 +41,7 @@ Building using Apache Cordova
 You can also use Apache Cordova to build the app:
 
 ````bash
-zermelo-app$ cordova platform add android
+zermelo-app$ cordova platform add android@4.0.0
 
 zermelo-app$ cordova build
 ````
