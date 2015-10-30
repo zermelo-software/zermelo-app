@@ -1073,7 +1073,7 @@ Ext.define('Zermelo.view.SlideView', {
         }));
 
         // Create optional drag-on-container functionality
-        /*        if (containerSlideDelay > -1) {
+                if (containerSlideDelay > -1) {
                     container.element.on({
                         drag: function (e, node, opts, eOpts) {
                             deltaX = e.absDeltaX;
@@ -1129,7 +1129,7 @@ Ext.define('Zermelo.view.SlideView', {
                             container.dragAllowed = false;
                         }
                     });
-                }*/
+                }
 
         return container;
     },
