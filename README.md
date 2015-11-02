@@ -56,7 +56,7 @@ www/app/view/Home.js view. The Home view is the main application, and contains t
 The www/js folder contains some supporting libraries. www/js/database.js takes care of storing all appointment and announcement data.
 www/js/fullcalendar.js renders the calendar view.
 
-Note that the app was not in any way "cleaned up" before being made open source. You will undoubtly find quite a bit of unused files and unused code.
+Note that the app was not in any way "cleaned up" before being made open source. You will undoubtedly find quite a bit of unused files and unused code.
 Code quality is also not guaranteed.
 
 License - App
