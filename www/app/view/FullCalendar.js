@@ -291,7 +291,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                         startWeek.setDate(startWeek.getDate() - startWeek.getDay() + 1);
                         //add data for week picker view 
                         for (i = 0; i < totalNumberOfWeek; i++) {
-                            console.log("week " + i);
                             startWeek = new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate());
                             var dateString = ('0' + startWeek.getDate()).slice(-2) + "-" + ('0' + (startWeek.getMonth() + 1)).slice(-2) + "-" + startWeek.getFullYear();
 
@@ -639,7 +638,7 @@ function updateView(me) {
 // get current week number
 Date.prototype.getWeek = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    return Math.ceil((((this - onejan + 1) / 86400000)) / 7);
 }
 
 function setClickButton() {
@@ -663,7 +662,7 @@ function getISOWeeks(y) {
 
     //check for a Jan 1 that's a Thursday or a leap year that has a 
     //Wednesday jan 1. Otherwise it's 52
-    return d.getDay() === 4 || isLeap && d.getDay() === 3 ? 53 : 52
+    return d.getDay() === 4 || isLeap && d.getDay() === 3 ? 53 : 52;
 }
 
 // 
