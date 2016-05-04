@@ -197,7 +197,11 @@ function authentication() {
             }],
         });
     } else {
-        if (text_institution.getValue().length != 0 && text_institution.getValue().length <= 100 && institution_reg.exec(text_institution.getValue())) {
+        // get textfields data
+        var value_institution = text_institution.getValue().trim();
+        var value_code = number_code.getValue();
+
+        if (value_institution.length != 0 && value_institution.length <= 100 && institution_reg.exec(value_institution)) {
             // text_institution field is valid
             text_flag = true;
         }
@@ -208,10 +212,6 @@ function authentication() {
         //if
         if (text_flag && number_flag) {
             // text_flag and number_flag are true
-
-            // get textfields data
-            var value_institution = text_institution.getValue();
-            var value_code = number_code.getValue();
 
             // show loading screen
             thisObj.setMasked({
