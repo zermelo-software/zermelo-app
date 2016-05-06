@@ -37,8 +37,6 @@ Ext.define("Zermelo.view.MessageList", {
     config: {
         listeners: {
             show: function () {
-              //  console.log(localStore.getCount());
-                console.log("show");
                 messageShow=true;
                 if (localStore.getCount() == 0)
                     Ext.Msg.show({
@@ -72,7 +70,6 @@ Ext.define("Zermelo.view.MessageList", {
              },
             // record update with read and unread
             painted_disabled: function () {
-				console.log("painted!");
                 if (localStore.getCount() == 0)
                     Ext.Msg.show({
                         items: [{
@@ -119,9 +116,12 @@ Ext.define("Zermelo.view.MessageList", {
             grouped: false,
             itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>"),
         }]
+    },
+    refresh: function() {
+        getAnnoucementData(this);
     }
-
 });
+
 //below function fetches the list of annoucement using webservice.
 function getAnnoucementData(thisObj) {   
     // get institution and accesstoken from localstorage
@@ -138,7 +138,6 @@ function getAnnoucementData(thisObj) {
         useDefaultXhrHeader: false,
 
         success: function (response) {
-           // console.log(response);
             var decoded = Ext.JSON.decode(response.responseText);
             // create store
             mystore = Ext.create('Ext.data.Store', {
@@ -176,9 +175,8 @@ function getAnnoucementData(thisObj) {
 }
 // filter data with read, unread and valid with feature date
 function dataFilter(thisObj, localStore) {
-	console.log("dataFilter");
     var readStore = Ext.getStore('ReadmessageStore');
-     var announcement_id=[];
+    var announcement_id=[];
     for(i=0;i<localStore.getCount();i++)
     {
         announcement_id.push({id:localStore.getAt(i).get('announcement_id')});

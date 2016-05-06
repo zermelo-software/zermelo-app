@@ -40,6 +40,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                         readId: messageDetails.announcement_id
                     });
                     mystore.sync();
+                    Ext.getCmp('messageList').refresh();
                 }
                 // set message details in labels
                 Ext.getCmp('messageDetails_title_lbl').setHtml(messageDetails.title);
