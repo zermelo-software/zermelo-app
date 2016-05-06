@@ -145,7 +145,7 @@ function getAnnoucementData(thisObj) {
                 fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid'],
             });
             mystore.setData(decoded.response.data);
-            var readStroe = Ext.getStore('ReadmessageStore');
+            var readStore = Ext.getStore('ReadmessageStore');
             // all data remove from localstore
 
             localStore = new Zermelo.store.AnnouncementStore();
@@ -177,7 +177,7 @@ function getAnnoucementData(thisObj) {
 // filter data with read, unread and valid with feature date
 function dataFilter(thisObj, localStore) {
 	console.log("dataFilter");
-    var readStroe = Ext.getStore('ReadmessageStore');
+    var readStore = Ext.getStore('ReadmessageStore');
      var announcement_id=[];
     for(i=0;i<localStore.getCount();i++)
     {
@@ -188,8 +188,8 @@ function dataFilter(thisObj, localStore) {
         var flag = false;
         var record = localStore.findRecord('announcement_id',announcement_id[i].id);
         var id = record.get('announcement_id');
-        for (j = 0; j < readStroe.getCount(); j++) {
-            var readid = readStroe.getAt(j);
+        for (j = 0; j < readStore.getCount(); j++) {
+            var readid = readStore.getAt(j);
             if (id == readid.get('readId')) {
                 flag = true;
             }
@@ -210,11 +210,11 @@ function dataFilter(thisObj, localStore) {
         var current_date = new Date();
         var format_startDate = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate());
         var format_endDate = new Date(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate())
-        var foramt_currentDate = new Date(current_date.getUTCFullYear(), current_date.getUTCMonth(), current_date.getUTCDate())
-        if (format_startDate.getTime() > foramt_currentDate.getTime()) {
+        var format_currentDate = new Date(current_date.getUTCFullYear(), current_date.getUTCMonth(), current_date.getUTCDate())
+        if (format_startDate.getTime() > format_currentDate.getTime()) {
 			// not visible yet
 			record.set('valid', 'false');
-        } else if (format_endDate.getTime() >= foramt_currentDate.getTime()) {
+        } else if (format_endDate.getTime() >= format_currentDate.getTime()) {
 			// visible
             record.set('valid', 'true');
         } else {
