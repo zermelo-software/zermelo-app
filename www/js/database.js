@@ -195,6 +195,99 @@ function updateRefreshFlag(query) {
     })
 }
 
+function logCollision(main, sub, eventArray) {
+    if (eventArray[sub].valid == 'true') {
+        eventArray[main].collision = true;
+        console.log(eventArray[main].multiid, eventArray[sub].id, eventArray[main].multiid.includes("," + eventArray[sub].id));
+        // if (!eventArray[main].multiid.substring("," + eventArray[sub].id)) {
+            eventArray[main].multiid = (eventArray[main].multiid ? eventArray[main].multiid : eventArray[main].id) + "," + eventArray[sub].id;
+        // }
+    }
+}
+
+function detectCollision(i, j, eventArray) {
+    istart = eventArray[i].start_time;
+    iend =eventArray[i].end_time;
+    jstart = eventArray[j].start_time;
+    jend = eventArray[j].end_time;
+
+    // Check whether there is a conflict
+    if (iend > jstart && istart < jend) {
+        // Check which appointment encapsulates the other
+        if (jstart < istart) {
+            if (jend < iend) {
+                // j before i, both appointments should show all data
+                logCollision(i, j, eventArray);
+                logCollision(j, i, eventArray);
+            }
+            else {
+                // j encapsulates i, j should show data from i
+                logCollision(j, i, eventArray);
+            }
+        }
+        else if (istart < jstart) {
+            if (iend < jend) {
+                // i before j, both appointments should show all data
+                logCollision(j, i, eventArray);
+                logCollision(i, j, eventArray);
+            }
+            else {
+                // i encapsulates j, i should show data from j
+                logCollision(i, j, eventArray);
+            }
+        }
+        else {
+            if (jend < iend) {
+                // i encapsulates j, i should show data from j
+                logCollision(i, j, eventArray);
+            }
+            else if (iend < jend) {
+                // j encapsulates i, j should show data from i
+                logCollision(j, i, eventArray);
+            }
+            else {
+                // they're the same, one should show data from the other
+                if (eventArray[i].multiid.split(",").length >= eventArray[j].multiid.split(",").length) {
+                    // i contains at least as many multiid's as j so we'll use i
+                    logCollision(i, j, eventArray);
+                }
+                else {
+                    // j contains more multiid's than i so we'll use that
+                    logCollision(j, i, eventArray);
+                }
+            }
+        }
+    }
+
+
+
+    // if (iend > jstart && istart < jend) {
+    //     // getAttributeAsInt seems to be broken too..
+    //     ibeforej = istart < jstart;
+
+    //     iLessThanj = istart < jend;
+    //     lesser = (iLessThanj ? i : j);
+    //     greater = (iLessThanj ? j : i);
+    //     if (eventArray[lesser].valid=='true') {
+    //         eventArray[greater].collision=true;
+    //         eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
+    //     }
+    //     iLessThanj = iend < jstart;
+    //     lesser = (iLessThanj ? i : j);
+    //     greater = (iLessThanj ? j : i);
+    //     if (eventArray[lesser].valid=='true') {
+    //         eventArray[greater].collision=true;
+    //         if(eventArray[greater].multiid.length!=0)
+    //             eventArray[greater].multiid=eventArray[greater].multiid+","+eventArray[greater].id+","+eventArray[lesser].id;
+    //         else
+    //         eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
+    //     }
+    //     var multiid=eventArray[greater].multiid.split(",");
+    //     multiid=_.uniq(multiid, false);
+    //     eventArray[greater].multiid=multiid.join(",");
+    // }
+}
+
 function getAppointmentData(query, callBack) {
     db.transaction(function (tx) {
         tx.executeSql(query, [], function (tx, results) {
@@ -228,37 +321,10 @@ function getAppointmentData(query, callBack) {
                 };
                 eventArray.push(obj);
             }
-          //get multiple appointment from data 
+            //get multiple appointment from data 
             for ( i = 0; i < eventArray.length; i++) {
-                istart = parseInt(eventArray[i].start_time);
-                iend =parseInt(eventArray[i].end_time);
                 for ( j = i + 1; j < eventArray.length; j++) {
-                    jstart = parseInt(eventArray[j].start_time);
-                    jend = parseInt(eventArray[j].end_time);
-                    if (iend > jstart && istart < jend) {
-                        // getAttributeAsInt seems to be broken too..
-                      
-                        iLessThanj = parseInt(eventArray[i].start_time) < parseInt(eventArray[j].end_time);
-                        lesser = (iLessThanj ? i : j);
-                        greater = (iLessThanj ? j : i);
-                        if (eventArray[lesser].valid=='true') {
-                            eventArray[greater].collision=true;
-                            eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
-                        }
-                        iLessThanj = parseInt(eventArray[i].end_time) < parseInt(eventArray[j].start_time);
-                        lesser = (iLessThanj ? i : j);
-                        greater = (iLessThanj ? j : i);
-                        if (eventArray[lesser].valid=='true') {
-                            eventArray[greater].collision=true;
-                            if(eventArray[greater].multiid.length!=0)
-                                eventArray[greater].multiid=eventArray[greater].multiid+","+eventArray[greater].id+","+eventArray[lesser].id;
-                            else
-                            eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
-                        }
-                        var multiid=eventArray[greater].multiid.split(",");
-                        multiid=_.uniq(multiid, false);
-                        eventArray[greater].multiid=multiid.join(",");
-                    }
+                    detectCollision(i, j, eventArray);
                 }
             }
             
