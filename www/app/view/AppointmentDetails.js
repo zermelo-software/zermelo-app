@@ -36,18 +36,14 @@ Ext.define('Zermelo.view.AppointmentDetails', {
             show: function() {
                 appointment_detail_open = true;
                 thisObj = this;
-               // console.log(eventDetails);
                 var multipleids = [];
                 if (eventDetails.multiid.length != 0)
                     multipleids = eventDetails.multiid.split(",");
                 else
                     multipleids[0] = String(eventDetails.id);
-               // console.log(multipleids.length);
-
                 for (i = 0; i < multipleids.length; i++) {
 
                     resultObject = search(multipleids[i], eventArray);
-                   // console.log(resultObject);
                     var container = Ext.create('Ext.Container', {
                         style: {
                             'font-size': '14px'

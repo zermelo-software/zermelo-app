@@ -229,20 +229,19 @@ function getAppointmentData(query, callBack) {
                 eventArray.push(obj);
             }
           //get multiple appointment from data 
-                for ( i = 0; i < eventArray.length; i++) {
-                 istart = parseInt(eventArray[i].start_time);
-                 iend =parseInt(eventArray[i].end_time);
+            for ( i = 0; i < eventArray.length; i++) {
+                istart = parseInt(eventArray[i].start_time);
+                iend =parseInt(eventArray[i].end_time);
                 for ( j = i + 1; j < eventArray.length; j++) {
-                     jstart = parseInt(eventArray[j].start_time);
-                     jend = parseInt(eventArray[j].end_time);
+                    jstart = parseInt(eventArray[j].start_time);
+                    jend = parseInt(eventArray[j].end_time);
                     if (iend > jstart && istart < jend) {
                         // getAttributeAsInt seems to be broken too..
                       
-                         iLessThanj = parseInt(eventArray[i].start_time) < parseInt(eventArray[j].end_time);
+                        iLessThanj = parseInt(eventArray[i].start_time) < parseInt(eventArray[j].end_time);
                         lesser = (iLessThanj ? i : j);
                         greater = (iLessThanj ? j : i);
                         if (eventArray[lesser].valid=='true') {
-                          //console.log("hhfdsf",eventArray[greater]);
                             eventArray[greater].collision=true;
                             eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
                         }
@@ -250,7 +249,6 @@ function getAppointmentData(query, callBack) {
                         lesser = (iLessThanj ? i : j);
                         greater = (iLessThanj ? j : i);
                         if (eventArray[lesser].valid=='true') {
-        //                    console.log("hhfdsf",eventArray[greater]);
                             eventArray[greater].collision=true;
                             if(eventArray[greater].multiid.length!=0)
                                 eventArray[greater].multiid=eventArray[greater].multiid+","+eventArray[greater].id+","+eventArray[lesser].id;
@@ -258,9 +256,7 @@ function getAppointmentData(query, callBack) {
                             eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
                         }
                         var multiid=eventArray[greater].multiid.split(",");
-                      //  console.log(_.uniq(multiid, false));
                         multiid=_.uniq(multiid, false);
-                      //  console.log(multiid.join(","));
                         eventArray[greater].multiid=multiid.join(",");
                     }
                 }
