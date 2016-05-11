@@ -104,7 +104,7 @@ Ext.define('Zermelo.view.Login', {
                                     },
                                     blur: function () {
                                         //set lowcase valule of institution
-                                        this.setValue(this.getValue().toLowerCase());
+                                        this.setValue(this.getValue().toLowerCase().trim());
                                     }
                                 }
                             }]
@@ -197,8 +197,7 @@ function authentication() {
             }],
         });
     } else {
-        var value_institution = text_institution.getValue();
-        if (value_institution.length != 0 && value_institution.length <= 100 && institution_reg.exec(value_institution)) {
+        if (text_institution.getValue().length != 0 && text_institution.getValue().length <= 100 && institution_reg.exec(text_institution.getValue())) {
             // text_institution field is valid
             text_flag = true;
         }
@@ -211,6 +210,7 @@ function authentication() {
             // text_flag and number_flag are true
 
             // get textfields data
+            var value_institution = text_institution.getValue();
             var value_code = number_code.getValue();
 
             // show loading screen
