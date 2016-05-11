@@ -205,87 +205,20 @@ function logCollision(main, sub, eventArray) {
     }
 }
 
-function detectCollision(i, j, eventArray) {
-    istart = eventArray[i].start_time;
-    iend =eventArray[i].end_time;
-    jstart = eventArray[j].start_time;
-    jend = eventArray[j].end_time;
+function detectCollision(i, j) {
+    if (i.valid == 'true' 
+        && j.valid == 'true' 
+        && ((j.start_time <= i.start_time && i.start_time < j.end_time) || (i.start_time <= j.start_time && j.start_time < i.end_time))
+    ) {
+        var iMultiid = i.multiid ? i.multiid.split(",") : [i.id];
+        var jMultiid = j.multiid ? j.multiid.split(",") : [j.id];
+        var mergedMultiid = _.union(iMultiid, jMultiid).join(",");
 
-    // Check whether there is a conflict
-    if (iend > jstart && istart < jend) {
-        // Check which appointment encapsulates the other
-        if (jstart < istart) {
-            if (jend < iend) {
-                // j before i, both appointments should show all data
-                logCollision(i, j, eventArray);
-                logCollision(j, i, eventArray);
-            }
-            else {
-                // j encapsulates i, j should show data from i
-                logCollision(j, i, eventArray);
-            }
-        }
-        else if (istart < jstart) {
-            if (iend < jend) {
-                // i before j, both appointments should show all data
-                logCollision(j, i, eventArray);
-                logCollision(i, j, eventArray);
-            }
-            else {
-                // i encapsulates j, i should show data from j
-                logCollision(i, j, eventArray);
-            }
-        }
-        else {
-            if (jend < iend) {
-                // i encapsulates j, i should show data from j
-                logCollision(i, j, eventArray);
-            }
-            else if (iend < jend) {
-                // j encapsulates i, j should show data from i
-                logCollision(j, i, eventArray);
-            }
-            else {
-                // they're the same, one should show data from the other
-                if (eventArray[i].multiid.split(",").length >= eventArray[j].multiid.split(",").length) {
-                    // i contains at least as many multiid's as j so we'll use i
-                    logCollision(i, j, eventArray);
-                }
-                else {
-                    // j contains more multiid's than i so we'll use that
-                    logCollision(j, i, eventArray);
-                }
-            }
-        }
+        i.multiid = mergedMultiid;
+        j.multiid = mergedMultiid;
+        i.collision = true;
+        j.collision = true;
     }
-
-
-
-    // if (iend > jstart && istart < jend) {
-    //     // getAttributeAsInt seems to be broken too..
-    //     ibeforej = istart < jstart;
-
-    //     iLessThanj = istart < jend;
-    //     lesser = (iLessThanj ? i : j);
-    //     greater = (iLessThanj ? j : i);
-    //     if (eventArray[lesser].valid=='true') {
-    //         eventArray[greater].collision=true;
-    //         eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
-    //     }
-    //     iLessThanj = iend < jstart;
-    //     lesser = (iLessThanj ? i : j);
-    //     greater = (iLessThanj ? j : i);
-    //     if (eventArray[lesser].valid=='true') {
-    //         eventArray[greater].collision=true;
-    //         if(eventArray[greater].multiid.length!=0)
-    //             eventArray[greater].multiid=eventArray[greater].multiid+","+eventArray[greater].id+","+eventArray[lesser].id;
-    //         else
-    //         eventArray[greater].multiid=eventArray[greater].id+","+eventArray[lesser].id;
-    //     }
-    //     var multiid=eventArray[greater].multiid.split(",");
-    //     multiid=_.uniq(multiid, false);
-    //     eventArray[greater].multiid=multiid.join(",");
-    // }
 }
 
 function getAppointmentData(query, callBack) {
@@ -324,7 +257,7 @@ function getAppointmentData(query, callBack) {
             //get multiple appointment from data 
             for ( i = 0; i < eventArray.length; i++) {
                 for ( j = i + 1; j < eventArray.length; j++) {
-                    detectCollision(i, j, eventArray);
+                    detectCollision(eventArray[i], eventArray[j]);
                 }
             }
             
