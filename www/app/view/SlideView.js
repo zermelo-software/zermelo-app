@@ -520,19 +520,10 @@ Ext.define('Zermelo.view.SlideView', {
 
                                 getAnnoucementsData(Ext.getCmp('messageList'))
                                 userChange = true;
-                                if (window.localStorage.getItem('user_code') == '~me') {
-                                    if (loc == 'nl') {
-                                        Ext.getCmp("message_title").setTitle("Mededelingen");
-                                    } else {
-                                        Ext.getCmp("message_title").setTitle("Announcements");
-
-                                    }
+                                if (loc == 'nl') {
+                                    Ext.getCmp("message_title").setTitle("Mededelingen");
                                 } else {
-                                    if (loc == 'nl') {
-                                        Ext.getCmp("message_title").setTitle("Mededelingen voor " + window.localStorage.getItem('user_code'));
-                                    } else {
-                                        Ext.getCmp("message_title").setTitle("Announcements for " + window.localStorage.getItem('user_code'));
-                                    }
+                                    Ext.getCmp("message_title").setTitle("Announcements");
                                 }
                             } else {
                                 getAnnoucementData(Ext.getCmp('schedule'));
@@ -545,7 +536,6 @@ Ext.define('Zermelo.view.SlideView', {
                             } else {
                                 Ext.getCmp("toolbar_main").setTitle("Schedule");
                                 Ext.getCmp("toolbar_day_back").setTitle("Schedule");
-
                             }
                             // 
                             thisobj.closeContainer();
