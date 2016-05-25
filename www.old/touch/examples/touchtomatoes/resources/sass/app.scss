@@ -1,0 +1,27 @@
+@import "compass/css3";
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700);
+
+$base-color: white;
+$base-gradient: flat;
+$toolbar-base-color: white;
+$tabs-light: rgb(180, 48, 39);
+$toolbar-base-color: #f7f7f7;
+$page-bg-color: #f7f7f7;
+
+$font-family: 'Roboto';
+
+
+//Import Sencha SASS
+@import "media-queries";
+@import "sencha";
+
+@import 'sencha-touch/default';
+@import 'sencha-touch/default/all';
+@include icon("bank");
+
+
+@import "menu";
+@import "welcomeOverlay";
+@import "list";
+@import "details";
+@import "windows";

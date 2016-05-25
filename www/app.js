@@ -38,15 +38,16 @@
  */
 // DO NOT DELETE - this directive is required for Sencha Cmd packages to work.
 //@require @packageOverrides
-
+//<debug>
 Ext.Loader.setPath({
-    'Ext' : 'touch/src',
-    'Ux' : 'Ux'
+	'Ext' : 'touch/src',
+	'Ux' : 'Ux'
 });
 Ext.Loader.setConfig({
-    enabled : true,
-    disableCaching : true
+	enabled : true,
+	disableCaching : false
 });
+//</debug>
 
 // workaround for release mode
 if (typeof Ext.Logger === 'undefined') {
@@ -94,8 +95,7 @@ Ext
 			name : 'Zermelo',
 
 			//overriede component for multiple langauge
-			requires : [ 
-					'Ux.locale.Manager',
+			requires : [ 'Ux.locale.Manager',
 					'Ux.locale.override.st.Component',
 					'Ux.locale.override.st.Button',
 					'Ux.locale.override.st.Container',
@@ -174,12 +174,8 @@ Ext
 					}
 					// set locale file
 					Ux.locale.Manager.setConfig({
-						ajaxConfig : {
-							method : 'GET'
-						},
 						language : loc,
-						tpl : 'locales/{locale}.json',
-						type : 'ajax'
+						tpl : 'locales/{locale}.json'
 					});
 					Ux.locale.Manager.init();
 					//set datepicker months in Dutch

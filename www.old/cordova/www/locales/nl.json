@@ -1,0 +1,80 @@
+{
+    "login":{
+        "text":"Vul de naam van uw instelling in en de toegangscode uit het Portal. U kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op  \"Koppel App\".",
+        "institution":"Instituut",
+        "code":"Code",
+        "login":"Login",
+        "institution_code_error_msg":"Vul alstublieft een geldige instelling in</br>Vul alstublieft een geldige code in",
+        "institution_error_msg":" Vul alstublieft een geldige instelling in ",
+        "code_error_msg":" Vul alstublieft een geldige code in ",
+    },
+    "menu":{
+        "title":{
+            "schedule":{
+                "self": "Rooster", 
+                "other": "Rooster van ",
+            },
+            "announcement":{
+                "self": "Mededelingen", 
+                "other": "Mededelingen voor ",
+            }
+        },
+        "Logout":"Uitloggen",
+        "logout_message":"Weet u zeker dat u de app wilt ontkoppelen? Voordat u hier uw rooster weer kunt zien dient u de app opnieuw te koppelen via Zermelo Portal."
+    },
+    "ok":"OK",
+    "done":"OK",
+    "cancel":"Annuleren",
+    "loading":"Laden",
+    "appointment":{
+        "title":"Details",
+        "teacher":"Docenten: ",
+        "subject":"Vakken: ",
+        "room":"Locatie: ",
+        "group":"Groepen: ",
+        "type":"Type: ",
+        "startTime":"Begin: ",
+        "endTime":"Eind: ",
+        "changeDescription": "Wijziging: ",
+        "remark": "Opmerking: ",
+    },
+    "announcement":{
+        "startDate":"Startdatum: ",
+        "endDate":"Einddatum: ",
+        "description":"Omschrijving: ",
+         "no_announcement_msg":"Er zijn op dit moment geen mededelingen."
+    },
+    "back":{
+        "Schedule_back":"Rooster",
+        "announcement_back":"Mededelingen",
+        "back":"Terug"
+    },
+    "type":{
+        "unknown" : "Onbekend",
+        "lesson" :"Les",
+        "exam" :"Toets",
+        "activity" : "Activiteit",
+        "choice" : "Keuze",
+        "other" : "Overig"
+    },
+    "network_error":"Probleem met het verbinden met Zermelo Portal",
+    "insufficient_permissions":"Je hebt onvoldoende rechten om dit rooster te bekijken",
+    "months" : {
+        "1"  : "Januari",
+        "2"  : "Februari",
+        "3"  : "Maart",
+        "4"  : "April",
+        "5"  : "Mei",
+        "6"  : "Juni",
+        "7"  : "Juli",
+        "8"  : "Augustus",
+        "9"  : "September",
+        "10" : "Oktober",
+        "11" : "November",
+        "12" : "December"
+    },
+    "exit_msg":"Wilt u de app verlaten?",
+    "own_schedule":"Eigen rooster",
+    "enter_user_code":"Leerlingnummer/afkorting",
+    
+}

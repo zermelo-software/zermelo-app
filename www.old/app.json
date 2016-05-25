@@ -1,0 +1,178 @@
+{
+    "builds": {
+        "web": {"default": true},
+        "native": {
+            "packager": "cordova",
+            "cordova" : {
+                "config": {
+                    // Uncomment the line below and add the platforms you wish to build for
+                    "platforms": "android",
+
+                    "id": "nl.zermelo.app",
+                    "name": "Zermelo"
+                }
+            }
+        }
+    },
+
+                
+    /**
+     * The application's namespace, used by Sencha Command to generate classes
+     */
+    "name": "Zermelo",
+
+    /**
+     * The file path to this application's front HTML document, relative to this app.json file
+     */
+    "indexHtmlPath": "index.html",
+
+    /**
+     * The Sencha Framework for this application: "ext" or "touch".
+     */
+    "framework": "touch",
+
+    /**
+     * The absolute URL to this application in development environment, i.e: the URL to run this application
+     * on your web browser during development, e.g: "http://localhost/myapp/index.html".
+     *
+     * This value is needed when build to resolve your application's dependencies if it requires server-side resources
+     * that are not accessible via file system protocol.
+     */
+    "url": null,
+
+    /**
+     * List of all JavaScript assets in the right execution order.
+     * Each item is an object with the following format:
+     *      {
+     *          "path": "path/to/script.js" // Path to file, if local file it must be relative to this app.json file
+     *          "remote": true              // (Optional)
+     *                                      // - Defaults to undefined (falsey) to signal a local file which will be copied
+     *                                      // - Specify true if this file is a remote file which will not to be copied
+     *          "update": "delta"           // (Optional)
+     *                                      //  - If not specified, this file will only be loaded once, and
+     *                                      //    cached inside localStorage until this value is changed.
+     *                                      //  - "delta" to enable over-the-air delta update for this file
+     *                                      //  - "full" means full update will be made when this file changes
+     *          "x-bootstrap": true         // (Optional)
+     *                                      // Indicates a development mode only dependency.  
+     *                                      // These files will not be copied into the build directory or referenced
+     *                                      // in the generate app.json manifest for the micro loader.
+     *
+     *      }
+     */
+    "js": [
+        {
+            "path": "touch/sencha-touch.js",
+            "x-bootstrap": true
+        },
+        // {
+        //     "path": "bootstrap.js",
+        //     "x-bootstrap": true
+        // },
+        {
+            "path": "app.js",
+            "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when build */
+            "update": "full"
+        },
+        {
+            "path":"js/jquery-1.7.2.js",
+            "update": "full"
+        },
+        {
+            "path":"js/fullcalendar.js",
+            "update": "full"
+        },
+        {
+            "path":"js/database.js",
+            "update": "full"
+        },
+        {
+            "path":"js/underscore.js",
+            "update": "full"
+        }
+    ],
+
+    /**
+     * List of all CSS assets in the right inclusion order.
+     * Each item is an object with the following format:
+     *      {
+     *          "path": "path/to/item.css" // Path to file, if local file it must be relative to this app.json file
+     *          "remote": true             // (Optional)
+     *                                     // - Defaults to undefined (falsey) to signal a local file which will be copied
+     *                                     // - Specify true if this file is a remote file which will not to be copied
+     *          "update": "delta"          // (Optional)
+     *                                     //  - If not specified, this file will only be loaded once, and
+     *                                     //    cached inside localStorage until this value is changed to either one below
+     *                                     //  - "delta" to enable over-the-air delta update for this file
+     *                                     //  - "full" means full update will be made when this file changes
+     *
+     *      }
+     */
+    "css": [
+        {
+            "path": "resources/css/app.css",
+            "update": "full",
+            "exclude": ["fashion"]
+        }
+    ],
+
+    /**
+     * Used to automatically generate cache.manifest (HTML 5 application cache manifest) file when you build
+     */
+    "appCache": {
+        /**
+         * List of items in the CACHE MANIFEST section
+         */
+        "cache": [
+            "index.html"
+        ],
+        /**
+         * List of items in the NETWORK section
+         */
+        "network": [
+            "*"
+        ],
+        /**
+         * List of items in the FALLBACK section
+         */
+        "fallback": []
+    },
+
+    /**
+     * Extra resources to be copied along when build
+     */
+    "resources": [
+        "resources/images",
+        "resources/icons",
+        // "resources/startup",
+        "locales/en.json",
+        "locales/nl.json",
+        "js/",
+        "resources/screens"
+    ],
+
+    /**
+     * File / directory name matchers to ignore when copying to the builds, must be valid regular expressions
+     */
+    "ignore": [
+        "\.svn$"
+    ],
+
+    /**
+     * Directory path to store all previous production builds. Note that the content generated inside this directory
+     * must be kept intact for proper generation of deltas between updates
+     */
+    "archivePath": "archive",
+
+    /**
+     * List of package names to require for the cmd build process
+     */
+    "requires": [
+    ],
+
+    /**
+     * Uniquely generated id for this application, used as prefix for localStorage keys.
+     * Normally you should never change this value.
+     */
+    "id": "f725562d-37ef-49f3-9ea3-402fd41438a7"
+}

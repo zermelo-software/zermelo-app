@@ -1,14 +1,14 @@
 Ext.define('Zermelo.UserManager', {
-	alternateClassName: 'UserManager',
-	singleton: true,
-	code: window.localStorage.getItem('user_code') ? window.localStorage.getItem('user_code') : '~me',
-	institution: window.localStorage.getItem('institution'),
-	accessToken: window.localStorage.getItem('accessToken'),
-	userChanged: false,
+    alternateClassName: 'UserManager',
+    singleton: true,
+    code: window.localStorage.getItem('user_code') ? window.localStorage.getItem('user_code') : '~me',
+    institution: window.localStorage.getItem('institution'),
+    accessToken: window.localStorage.getItem('accessToken'),
+    userChanged: false,
 
-	loggedIn: function() {
-		return this.accessToken ? true : false;
-	},
+    loggedIn: function() {
+    	return this.accessToken ? true : false;
+    },
 
 	getUser: function() {
 		return this.code;
@@ -37,62 +37,66 @@ Ext.define('Zermelo.UserManager', {
 		window.localStorage.setItem('accessToken', newAccessToken);
 	},
 
-	saveLogin: function(code, institution, accessToken) {
-		this.setCode(code);
-		this.setInstitution(institution);
-		this.setAccessToken(accessToken);
-	},
+    saveLogin: function(code, institution, accessToken) {
+        this.setCode(code);
+        this.setInstitution(institution);
+        this.setAccessToken(accessToken);
+    },
 
-	logout: function() {
-		this.setCode('');
-		this.setInstitution('');
-		this.setAccessToken('');
-	},
+    logout: function() {
+        this.setCode('');
+        this.setInstitution('');
+        this.setAccessToken('');
+    },
 
-	refreshData: function() {
-		deleteappointmentdatas();
-		var store = Ext.getStore('AnnouncementStore');
-		store.getProxy().clear();
-		store.data.clear();
-		store.sync();
-	},
+    refreshData: function() {
+        deleteappointmentdatas();
+        var store = Ext.getStore('AnnouncementStore');
+        store.getProxy().clear();
+        store.data.clear();
+        store.sync();
+    },
 
-	setTitles: function() {
-		var title;
+    setTitles: function() {
+    	var title;
 
-		title = Ext.getCmp("toolbar_main");
-		if (title)
-			title.setTitle(this.getScheduleTitle());
+    	title = Ext.getCmp("toolbar_main");
+    	if (title)
+    		title.setTitle(this.getScheduleTitle());
 
-		title = Ext.getCmp("toolbar_day_back");
-		if (title)
-			title.setTitle(this.getScheduleTitle());
+    	title = Ext.getCmp("toolbar_day_back");
+    	if (title)
+    		title.setTitle(this.getScheduleTitle());
 
-		title = Ext.getCmp("message_title");
-		if (title)
-			title.setTitle(this.getAnnouncementsTitle());
-	},
+    	title = Ext.getCmp("message_title");
+    	if (title)
+    		title.setTitle(this.getAnnouncementsTitle());
+    },
 
-	setUser: function(newCode) {
-		newCode = newCode ? newCode : '~me';
-		if (this.code == newCode)
-			return;
+    setUser: function(newCode) {
+        newCode = newCode ? newCode : '~me';
+    	if (this.code == newCode)
+    		return;
 
-		this.setCode(newCode);
-		this.refreshData();
-		this.setTitles();
-		Ext.getCmp('fullCalendarView').renderFullCalendar();
-	},
+    	this.setCode(newCode);
+    	this.refreshData();
+    	this.setTitles();
+        Ext.getCmp('fullCalendarView').renderFullCalendar();
+    },
 
-	getScheduleTitle: function() {
-		return this.code == '~me' ? 
-				Ux.locale.Manager.get('menu.schedule.self') : 
-				Ux.locale.Manager.get('menu.schedule.other') + this.code;
-	},
+    getScheduleTitle: function() {
+        var ret =  this.code == '~me' ? 
+                Ux.locale.Manager.get('menu.schedule_self') : 
+                Ux.locale.Manager.get('menu.schedule_other') + this.code;
+        console.log('return: ', ret);
+        return ret;
+    },
 
-	getAnnouncementsTitle: function() {
-		return this.code == '~me' ? 
-				Ux.locale.Manager.get('menu.announcement.self') : 
-				Ux.locale.Manager.get('menu.announcement.other') + this.code;
-	}
+    getAnnouncementsTitle: function() {
+        var ret = this.code == '~me' ? 
+                Ux.locale.Manager.get('menu.announcement_self') : 
+                Ux.locale.Manager.get('menu.announcement_other') + this.code;
+        console.log('return: ', ret);
+        return ret;
+    }
 });

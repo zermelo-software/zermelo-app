@@ -879,7 +879,7 @@ Ext.define('Zermelo.view.SlideView', {
             store: this.store,
             docked: listPosition,
             scrollable: false,
-            height: Ext.Viewport.getWindowHeight(),
+            height: null,
             cls: 'zermelo-menu-list',
             itemCls: 'zermelo-menu-list-item',
             pressedCls: 'zermelo-menu-list-item-pressed',

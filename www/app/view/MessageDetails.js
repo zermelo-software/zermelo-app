@@ -53,7 +53,7 @@ Ext.define('Zermelo.view.MessageDetails', {
             type: 'vbox',
             align: 'stretch',
         },
-        scrollable: null,
+        scrollable: true,
         items: [{
                 // titlebar
                 xtype: 'titlebar',

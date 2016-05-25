@@ -1,6 +1,5 @@
 Ext.define('Zermelo.ErrorManager', {
 	alternateClassName: 'ErrorManager',
-	requires: ['Ext.MessageBox'],
 	singleton: true,
 	messageBox: Ext.create('Ext.MessageBox', 
 	{
