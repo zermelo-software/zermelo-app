@@ -1,0 +1,13 @@
+*.~*
+/originals
+/platforms
+/source.zip
+/www/resources_zermelo
+/www/touch_zermelo
+*.BAK
+*.bak
+*.TMP*
+/plugins/cordova-plugin-whitelist/
+/www/plugins/cordova-plugin-whitelist/
+node_modules
+*.patch

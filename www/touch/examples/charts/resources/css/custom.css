@@ -1,0 +1,162 @@
+.x-legend .x-legend-inner .x-legend-container {
+    border: none;
+}
+
+div.outer-triangle {
+    border-bottom: 52px solid white;
+    border-left: 26px solid transparent;
+    border-right: 26px solid transparent;
+    height: 0;
+    left: 50%;
+    margin-left: -26px;
+    margin-top: -52px;
+    position: absolute;
+    top: 100%;
+    width: 0;
+    z-index: 10000;
+}
+
+div.triangle {
+    border-bottom: 50px solid #666;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    height: 0;
+    left: 50%;
+    margin-left: -25px;
+    margin-top: -50px;
+    position: absolute;
+    top: 100%;
+    width: 0;
+    z-index: 10001;
+}
+
+div.inner-triangle {
+    border-bottom: 50px solid transparent;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    height: 0;
+    left: 50%;
+    margin-left: -25px;
+    margin-top: -50px;
+    position: absolute;
+    top: 100%;
+    width: 0;
+    z-index: 10001;
+}
+
+.coloredRectangle {
+    height: 20px;
+    position: absolute;
+    width: 20px;
+    border: 1px solid white;
+}
+
+.myListValue {
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    right: 5px;
+    bottom: 5px;
+}
+
+.wins {
+    position: absolute;
+    font-weight: bold;
+    color: green;
+}
+.losses {
+    position: absolute;
+    font-weight: bold;
+    color: red;
+}
+
+.centered-label {
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
+}
+
+.centered-label-content {
+    color: #545454;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 60px;
+}
+
+.red-font {
+    color: #fa4c2c;
+    font-size: 28px;
+    border-top: 3px solid #AAA;
+    border-bottom: 3px solid #AAA;
+}
+
+.wheel-label-content {
+    color: #545454;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 60px;
+}
+
+.wheel-red-font {
+    color: #fa4c2c;
+    font-size: 22px;
+    border-top: 3px solid #AAA;
+    border-bottom: 3px solid #AAA;
+}
+
+.finance-value {
+    position: absolute;
+    top: 10px;
+    right: 100px;
+}
+
+.finance-pct {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.finance-header {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.finance-detail {
+    font-size: 24px;
+    color: grey;
+    padding-bottom: 120px;
+}
+
+.finance-in {
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;
+    right: 50px;
+    color: rgba(19, 117, 231, 1);
+}
+
+.finance-out {
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;
+    right: 50px;
+    color: rgba(19, 117, 231, 1);
+}
+
+.finance-net {
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;
+    right: 50px;
+    margin-top: 10px;
+    border-top: 2px solid #808080;
+    color: rgba(37, 231, 78, 1);
+}
+
+.finance-desc {
+    font-size: 24px;
+    color: grey;
+    padding-left: 250px;
+}

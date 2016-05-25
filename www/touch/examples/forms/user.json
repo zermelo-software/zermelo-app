@@ -1,0 +1,23 @@
+{
+    "success": true,
+    "data": {
+        "name": "Akura",
+        "password": "secret",
+        "email": "saru@sencha.com",
+        "disabled": "disabled",
+        "url": "http://sencha.com",
+        "bio": "Learned the hard way!",
+        "number": 20,
+        "height": 20,
+        "spinner": 5,
+        "enable": 1,
+        "cool": true,
+        "date": "2013-06-01",
+        "team": "redteam",
+        "color": "blue",
+        "rank": "padawan",
+        "secret": true,
+        "single_slider": 10,
+        "multiple_slider": [20, 40]
+    }
+}

@@ -1,0 +1,82 @@
+{
+  "name": "EnergyApp",
+  "indexHtmlPath": "index.html",
+  "url": null,
+  "js": [
+    {
+      "path": "../../sencha-touch-all.js",
+      "x-bootstrap": true
+    },
+    {
+      "path": "bootstrap.js",
+      "x-bootstrap": true
+    },
+    {
+      "path": "app.js",
+      "bundle": true,
+      "update": "delta"
+    }
+  ],
+  "css": [
+    {
+      "path": "resources/css/app.css",
+      "update": "delta"
+    },
+    {
+      "path": "resources/css/Orbitron.css",
+      "update": "delta"
+    }
+  ],
+
+  "appCache": {
+    "cache": [
+      "index.html"
+    ],
+    "network": [
+      "*"
+    ],
+    "fallback": []
+  },
+
+  "buildOptions": {
+    "product": "touch",
+    "minVersion": 3,
+    "debug": false,
+    "logger": false
+  },
+
+    /**
+     * Extra resources to be copied along when build
+     */
+    "resources": [
+        "resources/images",
+        "resources/icons",
+        "app/data",
+        "resources/startup"
+    ],
+
+    /**
+     * File / directory name matchers to ignore when copying to the builds, must be valid regular expressions
+     */
+    "ignore": [
+        "\.svn$"
+    ],
+
+    /**
+     * Directory path to store all previous production builds. Note that the content generated inside this directory
+     * must be kept intact for proper generation of deltas between updates
+     */
+    "archivePath": "archive",
+
+    /**
+     * List of package names to require for the cmd build process
+     */
+    "requires": [
+    ],
+
+    /**
+     * Uniquely generated id for this application, used as prefix for localStorage keys.
+     * Normally you should never change this value.
+     */
+    "id": "60029dcf-ac72-4e6b-8b1d-f74aa17040ef"
+}
