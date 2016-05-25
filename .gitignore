@@ -11,3 +11,4 @@
 /www/plugins/cordova-plugin-whitelist/
 node_modules
 *.patch
+www.old/
