@@ -95,30 +95,17 @@ Ext
 			name : 'Zermelo',
 
 			//overriede component for multiple langauge
-			requires : [ 'Ux.locale.Manager',
-					'Ux.locale.override.st.Component',
-					'Ux.locale.override.st.Button',
-					'Ux.locale.override.st.Container',
-					'Ux.locale.override.st.TitleBar',
-					'Ux.locale.override.st.ToolBar',
-					'Ux.locale.override.st.Title',
-					'Ux.locale.override.st.Label',
-					'Ux.locale.override.st.field.Field',
-					'Ux.locale.override.st.field.DatePicker',
-					'Ux.locale.override.st.form.FieldSet',
-					'Ux.locale.override.st.picker.Picker',
-					'Ux.locale.override.st.picker.Date',
-					'Ux.locale.override.st.Msgbox',
-					'Ux.locale.override.st.LoadMask',
-					'Zermelo.UserManager',
-					'Zermelo.ErrorManager',
-					],
+			requires : [
+				'Ux.locale.Manager',
+				'Zermelo.UserManager',
+				'Zermelo.ErrorManager',
+			],
 
 			// views load
-			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
-					'MessageDetails', 'Schedule', 'FullCalendar',
-					'AppointmentDetails',
-
+			views : [ 
+				'SlideView', 'Login', 'Main', 'Home', 'MessageList',
+				'MessageDetails', 'Schedule', 'FullCalendar',
+				'AppointmentDetails',
 			],
 
 			// controller load

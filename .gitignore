@@ -12,3 +12,6 @@
 node_modules
 *.patch
 www.old/
+www/resources/sass/.sass-cache/
+www/build/
+www/cordova/
