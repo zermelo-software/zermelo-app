@@ -1,7 +1,7 @@
 Ext.define('Zermelo.UserManager', {
     alternateClassName: 'UserManager',
+    requires: ['Ux.locale.Manager'],
     singleton: true,
-    // requires: ['Ux.locale.Manager']
     code: window.localStorage.getItem('user_code') ? window.localStorage.getItem('user_code') : '~me',
     institution: window.localStorage.getItem('institution'),
     accessToken: window.localStorage.getItem('accessToken'),
@@ -86,7 +86,7 @@ Ext.define('Zermelo.UserManager', {
     },
 
     getScheduleTitle: function() {
-        var ret =  this.code == '~me' ? 
+        var ret = (this.code == '~me' && Ux.locale.Manager.isLoaded()) ?
                 Ux.locale.Manager.get('menu.schedule_self') : 
                 Ux.locale.Manager.get('menu.schedule_other') + this.code;
         console.log('return: ', ret);
@@ -94,7 +94,7 @@ Ext.define('Zermelo.UserManager', {
     },
 
     getAnnouncementsTitle: function() {
-        var ret = this.code == '~me' ? 
+        var ret = (this.code == '~me' && Ux.locale.Manager.isLoaded()) ? 
                 Ux.locale.Manager.get('menu.announcement_self') : 
                 Ux.locale.Manager.get('menu.announcement_other') + this.code;
         console.log('return: ', ret);

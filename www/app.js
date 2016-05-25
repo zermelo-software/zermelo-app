@@ -72,6 +72,7 @@ var messageDetails;
 var db;
 var eventArray = [];
 var eventDetails;
+var loc = '';
 var scrollTopHeight = 0;
 var startFlag = false;
 var currentView;
@@ -95,17 +96,30 @@ Ext
 			name : 'Zermelo',
 
 			//overriede component for multiple langauge
-			requires : [
-				'Ux.locale.Manager',
-				'Zermelo.UserManager',
-				'Zermelo.ErrorManager',
-			],
+			requires : [ 'Ux.locale.Manager',
+					'Ux.locale.override.st.Component',
+					'Ux.locale.override.st.Button',
+					'Ux.locale.override.st.Container',
+					'Ux.locale.override.st.TitleBar',
+					'Ux.locale.override.st.ToolBar',
+					'Ux.locale.override.st.Title',
+					'Ux.locale.override.st.Label',
+					'Ux.locale.override.st.field.Field',
+					'Ux.locale.override.st.field.DatePicker',
+					'Ux.locale.override.st.form.FieldSet',
+					'Ux.locale.override.st.picker.Picker',
+					'Ux.locale.override.st.picker.Date',
+					'Ux.locale.override.st.Msgbox',
+					'Ux.locale.override.st.LoadMask',
+					'Zermelo.UserManager',
+					'Zermelo.ErrorManager',
+					],
 
 			// views load
-			views : [ 
-				'SlideView', 'Login', 'Main', 'Home', 'MessageList',
-				'MessageDetails', 'Schedule', 'FullCalendar',
-				'AppointmentDetails',
+			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
+					'MessageDetails', 'Schedule', 'FullCalendar',
+					'AppointmentDetails',
+
 			],
 
 			// controller load
@@ -122,56 +136,59 @@ Ext
 				// display magnified glass press on textbox
 				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
 				
-				(function() {// check device's default language
-					var loc;
-					if (Ext.os.is('Android') && version == 2) { // only for android 2.3 os
-	
-						if (navigator
-								&& navigator.userAgent
-								&& (loc = navigator.userAgent
-										.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
-							loc = loc[1];
+				// check device's default language
+
+				if (Ext.os.is('Android') && version == 2) { // only for android 2.3 os
+
+					if (navigator
+							&& navigator.userAgent
+							&& (loc = navigator.userAgent
+									.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
+						loc = loc[1];
+					}
+					if (!loc && navigator) {
+						if (navigator.language) {
+							loc = navigator.language;
+						} else if (navigator.browserLanguage) {
+							loc = navigator.browserLanguage;
+						} else if (navigator.systemLanguage) {
+							loc = navigator.systemLanguage;
+						} else if (navigator.userLanguage) {
+							loc = navigator.userLanguage;
 						}
-						if (!loc && navigator) {
-							if (navigator.language) {
-								loc = navigator.language;
-							} else if (navigator.browserLanguage) {
-								loc = navigator.browserLanguage;
-							} else if (navigator.systemLanguage) {
-								loc = navigator.systemLanguage;
-							} else if (navigator.userLanguage) {
-								loc = navigator.userLanguage;
-							}
-							loc = loc.substr(0, 2);
-						}
-						if (loc == 'en' || loc == 'nl') {
-							loc = loc;
-						} else {
-							loc = 'en';
-						}
-	
+						loc = loc.substr(0, 2);
+					}
+					if (loc == 'en' || loc == 'nl') {
+						loc = loc;
 					} else {
-						if (navigator.language.split('-')[0] == 'en'
-								|| navigator.language.split('-')[0] == 'nl') {
-							loc = navigator.language.split('-')[0];
-						} else {
-							//default set english
-							loc = 'en';
-						}
+						loc = 'en';
 					}
-					// set locale file
-					Ux.locale.Manager.setConfig({
-						language : loc,
-						tpl : 'locales/{locale}.json'
-					});
-					Ux.locale.Manager.init();
-					//set datepicker months in Dutch
-					if (loc == 'nl') {
-						Ext.Date.monthNames = [ "Januari", "Februari", "Maart",
-								"April", "Mei", "Juni", "Juli", "Augustus",
-								"September", "Oktober", "November", "December" ];
+
+				} else {
+					if (navigator.language.split('-')[0] == 'en'
+							|| navigator.language.split('-')[0] == 'nl') {
+						loc = navigator.language.split('-')[0];
+					} else {
+						//default set english
+						loc = 'en';
 					}
-				})();
+				}
+				// set locale file
+				Ux.locale.Manager.setConfig({
+					ajaxConfig : {
+						method : 'GET'
+					},
+					language : loc,
+					tpl : 'locales/{locale}.json',
+					type : 'ajax'
+				});
+				Ux.locale.Manager.init();
+				//set datepicker months in Dutch
+				if (loc == 'nl') {
+					Ext.Date.monthNames = [ "Januari", "Februari", "Maart",
+							"April", "Mei", "Juni", "Juli", "Augustus",
+							"September", "Oktober", "November", "December" ];
+				}
 				// Add resume event listener
 				document.addEventListener("resume", Ext.bind(onResume, this),
 						false);
