@@ -116,12 +116,12 @@ Ext.define('Zermelo.view.Home', {
                 //css class resources/images/app.css
                 cls: 'zermelo-toolbar',
                 id: 'toolbar_main',
-                centered: false,
                 height: '47px',
+                width: '100%',
                 // set title in multiple language
-                /*locales: {
+                locales: {
                     title: 'menu.myschedule'
-                },*/
+                },
                 docked: 'top',
                 // Add two buttons refresh and new announcement
                 items: [{

@@ -380,7 +380,6 @@ Ext.define('Zermelo.view.SlideView', {
             if (layout && Ext.isFunction(layout.setPack)) {
                 layout.setPack(listPosition);
             }
-
             return parent.add(Ext.merge(me._slideButtonConfig, config));
         }
 
