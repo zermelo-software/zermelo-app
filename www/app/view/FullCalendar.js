@@ -94,7 +94,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         me.topBar = Ext.create('Ext.Container', {
             xtype: 'container',
             docked: 'top',
-            layout: 'vbox',
+            layout: 'vbox'
         });
         // days button container with hbox
         me.day = Ext.create('Ext.Container', {
@@ -112,7 +112,7 @@ Ext.define('Zermelo.view.FullCalendar', {
             items: [{
                 //balnk label
                 xtype: 'label',
-                width: '50px',
+                width: '50px'
             }, {
                 // Monday button 
                 xtype: 'button',
@@ -184,12 +184,12 @@ Ext.define('Zermelo.view.FullCalendar', {
                     var selectedDate = new Date(date[0], date[1] - 1, date[2]);
                     openDayView(selectedDate, me);
                 }
-            }, ]
+            }]
         }); // end day container
 
         // line create below days container
         me.line = Ext.create('Ext.Container', {
-            html: '<hr>',
+            html: '<hr>'
         });
 
         //create toolbar with current week or current day title, prev, next and schedule button 
@@ -297,7 +297,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                             var weekString = startWeek.getWeek();
                             weekArray.push({
                                 text: "<div style='padding-left: 13%;padding-right: 13%;'><font style='font-weight: bold;float:left'>Week " + weekString + "</font><div style='position: relative;float: right;'>&nbsp;&nbsp;&nbsp;&nbsp;" + dateString + "</div></div>",
-                                value: new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate()).toString(),
+                                value: new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate()).toString()
                             });
                             startWeek.setDate(startWeek.getDate() + 7);
                         }
@@ -316,11 +316,11 @@ Ext.define('Zermelo.view.FullCalendar', {
                             modal: true,
                             cls: 'zermelo-toolbar',
                             value: {
-                                'week': new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toString(),
+                                'week': new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toString()
                             },
                             slots: [{
                                 name: 'week',
-                                data: weekArray,
+                                data: weekArray
                             }],
                             doneButton: {
                                 locales: {
@@ -353,7 +353,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                                         }
                                     }
                                 }
-                            },
+                            }
                         });
                         Ext.Viewport.add(datePicker);
                         datePicker.show();
@@ -364,7 +364,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 ui: 'plain',
                 id: 'btn_datePicker',
                 centered: true,
-                labelCls: 'zermelo-button-weeK-day',
+                labelCls: 'zermelo-button-weeK-day'
             }, {
                 // prev button
                 xtype: 'button',
@@ -496,7 +496,7 @@ Ext.define('Zermelo.view.FullCalendar', {
             $('#' + me.getPlaceholderid()).fullCalendar('prev');
         }
         me.changeTitle();
-    },
+    }
 });
 
 
@@ -505,7 +505,7 @@ function getAppointment(me, currentobj, refresh, startTime, endTime, weekarrayem
     me.setMasked({
         xtype: 'loadmask',
         locale: {
-            message: 'loading',
+            message: 'loading'
         },
         indicator: true
     });

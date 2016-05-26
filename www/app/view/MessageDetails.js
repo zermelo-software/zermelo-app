@@ -51,7 +51,7 @@ Ext.define('Zermelo.view.MessageDetails', {
         },
         layout: {
             type: 'vbox',
-            align: 'stretch',
+            align: 'stretch'
         },
         scrollable: true,
         items: [{
@@ -68,7 +68,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                     //back button in title bar
                     xtype: 'button',
                     locales: {
-                        text: 'back.back',
+                        text: 'back.back'
                     },
                     style: {
                         'padding-left': '0px'
@@ -76,7 +76,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                     iconCls: 'zermelo-back-button-' + imageType,
                     align: 'left',
                     ui: 'plain',
-                    id: 'messageDetails_back',
+                    id: 'messageDetails_back'
                 }]
             }, { //body container
                 xtype: 'container',
@@ -89,7 +89,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                     //message title
                     xtype: 'label',
                     id: 'messageDetails_title_lbl',
-                    cls: 'zermelo-messagedetail-title',
+                    cls: 'zermelo-messagedetail-title'
                 }, /*{
                     // start date container
                     xtype: 'container',
@@ -142,9 +142,9 @@ Ext.define('Zermelo.view.MessageDetails', {
                     //description label
                     xtype: 'label',
                     locales: {
-                        html: 'announcement.description',
+                        html: 'announcement.description'
                     },
-                    margin: '10 0 10 0',
+                    margin: '10 0 10 0'
 
                 }, {
                     //description value label

@@ -67,8 +67,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.teacher',
-                                        },
+                                            html: 'appointment.teacher'
+                                        }
                                     }, {
                                         // teacher value label
                                         xtype: 'label',
@@ -76,7 +76,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         id: 'appointmentDetails_teacher_value_lbl',
                                         // css class resouces/css/app.css
                                         html: resultObject.teacher,
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end teacher container   
                             }, {
@@ -94,8 +94,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.subject',
-                                        },
+                                            html: 'appointment.subject'
+                                        }
                                     }, {
                                         // subject value label
                                         xtype: 'label',
@@ -103,7 +103,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         id: 'appointmentDetails_subject_value_lbl',
                                         html: resultObject.subject,
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     // end subject container
                             }, {
@@ -121,8 +121,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.room',
-                                        },
+                                            html: 'appointment.room'
+                                        }
                                     }, {
                                         //room value lebel
                                         xtype: 'label',
@@ -130,7 +130,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         id: 'appointmentDetails_room_value_lbl',
                                         html: resultObject.locations,
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end room container
                             }, {
@@ -148,8 +148,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.group',
-                                        },
+                                            html: 'appointment.group'
+                                        }
                                     }, {
                                         // group value label
                                         xtype: 'label',
@@ -157,7 +157,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         flex: 1.5,
                                         html: resultObject.groups,
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end group container
                             }, {
@@ -176,8 +176,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.type',
-                                        },
+                                            html: 'appointment.type'
+                                        }
                                     },{
                                          xtype: 'label',
                                         id: 'appointmentDetails_type_value_lbl',
@@ -204,8 +204,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.startTime',
-                                        },
+                                            html: 'appointment.startTime'
+                                        }
                                     }, {
                                         //starttime value label
                                         xtype: 'label',
@@ -213,7 +213,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         id: 'appointmentDetails_start_time_value_lbl',
                                         // css class resouces/css/app.css
                                         html: Ext.Date.format(new Date(resultObject.start), 'd M. Y H:i'),
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end starttime container
                             }, {
@@ -231,8 +231,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.endTime',
-                                        },
+                                            html: 'appointment.endTime'
+                                        }
                                     }, {
                                         //endtime value label
                                         xtype: 'label',
@@ -241,7 +241,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         html: Ext.Date.format(new Date(resultObject.end), 'd M. Y H:i'),
 
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end endtime container
                             }, {
@@ -253,15 +253,15 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                 },
                                 //multiple language
                                 locales: {
-                                    html: 'appointment.remark',
-                                },
+                                    html: 'appointment.remark'
+                                }
                             }, {
                                 //remark value label
                                 xtype: 'label',
                                 id: 'appointmentDetails_remarks_value_lbl',
                                 style: {
                                     'margin-bottom': '20px'
-                                },
+                                }
                             }, {
                                 //description label
                                 xtype: 'label',
@@ -271,15 +271,15 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                 },
                                 //multiple language
                                 locales: {
-                                    html: 'appointment.changeDescription',
-                                },
+                                    html: 'appointment.changeDescription'
+                                }
                             }, {
                                 //description value label
                                 xtype: 'label',
                                 id: 'appointmentDetails_description_value_lbl',
                                 style: {
                                     'margin-bottom': '20px'
-                                },
+                                }
                             },
                             {
                                 xtype:'container',
@@ -346,7 +346,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
         // set vertical box layout
         layout: {
             type: 'vbox',
-            align: 'stretch',
+            align: 'stretch'
         },
        /* */
         items: [{
@@ -358,7 +358,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
             height: '47px',
             //multiple language
             locales: {
-                title: 'appointment.title',
+                title: 'appointment.title'
             },
             // add back button in title bar left side
             items: [{
@@ -373,8 +373,8 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                     },
                     //multiple language
                     locales: {
-                        text: 'back.back',
-                    },
+                        text: 'back.back'
+                    }
                 }]
                 //end titelbar
         }, {
@@ -383,10 +383,10 @@ Ext.define('Zermelo.view.AppointmentDetails', {
             scrollable: true,
             height: '100%',
             scrollable: {
-            direction: 'vertical',
-            directionLock: false
-        },
-        }],
+                direction: 'vertical',
+                directionLock: false
+            }
+        }]
         //main container
         //end main container
     } //end config

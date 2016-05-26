@@ -38,7 +38,7 @@ Ext.define("Zermelo.view.Schedule", {
                 changeRefreshIcon();
                 messageShow = false;
                 Zermelo.UserManager.setTitles();
-            },
+            }
         },
         items: [{
             xtype: 'fullcalendarpanel',
@@ -63,7 +63,7 @@ Ext.define("Zermelo.view.Schedule", {
                         appointmentdetailView.show();
                         currentView = "appointmentDetail";
                     }
-                },
+                }
             }
         }]
     }

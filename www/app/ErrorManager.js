@@ -5,7 +5,7 @@ Ext.define('Zermelo.ErrorManager', {
 	{
 		items: [{
 			xtype: 'label',
-			cls: 'zermelo-error-messagebox',
+			cls: 'zermelo-error-messagebox'
 		}],
 		buttons: [{
 			itemId: 'ok',
@@ -13,12 +13,12 @@ Ext.define('Zermelo.ErrorManager', {
 			ui: 'normal',
 			handler: function() {
 				this.parent.parent.hide();
-			},
-		}],
+			}
+		}]
 	}),
 
 	showErrorBox: function(key) {
 		this.messageBox.setMessage(Ux.locale.Manager.get(key));
 		this.messageBox.show();
-	},
+	}
 })

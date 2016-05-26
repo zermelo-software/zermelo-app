@@ -36,7 +36,7 @@ Ext.define('Zermelo.view.SlideView', {
         'Ext.data.Model',
         'Ext.data.ModelManager',
         'Ext.data.Store',
-        'Ext.dataview.List',
+        'Ext.dataview.List'
     ],
     xtype: 'slidenavigationview',
 
@@ -448,7 +448,7 @@ Ext.define('Zermelo.view.SlideView', {
                 buttons: [{
                     itemId: 'ok',
                     locales: {
-                        text: 'ok',
+                        text: 'ok'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -462,7 +462,7 @@ Ext.define('Zermelo.view.SlideView', {
                 }, {
                     itemId: 'cancel',
                     locales: {
-                        text: 'cancel',
+                        text: 'cancel'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -470,7 +470,7 @@ Ext.define('Zermelo.view.SlideView', {
                         this.hide();
                     }
 
-                }],
+                }]
             });
 
         } else if (index == 2) {
@@ -491,7 +491,7 @@ Ext.define('Zermelo.view.SlideView', {
                         xtype: 'button',
 
                         locales: {
-                            text: 'own_schedule',
+                            text: 'own_schedule'
                         },
                         ui: 'normal',
                         handler: function() {
@@ -504,26 +504,23 @@ Ext.define('Zermelo.view.SlideView', {
                             thisobj.closeContainer();
                             this.getParent().getParent().hide();
                         }
-                    }],
+                    }]
                 }, {
                     xtype: 'textfield',
                     label: '',
                     name: 'new_user_code',
                     id: 'new_user_code',
                     style: {
-                        'margin': '10px 10px 10px 10px',
+                        'margin': '10px 10px 10px 10px'
                     },
                     locales: {
                         placeHolder: 'enter_user_code'
-                    },
-
-
-
+                    }
                 }],
                 buttons: [{
                     itemId: 'ok',
                     locales: {
-                        text: 'ok',
+                        text: 'ok'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -540,11 +537,11 @@ Ext.define('Zermelo.view.SlideView', {
                                 buttons: [{
                                     itemId: 'ok',
                                     locales: {
-                                        text: 'ok',
+                                        text: 'ok'
                                     },
 
                                     ui: 'normal'
-                                }],
+                                }]
                             });
                         } else {
                             Zermelo.UserManager.setUser(user_code);
@@ -561,7 +558,7 @@ Ext.define('Zermelo.view.SlideView', {
                 }, {
                     itemId: 'cancel',
                     locales: {
-                        text: 'cancel',
+                        text: 'cancel'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -569,7 +566,7 @@ Ext.define('Zermelo.view.SlideView', {
                         this.hide();
                     }
 
-                }],
+                }]
             });
 
         } else {
