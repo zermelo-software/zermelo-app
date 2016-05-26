@@ -139,7 +139,8 @@
      */
     "resources": [
         "resources/images",
-        "resources/icons"
+        "resources/icons",
+        "locales/"
     ],
 
     /**

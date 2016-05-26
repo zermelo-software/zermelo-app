@@ -75,7 +75,8 @@ Ext.define('Zermelo.UserManager', {
     },
 
     setUser: function(newCode) {
-        newCode = newCode ? newCode : '~me';
+        if(!newCode)
+            newCode = '~me';
     	if (this.code == newCode)
     		return;
 
@@ -86,18 +87,16 @@ Ext.define('Zermelo.UserManager', {
     },
 
     getScheduleTitle: function() {
-        var ret = (this.code == '~me' && Ux.locale.Manager.isLoaded()) ?
-                Ux.locale.Manager.get('menu.schedule_self') : 
-                Ux.locale.Manager.get('menu.schedule_other') + this.code;
-        console.log('return: ', ret);
-        return ret;
+    	if (loc == 'nl')
+    		return this.code == '~me' ? "Rooster" : "Rooster van " + this.code;
+    	else
+    		return this.code == '~me' ? "Schedule" : "Schedule for " + this.code;
     },
 
     getAnnouncementsTitle: function() {
-        var ret = (this.code == '~me' && Ux.locale.Manager.isLoaded()) ? 
-                Ux.locale.Manager.get('menu.announcement_self') : 
-                Ux.locale.Manager.get('menu.announcement_other') + this.code;
-        console.log('return: ', ret);
-        return ret;
+    	if (loc == 'nl')
+    		return this.code == '~me' ? "Mededelingen" : "Mededelingen voor " + this.code;
+    	else
+    		return this.code == '~me' ? "Announcements" : "Announcements for " + this.code;
     }
 });
