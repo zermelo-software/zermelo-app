@@ -479,6 +479,7 @@ Ext.define('Zermelo.view.SlideView', {
                     'padding': '1em 1em 0.5em 1em'
                 },
                 id: 'user_code_msg',
+                showAnimation: false,
                 items: [{
                     xtype: 'toolbar',
                     //   cls: 'zermelo-error-messagebox',
