@@ -3,6 +3,8 @@ Ext.define('Zermelo.ErrorManager', {
 	singleton: true,
 	messageBox: Ext.create('Ext.MessageBox', 
 	{
+		// // workaround for bug in Sencha touch where messageboxes can't close due to animations
+		// showAnimation: false,
 		items: [{
 			xtype: 'label',
 			cls: 'zermelo-error-messagebox'

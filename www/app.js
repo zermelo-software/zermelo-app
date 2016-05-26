@@ -132,6 +132,7 @@ Ext
 			// Launch application
 
 			launch : function() {
+				Ext.Msg.defaultAllowedConfig.showAnimation = false;
 				// display magnified glass press on textbox
 				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
 				
