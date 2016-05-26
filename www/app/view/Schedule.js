@@ -26,15 +26,19 @@
  */
 
 // This page handles the scheduling of calendar.
-var appointmentdetailView;
 Ext.define("Zermelo.view.Schedule", {
     extend: 'Ext.Container',
     xtype: 'schedule',
     id: 'schedule',
+    requires: ['Zermelo.view.AppointmentDetails'],
+    appointmentDetailView: null,
     config: {
         listeners: {
             show: function() {
-                appointmentdetailView = Ext.create('Zermelo.view.AppointmentDetails');
+                if (this.appointmentDetailView)
+                    this.appointmentDetailView.show();
+                else
+                    this.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
                 changeRefreshIcon();
                 messageShow = false;
                 Zermelo.UserManager.setTitles();
@@ -56,11 +60,11 @@ Ext.define("Zermelo.view.Schedule", {
 
                         var home = Ext.getCmp('home');
                         // add appointment detail viewport
-                        Ext.Viewport.add(appointmentdetailView);
+                        Ext.Viewport.add(this.appointmentDetailView);
                         //hide home view 
                         home.hide();
                         // show appointment detail
-                        appointmentdetailView.show();
+                        this.appointmentDetailView.show();
                         currentView = "appointmentDetail";
                     }
                 }
