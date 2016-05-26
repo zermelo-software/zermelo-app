@@ -1,5 +1,6 @@
 Ext.define('Zermelo.ErrorManager', {
 	alternateClassName: 'ErrorManager',
+	requires: ['Ux.locale.Manager', 'Ext.MessageBox'],
 	singleton: true,
 	messageBox: Ext.create('Ext.MessageBox', 
 	{
@@ -20,7 +21,10 @@ Ext.define('Zermelo.ErrorManager', {
 	}),
 
 	showErrorBox: function(key) {
-		this.messageBox.setMessage(Ux.locale.Manager.get(key));
-		this.messageBox.show();
+		// hacky workaround
+		Ext.defer(function() {
+			this.messageBox.setMessage(Ux.locale.Manager.get(key));
+			this.messageBox.show();
+		}, 100, this);
 	}
 })

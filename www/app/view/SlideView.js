@@ -36,7 +36,8 @@ Ext.define('Zermelo.view.SlideView', {
         'Ext.data.Model',
         'Ext.data.ModelManager',
         'Ext.data.Store',
-        'Ext.dataview.List'
+        'Ext.dataview.List',
+        'Ext.MessageBox'
     ],
     xtype: 'slidenavigationview',
 
