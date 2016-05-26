@@ -69,19 +69,23 @@
         },
         {
             "path": "js/jquery-1.7.2.js",
-            "update": "full"
+            "update": "full",
+            "includeInBundle": true
         },
         {
             "path": "js/fullcalendar.js",
-            "update": "full"
+            "update": "full",
+            "includeInBundle": true
         },
         {
             "path": "js/database.js",
-            "update": "full"
+            "update": "full",
+            "includeInBundle": true
         },
         {
             "path": "js/underscore.js",
-            "update": "full"
+            "update": "full",
+            "includeInBundle": true
         }
     ],
 
@@ -135,7 +139,7 @@
      */
     "resources": [
         "resources/images",
-        "resources/icons",
+        "resources/icons"
     ],
 
     /**
@@ -155,7 +159,6 @@
      * List of package names to require for the cmd build process
      */
     "requires": [
-        "Ux.locale.Manager"
     ],
 
     /**
