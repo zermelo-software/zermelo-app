@@ -109,7 +109,6 @@ Ext.define('Zermelo.view.Home', {
             slideButton: true,
             // display schedule image in slide menu list
             urlLogo: 'resources/images/myschedule.' + imageType,
-            title: 'myschedule',
             items: [{
                 // set toolbar with menu, refresh, annoucement buttons
                 xtype: 'toolbar',
@@ -120,7 +119,7 @@ Ext.define('Zermelo.view.Home', {
                 width: '100%',
                 // set title in multiple language
                 locales: {
-                    title: 'menu.myschedule'
+                    title: 'menu.schedule_self'
                 },
                 docked: 'top',
                 // Add two buttons refresh and new announcement
