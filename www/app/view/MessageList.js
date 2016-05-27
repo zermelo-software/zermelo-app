@@ -38,8 +38,9 @@ Ext.define("Zermelo.view.MessageList", {
         listeners: {
             show: function () {
                 messageShow=true;
-                if (localStore.getCount() == 0)
+                if (localStore.getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
+                }
 				dataFilter(this, localStore);
 				Zermelo.UserManager.setTitles();
 
@@ -49,8 +50,9 @@ Ext.define("Zermelo.view.MessageList", {
              },
             // record update with read and unread
             painted_disabled: function () {
-                if (localStore.getCount() == 0)
+                if (localStore.getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
+                }
                 dataFilter(this, localStore);
             } //end painted
         }, // end listeners
