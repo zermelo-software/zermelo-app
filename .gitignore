@@ -14,4 +14,5 @@ node_modules
 www.old/
 www/resources/sass/.sass-cache/
 www/build/
-www/cordova/
+www/cordova/*/*/
+www/cordova/www
