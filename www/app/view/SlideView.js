@@ -537,7 +537,7 @@ Ext.define('Zermelo.view.SlideView', {
                                     locales: {
                                         text: 'ok'
                                     },
-                                    ui: 'normal',
+                                    ui: 'normal'
                                 }]
                             });
                             thisobj.closeContainer();

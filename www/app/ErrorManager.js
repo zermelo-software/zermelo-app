@@ -21,7 +21,7 @@ Ext.define('Zermelo.ErrorManager', {
                     text: 'ok'
                 },
                 ui: 'normal'
-            }],
+            }]
         });
     }
 })
