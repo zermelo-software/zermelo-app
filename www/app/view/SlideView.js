@@ -537,17 +537,17 @@ Ext.define('Zermelo.view.SlideView', {
                                     locales: {
                                         text: 'ok'
                                     },
-
-                                    ui: 'normal'
+                                    ui: 'normal',
                                 }]
                             });
+                            thisobj.closeContainer();
                         } else {
                             Zermelo.UserManager.setUser(user_code);
                             if (messageShow)
                                 getAnnoucementsData(Ext.getCmp('messageList'));
                             else
                                 getAnnoucementsData(Ext.getCmp('schedule'));
-                            console.log(thisobj);
+                            thisobj.closeContainer();
                             this.hide();
                         }
                     }
@@ -561,7 +561,7 @@ Ext.define('Zermelo.view.SlideView', {
                     ui: 'normal',
                     handler: function() {
                         console.log("this.hide");
-                        // thisobj.closeContainer();
+                        thisobj.closeContainer();
                         this.hide();
                     }
 
@@ -606,7 +606,7 @@ Ext.define('Zermelo.view.SlideView', {
                         me._cache[index].addListener('painted', function() {
                             // The slight delay here gives the component enough time to update before
                             // the close animation starts.
-                            Ext.defer(me.closeContainer, 100, me, [me.config.selectSlideDuration]);
+                            me.closeContainer();
                         });
                     }
 
