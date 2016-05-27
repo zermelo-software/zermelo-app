@@ -35,10 +35,12 @@ Ext.define("Zermelo.view.Schedule", {
     config: {
         listeners: {
             show: function() {
-                if (this.appointmentDetailView)
+                if (this.appointmentDetailView) {
                     this.appointmentDetailView.show();
-                else
+                }
+                else {
                     this.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
+                }
                 changeRefreshIcon();
                 messageShow = false;
                 Zermelo.UserManager.setTitles();
@@ -50,8 +52,6 @@ Ext.define("Zermelo.view.Schedule", {
             listeners: {
                 eventclick: function(calEvent, jsEvent, view, fc) {
                     // get selected event data
-                    // console.log("click");
-                    //  console.log(clickButton);
                     if (clickButton) {
                         clickButton = false;
                     } else {
@@ -60,11 +60,11 @@ Ext.define("Zermelo.view.Schedule", {
 
                         var home = Ext.getCmp('home');
                         // add appointment detail viewport
-                        Ext.Viewport.add(this.appointmentDetailView);
+                        Ext.Viewport.add(this.parent.appointmentDetailView);
                         //hide home view 
                         home.hide();
                         // show appointment detail
-                        this.appointmentDetailView.show();
+                        this.parent.appointmentDetailView.show();
                         currentView = "appointmentDetail";
                     }
                 }
