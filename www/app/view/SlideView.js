@@ -475,12 +475,14 @@ Ext.define('Zermelo.view.SlideView', {
 
         } else if (index == 2) {
             // display popup while pressed on change user
+            console.log("Show user picker");
             Ext.Msg.show({
                 style: {
                     'padding': '1em 1em 0.5em 1em'
                 },
                 id: 'user_code_msg',
                 showAnimation: false,
+                hideAnimation: false,
                 items: [{
                     xtype: 'toolbar',
                     //   cls: 'zermelo-error-messagebox',
@@ -497,11 +499,6 @@ Ext.define('Zermelo.view.SlideView', {
                         ui: 'normal',
                         handler: function() {
                             Zermelo.UserManager.setUser();
-                            if (messageShow)
-                                getAnnoucementsData(Ext.getCmp('messageList'));
-                            else
-                                getAnnoucementsData(Ext.getCmp('schedule'));
-                            refresh();
                             thisobj.closeContainer();
                             this.getParent().getParent().hide();
                         }
@@ -550,7 +547,7 @@ Ext.define('Zermelo.view.SlideView', {
                                 getAnnoucementsData(Ext.getCmp('messageList'));
                             else
                                 getAnnoucementsData(Ext.getCmp('schedule'));
-                            thisobj.closeContainer();
+                            console.log(thisobj);
                             this.hide();
                         }
                     }
@@ -563,7 +560,8 @@ Ext.define('Zermelo.view.SlideView', {
                     },
                     ui: 'normal',
                     handler: function() {
-                        thisobj.closeContainer();
+                        console.log("this.hide");
+                        // thisobj.closeContainer();
                         this.hide();
                     }
 
@@ -572,7 +570,8 @@ Ext.define('Zermelo.view.SlideView', {
 
         } else {
             if (list.isSelected(item) && this.config.closeOnSelect) {
-                this.closeContainer();
+                console.log("inside else");
+                thisobj.closeContainer();
             }
         }
 
@@ -877,7 +876,7 @@ Ext.define('Zermelo.view.SlideView', {
             store: this.store,
             docked: listPosition,
             scrollable: false,
-            height: null,
+            height: '100%',
             cls: 'zermelo-menu-list',
             itemCls: 'zermelo-menu-list-item',
             pressedCls: 'zermelo-menu-list-item-pressed',

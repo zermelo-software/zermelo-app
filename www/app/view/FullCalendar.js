@@ -561,18 +561,15 @@ function getAppointment(me, currentobj, refresh, startTime, endTime, weekarrayem
             insertData(decoded.response.data, currentobj, refresh, me, nextprev, datepickerGo, week);
         },
         failure: function (response) {
+            var error_msg = 'network_error';
             if (response.status == 403) {
-                console.log('getAppointment');
-                Zermelo.ErrorManager.showErrorBox('insufficient_permissions');
+                error_msg = 'insufficient_permissions';
                 Zermelo.UserManager.setUser();
             }
-            else {
-                Zermelo.ErrorManager.showErrorBox('network_error');
-            }
+            Zermelo.ErrorManager.showErrorBox(error_msg);
 
             Ext.Viewport.setMasked(false);
             thisObj.show();
-            ErrorManager.showFirstError();
         }
     }); // end ajax request
 }

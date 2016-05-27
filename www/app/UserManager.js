@@ -51,11 +51,19 @@ Ext.define('Zermelo.UserManager', {
     },
 
     refreshData: function() {
+        refresh();
         deleteappointmentdatas();
         var store = Ext.getStore('AnnouncementStore');
         store.getProxy().clear();
         store.data.clear();
         store.sync();
+        Ext.getCmp('fullCalendarView').renderFullCalendar();
+        if (messageShow) {
+            getAnnoucementsData(Ext.getCmp('messageList'));
+        }
+        else {
+            getAnnoucementsData(Ext.getCmp('schedule'));
+        }
     },
 
     setTitles: function() {
@@ -83,7 +91,6 @@ Ext.define('Zermelo.UserManager', {
     	this.setCode(newCode);
     	this.refreshData();
     	this.setTitles();
-        Ext.getCmp('fullCalendarView').renderFullCalendar();
     },
 
     getScheduleTitle: function() {

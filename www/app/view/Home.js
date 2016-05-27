@@ -257,8 +257,9 @@ function refresh() {
 
     // call appointment api and announcement api at start
     getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, true, '', false);
-    getAnnoucementData(Ext.getCmp('schedule'))
+    getAnnoucementData(Ext.getCmp('schedule'));
 }
+
 function getAnnoucementsData(thisObj) {   
     Ext.Viewport.setMasked({
         xtype: 'loadmask',

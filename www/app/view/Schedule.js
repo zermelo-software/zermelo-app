@@ -35,12 +35,6 @@ Ext.define("Zermelo.view.Schedule", {
     config: {
         listeners: {
             show: function() {
-                if (this.appointmentDetailView) {
-                    this.appointmentDetailView.show();
-                }
-                else {
-                    this.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
-                }
                 changeRefreshIcon();
                 messageShow = false;
                 Zermelo.UserManager.setTitles();
@@ -59,8 +53,12 @@ Ext.define("Zermelo.view.Schedule", {
                         // create home view object
 
                         var home = Ext.getCmp('home');
-                        // add appointment detail viewport
-                        Ext.Viewport.add(this.parent.appointmentDetailView);
+                        
+                        if (!this.parent.appointmentDetailView) {
+                            this.parent.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
+                            Ext.Viewport.add(this.parent.appointmentDetailView);
+                        }
+                        this.parent.appointmentDetailView.show();
                         //hide home view 
                         home.hide();
                         // show appointment detail
