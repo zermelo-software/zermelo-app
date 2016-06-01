@@ -21,3 +21,4 @@ zip.sh
 *.keystore
 *.png
 *.svg
+*.zip
