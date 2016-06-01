@@ -11,9 +11,11 @@
 /www/plugins/cordova-plugin-whitelist/
 node_modules
 *.patch
-www.old/
 www/resources/sass/.sass-cache/
 www/build/
 www/cordova/*/*/
 www/cordova/www
 conversion/
+*.old
+zip.sh
+*.keystore

@@ -8,7 +8,7 @@
                     // Uncomment the line below and add the platforms you wish to build for
                     "platforms": "android",
 
-                    "id": "nl.zermelo.app",
+                    "id": "nl.Zermelo.App",
                     "name": "Zermelo"
                 }
             }
@@ -21,15 +21,12 @@
      */
     "name": "Zermelo",
 
+    "framework": "touch",
+
     /**
      * The file path to this application's front HTML document, relative to this app.json file
      */
     "indexHtmlPath": "index.html",
-
-    /**
-     * The Sencha Framework for this application: "ext" or "touch".
-     */
-    "framework": "touch",
 
     /**
      * The absolute URL to this application in development environment, i.e: the URL to run this application
@@ -65,30 +62,30 @@
             "path": "touch/sencha-touch.js",
             "x-bootstrap": true
         },
-        // {
-        //     "path": "bootstrap.js",
-        //     "x-bootstrap": true
-        // },
         {
             "path": "app.js",
             "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when build */
             "update": "full"
         },
         {
-            "path":"js/jquery-1.7.2.js",
-            "update": "full"
+            "path": "js/jquery-1.7.2.js",
+            "update": "full",
+            "includeInBundle": true
         },
         {
-            "path":"js/fullcalendar.js",
-            "update": "full"
+            "path": "js/fullcalendar.js",
+            "update": "full",
+            "includeInBundle": true
         },
         {
-            "path":"js/database.js",
-            "update": "full"
+            "path": "js/database.js",
+            "update": "full",
+            "includeInBundle": true
         },
         {
-            "path":"js/underscore.js",
-            "update": "full"
+            "path": "js/underscore.js",
+            "update": "full",
+            "includeInBundle": true
         }
     ],
 
@@ -111,8 +108,7 @@
     "css": [
         {
             "path": "resources/css/app.css",
-            "update": "full",
-            "exclude": ["fashion"]
+            "update": "full"
         }
     ],
 
@@ -144,11 +140,7 @@
     "resources": [
         "resources/images",
         "resources/icons",
-        // "resources/startup",
-        "locales/en.json",
-        "locales/nl.json",
-        "js/",
-        "resources/screens"
+        "locales/"
     ],
 
     /**
@@ -174,5 +166,5 @@
      * Uniquely generated id for this application, used as prefix for localStorage keys.
      * Normally you should never change this value.
      */
-    "id": "f725562d-37ef-49f3-9ea3-402fd41438a7"
+    "id": "82c6c4c2-fed0-40b4-a623-599728669ac6"
 }

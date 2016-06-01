@@ -60,31 +60,31 @@ function createDatabase() {
             'refreshFlag BOOL)'
         );
     });
-};
+}
 
 // delete data from appointment table before insert data into table
 function deleteappointmentdata(startweek, endweek) {
     db.transaction(function (tx) {
         tx.executeSql('DELETE  from APPOINTMENTS where weeknumber in (' + startweek + ',' + endweek + ')');
     }, errorDB, successDB);
-};
+}
 function deleteappointmentdatas() {
     db.transaction(function (tx) {
         tx.executeSql('DELETE  from APPOINTMENTS');
     }, errorDB, successDB);
-};
+}
 
 function errorDB(err) {
     alert("Error processing SQL: " + err.message);
-};
+}
 
 function successDB() {
   //  console.log("success fully delete");
-};
+}
 function fix(x) {
 	if (x == null) return '';
 	return x;
-};
+}
 
 /**insert data into table
     @param decode : json data
@@ -171,7 +171,7 @@ function insertData(decode, currentObj, refresh, m, nextprev, datepickerGo, week
 
         });
 
-};
+}
 /**Get count number of record of selected weeknumber
 @param query: sql query
 @param weeknumber: week number for get this week data
@@ -183,7 +183,7 @@ function getRecodrdCount(query, weeknumber, callBack) {
             callBack(result.rows.item(0).count);
         }, errorDB);
     })
-};
+}
 /**update refresh flag when refresh data 
 @param query: sql query
 */
@@ -193,7 +193,7 @@ function updateRefreshFlag(query) {
           //  console.log("update");
         }, errorDB);
     })
-};
+}
 
 function logCollision(main, sub, eventArray) {
     if (eventArray[sub].valid == 'true') {
@@ -203,7 +203,7 @@ function logCollision(main, sub, eventArray) {
             eventArray[main].multiid = (eventArray[main].multiid ? eventArray[main].multiid : eventArray[main].id) + "," + eventArray[sub].id;
         // }
     }
-};
+}
 
 function detectCollision(i, j) {
     if (i.valid == 'true' 
@@ -219,7 +219,7 @@ function detectCollision(i, j) {
         i.collision = true;
         j.collision = true;
     }
-};
+}
 
 function getAppointmentData(query, callBack) {
     db.transaction(function (tx) {
@@ -265,10 +265,10 @@ function getAppointmentData(query, callBack) {
         }, errorCB);
 
     });
-};
+}
 
 //fail query fire 
 function errorCB(err) {
    // console.log("Error processing SQL: " + err.code);
     alert("Error processing SQL: " + err.code);
-};
+}

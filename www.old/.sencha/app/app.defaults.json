@@ -267,11 +267,11 @@
             "path": "${app.dir}/phonegap"
         },
         "js": [
-            {
-                "path": "phonegap.js",
-                "remote": true,
-                "priority": 1000
-            }
+            // {
+            //     "path": "phonegap.js",
+            //     "remote": true,
+            //     "priority": 1000
+            // }
         ],
         "microloader": "${app.config.dir}/microloader/testing.js",
         "output": {

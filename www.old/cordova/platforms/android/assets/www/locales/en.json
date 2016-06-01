@@ -6,19 +6,13 @@
         "login":"Login",
         "institution_code_error_msg":"Please enter a valid institution</br>Please enter a valid code",
         "institution_error_msg":"Please enter a valid institution",
-        "code_error_msg":"Please enter a valid code",
+        "code_error_msg":"Please enter a valid code"
     },
     "menu":{
-        "title":{
-            "schedule":{
-                "self": "Schedule", 
-                "other": "Schedule for ",
-            },
-            "announcement":{
-                "self": "Announcements", 
-                "other": "Announcements for ",
-            }
-        },
+        "schedule_self": "Schedule", 
+        "schedule_other": "Schedule for ",
+        "announcement_self": "Announcements", 
+        "announcement_other": "Announcements for ",
         "Logout":"Logout",
         "logout_message":"Are you sure that you want to disconnect from Zermelo Portal? You will have to link it again to view your schedule."
     },
@@ -36,7 +30,7 @@
         "startTime":"Start: ",
         "endTime":"End: ",
         "changeDescription": "Change: ",
-        "remark": "Remarks: ",
+        "remark": "Remarks: "
     },
     "announcement":{
         "startDate":"Start Date: ",
@@ -75,5 +69,5 @@
     },
     "exit_msg":"Are you sure you want to close the app?",
     "own_schedule":"Own schedule",
-    "enter_user_code":"Please enter user code",
+    "enter_user_code":"Please enter user code"
 }

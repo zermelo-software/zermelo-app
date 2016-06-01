@@ -1,19 +1,45 @@
 <!DOCTYPE HTML>
+<!--
+Copyright (c) Zermelo Software B.V. and contributors
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+-->
+
 <html manifest="" lang="en-US">
+
 <head>
     <meta charset="UTF-8">
     <title>Zermelo</title>
     <style type="text/css">
-         /**
+        /**
          * Example of an initial loading indicator.
          * It is recommended to keep this as minimal as possible to provide instant feedback
          * while other resources are still being loaded for the first time
          */
-        html, body {
+        html,
+        body {
             height: 100%;
-            background-color: #1985D0
+            background-image: url("resources/images/loginbg.png");
         }
-
         #appLoadingIndicator {
             position: absolute;
             top: 50%;
@@ -26,18 +52,15 @@
             -webkit-animation-iteration-count: infinite;
             -webkit-animation-direction: linear;
         }
-
         #appLoadingIndicator > * {
-            background-color: #FFFFFF;
+            background-color: #2e6ee2;
             display: inline-block;
             height: 30px;
             -webkit-border-radius: 15px;
             margin: 0 5px;
             width: 30px;
-            opacity: 0.8;
         }
-
-        @-webkit-keyframes appLoadingIndicator{
+        @-webkit-keyframes appLoadingIndicator {
             0% {
                 opacity: 0.8
             }
@@ -49,29 +72,25 @@
             }
         }
     </style>
-
     <script type="text/javascript">
-        var imageType = 'svg';
-        var ua = ua || navigator.userAgent;
-        var match = ua.match(/Android\s([0-9\.]*)/);
-        var result = /AppleWebKit\/([\d.]+)/.exec(navigator.userAgent);
-        // get webkit version of browser
-        var webkitVersion = result[1];
-        // get android os version
-        if (match != null) {
-            var version = parseInt(match[1]);
-            if (version == 2)
-                imageType = 'png';
-        }
-    </script>
 
-    <!-- The line below must be kept intact for Sencha Command to build your application -->
-    <script id="microloader" type="text/javascript" src=".sencha/app/microloader/development.js"></script>
-    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
-    <script type="text/javascript" src="js/fullcalendar.js"></script>
-    <script type="text/javascript" src="js/database.js"></script>
-    <script type="text/javascript" src="js/underscore.js"></script>
+            var imageType = 'svg';
+    var ua = ua || navigator.userAgent;
+    var match = ua.match(/Android\s([0-9\.]*)/);
+    var result = /AppleWebKit\/([\d.]+)/.exec(navigator.userAgent);
+    // get webkit version of browser
+    var webkitVersion = result[1];
+    // get android os version
+    if (match != null) {
+        var version = parseInt(match[1]);
+        if (version == 2)
+            imageType = 'png';
+    }
+
+    </script>
+    <script id="microloader" type="text/javascript" src="touch/microloader/development.js"></script>
 </head>
+
 <body>
     <div id="appLoadingIndicator">
         <div></div>
@@ -79,4 +98,5 @@
         <div></div>
     </div>
 </body>
+
 </html>

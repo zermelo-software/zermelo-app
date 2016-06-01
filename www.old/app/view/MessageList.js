@@ -38,8 +38,9 @@ Ext.define("Zermelo.view.MessageList", {
         listeners: {
             show: function () {
                 messageShow=true;
-                if (localStore.getCount() == 0)
+                if (localStore.getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
+                }
 				dataFilter(this, localStore);
 				Zermelo.UserManager.setTitles();
 
@@ -49,10 +50,11 @@ Ext.define("Zermelo.view.MessageList", {
              },
             // record update with read and unread
             painted_disabled: function () {
-                if (localStore.getCount() == 0)
+                if (localStore.getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
+                }
                 dataFilter(this, localStore);
-            }, //end painted
+            } //end painted
         }, // end listeners
         layout: 'fit',
         style: {
@@ -77,7 +79,7 @@ Ext.define("Zermelo.view.MessageList", {
             //data store
             store: localStore,
             grouped: false,
-            itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>"),
+            itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
         }]
     },
     refresh: function() {
@@ -100,7 +102,7 @@ function getAnnoucementData(thisObj) {
             var decoded = Ext.JSON.decode(response.responseText);
             // create store
             mystore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid'],
+                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid']
             });
             mystore.setData(decoded.response.data);
             var readStore = Ext.getStore('ReadmessageStore');
@@ -116,7 +118,7 @@ function getAnnoucementData(thisObj) {
                     start: record.data.start,
                     end: record.data.end,
                     title: record.data.title,
-                    text: record.data.text, // in a real app you would not update a real field like this!
+                    text: record.data.text // in a real app you would not update a real field like this!
                 };
                 // add reocrd into localstore one bye one
                 localStore.add(rec);
@@ -127,7 +129,6 @@ function getAnnoucementData(thisObj) {
         },
         failure: function (response) {
             if (response.status == 403) {
-                console.log('getAppointment');
                 Zermelo.ErrorManager.showErrorBox('insufficient_permissions');
                 Zermelo.UserManager.setUser();
             }

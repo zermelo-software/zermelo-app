@@ -1,14 +1,19 @@
 Ext.define('Zermelo.UserManager', {
-	alternateClassName: 'UserManager',
-	singleton: true,
-	code: window.localStorage.getItem('user_code') ? window.localStorage.getItem('user_code') : '~me',
-	institution: window.localStorage.getItem('institution'),
-	accessToken: window.localStorage.getItem('accessToken'),
-	userChanged: false,
+    alternateClassName: 'UserManager',
+    requires: ['Ux.locale.Manager'],
+    singleton: true,
+    code: window.localStorage.getItem('user_code') ? window.localStorage.getItem('user_code') : '~me',
+    institution: window.localStorage.getItem('institution'),
+    accessToken: window.localStorage.getItem('accessToken'),
+    userChanged: false,
 
-	loggedIn: function() {
-		return this.accessToken ? true : false;
-	},
+    loggedIn: function() {
+    	return this.accessToken ? true : false;
+    },
+
+    userIsSelf: function() {
+        return this.getUser() == '~me';
+    },
 
 	getUser: function() {
 		return this.code;
@@ -37,62 +42,57 @@ Ext.define('Zermelo.UserManager', {
 		window.localStorage.setItem('accessToken', newAccessToken);
 	},
 
-	saveLogin: function(code, institution, accessToken) {
-		this.setCode(code);
-		this.setInstitution(institution);
-		this.setAccessToken(accessToken);
-	},
+    saveLogin: function(code, institution, accessToken) {
+        this.setCode(code);
+        this.setInstitution(institution);
+        this.setAccessToken(accessToken);
+    },
 
-	logout: function() {
-		this.setCode('');
-		this.setInstitution('');
-		this.setAccessToken('');
-	},
+    logout: function() {
+        this.setCode('');
+        this.setInstitution('');
+        this.setAccessToken('');
+    },
 
-	refreshData: function() {
-		deleteappointmentdatas();
-		var store = Ext.getStore('AnnouncementStore');
-		store.getProxy().clear();
-		store.data.clear();
-		store.sync();
-	},
+    refreshData: function() {
+        if (messageShow) {
+            getAnnoucementsData(Ext.getCmp('messageList'));
+        }
+        else {
+            getAnnoucementsData(Ext.getCmp('schedule'));
+        }
+        refresh();
+    },
 
-	setTitles: function() {
-		var title;
+    setTitles: function() {
+    	var header;
+        var key_suffix = this.userIsSelf() ? 'self' : 'other';
+        var suffix = this.userIsSelf() ? '' : this.getUser();
 
-		title = Ext.getCmp("toolbar_main");
-		if (title)
-			title.setTitle(this.getScheduleTitle());
+    	header = Ext.getCmp("toolbar_main");
+    	if (header) {
+    		header.title = Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+        }
 
-		title = Ext.getCmp("toolbar_day_back");
-		if (title)
-			title.setTitle(this.getScheduleTitle());
+    	header = Ext.getCmp("toolbar_day_back");
+    	if (header) {
+    		header.title = Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+        }
 
-		title = Ext.getCmp("message_title");
-		if (title)
-			title.setTitle(this.getAnnouncementsTitle());
-	},
+    	header = Ext.getCmp("message_title");
+    	if (header) {
+    		header.title = Ux.locale.Manager.get('menu.announcement_' + key_suffix) + suffix;
+        }
+    },
 
-	setUser: function(newCode) {
-		newCode = newCode ? newCode : '~me';
-		if (this.code == newCode)
-			return;
+    setUser: function(newCode) {
+        if(!newCode)
+            newCode = '~me';
+    	if (this.code == newCode)
+    		return;
 
-		this.setCode(newCode);
-		this.refreshData();
-		this.setTitles();
-		Ext.getCmp('fullCalendarView').renderFullCalendar();
-	},
-
-	getScheduleTitle: function() {
-		return this.code == '~me' ? 
-				Ux.locale.Manager.get('menu.schedule.self') : 
-				Ux.locale.Manager.get('menu.schedule.other') + this.code;
-	},
-
-	getAnnouncementsTitle: function() {
-		return this.code == '~me' ? 
-				Ux.locale.Manager.get('menu.announcement.self') : 
-				Ux.locale.Manager.get('menu.announcement.other') + this.code;
-	}
+    	this.setCode(newCode);
+    	this.refreshData();
+    	this.setTitles();
+    }
 });

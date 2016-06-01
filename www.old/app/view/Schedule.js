@@ -26,19 +26,19 @@
  */
 
 // This page handles the scheduling of calendar.
-var appointmentdetailView;
 Ext.define("Zermelo.view.Schedule", {
     extend: 'Ext.Container',
     xtype: 'schedule',
     id: 'schedule',
+    requires: ['Zermelo.view.AppointmentDetails'],
+    appointmentDetailView: null,
     config: {
         listeners: {
             show: function() {
-                appointmentdetailView = Ext.create('Zermelo.view.AppointmentDetails');
                 changeRefreshIcon();
                 messageShow = false;
                 Zermelo.UserManager.setTitles();
-            },
+            }
         },
         items: [{
             xtype: 'fullcalendarpanel',
@@ -46,8 +46,6 @@ Ext.define("Zermelo.view.Schedule", {
             listeners: {
                 eventclick: function(calEvent, jsEvent, view, fc) {
                     // get selected event data
-                    // console.log("click");
-                    //  console.log(clickButton);
                     if (clickButton) {
                         clickButton = false;
                     } else {
@@ -55,15 +53,19 @@ Ext.define("Zermelo.view.Schedule", {
                         // create home view object
 
                         var home = Ext.getCmp('home');
-                        // add appointment detail viewport
-                        Ext.Viewport.add(appointmentdetailView);
+                        
+                        if (!this.parent.appointmentDetailView) {
+                            this.parent.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
+                            Ext.Viewport.add(this.parent.appointmentDetailView);
+                        }
+                        this.parent.appointmentDetailView.show();
                         //hide home view 
                         home.hide();
                         // show appointment detail
-                        appointmentdetailView.show();
+                        this.parent.appointmentDetailView.show();
                         currentView = "appointmentDetail";
                     }
-                },
+                }
             }
         }]
     }

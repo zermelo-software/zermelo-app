@@ -1,19 +1,45 @@
 <!DOCTYPE HTML>
+<!--
+Copyright (c) Zermelo Software B.V. and contributors
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+-->
+
 <html manifest="cache.appcache" lang="en-US">
+
 <head>
     <meta charset="UTF-8">
     <title>Zermelo</title>
     <style type="text/css">
-         /**
+        /**
          * Example of an initial loading indicator.
          * It is recommended to keep this as minimal as possible to provide instant feedback
          * while other resources are still being loaded for the first time
          */
-        html, body {
+        html,
+        body {
             height: 100%;
-            background-color: #1985D0
+            background-image: url("resources/images/loginbg.png");
         }
-
         #appLoadingIndicator {
             position: absolute;
             top: 50%;
@@ -26,18 +52,15 @@
             -webkit-animation-iteration-count: infinite;
             -webkit-animation-direction: linear;
         }
-
         #appLoadingIndicator > * {
-            background-color: #FFFFFF;
+            background-color: #2e6ee2;
             display: inline-block;
             height: 30px;
             -webkit-border-radius: 15px;
             margin: 0 5px;
             width: 30px;
-            opacity: 0.8;
         }
-
-        @-webkit-keyframes appLoadingIndicator{
+        @-webkit-keyframes appLoadingIndicator {
             0% {
                 opacity: 0.8
             }
@@ -49,24 +72,23 @@
             }
         }
     </style>
-
     <script type="text/javascript">
-        var imageType = 'svg';
-        var ua = ua || navigator.userAgent;
-        var match = ua.match(/Android\s([0-9\.]*)/);
-        var result = /AppleWebKit\/([\d.]+)/.exec(navigator.userAgent);
-        // get webkit version of browser
-        var webkitVersion = result[1];
-        // get android os version
-        if (match != null) {
-            var version = parseInt(match[1]);
-            if (version == 2)
-                imageType = 'png';
-        }
-    </script>
 
-    <!-- The line below must be kept intact for Sencha Command to build your application -->
-    <script id="microloader" data-app="f725562d-37ef-49f3-9ea3-402fd41438a7" type="text/javascript">(function(k){function t(b){function c(a,b){var f=a.length,j,d;for(j=0;j<f;j++){d=a[j];var c=a,e=j,q=void 0;"string"==typeof d&&(d={path:d});d.shared?(d.version=d.shared,q=d.shared+d.path):(G.href=d.path,q=G.href,d.version=d.hash);d.uri=q;d.key=g+"-"+q;h[q]=d;c[e]=d;d.type=b;d.index=j;d.collection=a;d.ready=!1;d.evaluated=!1}return a}var f;"string"==typeof b?(f=b,b=H(f)):f=JSON.stringify(b);var g=b.id,e=g+"-"+I+r,h={};this.key=e;this.css=c(b.css,"css");this.js=c(b.js,"js");l.microloaded=!0;var n=window.Ext.filterPlatform=
+            var imageType = 'svg';
+    var ua = ua || navigator.userAgent;
+    var match = ua.match(/Android\s([0-9\.]*)/);
+    var result = /AppleWebKit\/([\d.]+)/.exec(navigator.userAgent);
+    // get webkit version of browser
+    var webkitVersion = result[1];
+    // get android os version
+    if (match != null) {
+        var version = parseInt(match[1]);
+        if (version == 2)
+            imageType = 'png';
+    }
+
+    </script>
+    <script id="microloader" data-app="82c6c4c2-fed0-40b4-a623-599728669ac6" type="text/javascript">(function(k){function t(b){function c(a,b){var f=a.length,j,d;for(j=0;j<f;j++){d=a[j];var c=a,e=j,q=void 0;"string"==typeof d&&(d={path:d});d.shared?(d.version=d.shared,q=d.shared+d.path):(G.href=d.path,q=G.href,d.version=d.hash);d.uri=q;d.key=g+"-"+q;h[q]=d;c[e]=d;d.type=b;d.index=j;d.collection=a;d.ready=!1;d.evaluated=!1}return a}var f;"string"==typeof b?(f=b,b=H(f)):f=JSON.stringify(b);var g=b.id,e=g+"-"+I+r,h={};this.key=e;this.css=c(b.css,"css");this.js=c(b.js,"js");l.microloaded=!0;var n=window.Ext.filterPlatform=
 function(a){function b(a){var d=/Mobile(\/|\s)/.test(a);return/(iPhone|iPod)/.test(a)||!/(Silk)/.test(a)&&/(Android)/.test(a)&&(/(Android 2)/.test(a)||d)||/(BlackBerry|BB)/.test(a)&&d||/(Windows Phone)/.test(a)}function f(a){return!b(a)&&(/iPad/.test(a)||/Android|Silk/.test(a)||/(RIM Tablet OS)/.test(a)||/MSIE 10/.test(a)&&/; Touch/.test(a))}var j=!1,d=navigator.userAgent,c,h;a=[].concat(a);c=window.location.search.substr(1).split("\x26");h={};var g;for(g=0;g<c.length;g++){var e=c[g].split("\x3d");
 h[e[0]]=e[1]}if(c=h.platform)return-1!=a.indexOf(c);c=0;for(h=a.length;c<h;c++){switch(a[c]){case "phone":j=b(d);break;case "tablet":j=f(d);break;case "desktop":j=!b(d)&&!f(d);break;case "ios":j=/(iPad|iPhone|iPod)/.test(d);break;case "android":j=/(Android|Silk)/.test(d);break;case "blackberry":j=/(BlackBerry|BB)/.test(d);break;case "safari":j=/Safari/.test(d)&&!/(BlackBerry|BB)/.test(d);break;case "chrome":j=/Chrome/.test(d);break;case "ie10":j=/MSIE 10/.test(d);break;case "windows":j=/MSIE 10/.test(d)||
 /Trident/.test(d);break;case "tizen":j=/Tizen/.test(d);break;case "firefox":j=/Firefox/.test(d)}if(j)return!0}return!1};this.css=this.css.filter(function(a){var b=a.platform,c=a.exclude;a.type="css";if(b){if(n(b)&&!n(c))return l.theme||(l.theme={}),l.theme.name||(l.theme.name=a.theme||"Default"),!0;a.filtered=!0;return!1}return!0});this.js=this.js.filter(function(a){var b=a.platform,c=a.exclude;a.type="js";return b&&(!n(b)||n(c))?(a.filtered=!0,!1):!0});this.assets=this.css.concat(this.js);this.getAsset=
@@ -80,12 +102,9 @@ d,!1);s(r,function(c){D=n=new t(c);var d;n.assets.forEach(function(a){d=b.getAss
 g+f[++h])):b.push(g);d=b.join("")}j(c,d)}catch(l){C("Malformed delta content received for "+a.uri)}},c)})})}var g=[],h=!1,k=function(){},m=function(){e.swapCache();h=!0;k()},p;N("message",M,!1);if(e.status==e.UPDATEREADY)m();else if(e.status==e.CHECKING||e.status==e.DOWNLOADING)e.onupdateready=m,e.onnoupdate=e.onobsolete=function(){k()};!1!==navigator.onLine?d():F("online",d,!1)}var k=b.assets,h=k.length,n;D=b;F("message",M,!1);0==h?g():k.forEach(function(a){var b=x(a.key);null===b?K(a,function(b){a.remote||
 A(a.key,b);c(a,b)},function(){c(a,"")}):c(a,b)})}function O(b){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var c=document.createElement("style");c.appendChild(document.createTextNode("@media screen and (orientation: portrait) {@-ms-viewport {width: 320px !important;}}@media screen and (orientation: landscape) {@-ms-viewport {width: 560px !important;}}"));document.getElementsByTagName("head")[0].appendChild(c)}c=/MSIE 10/.test(navigator.userAgent)?/complete|loaded/:/interactive|complete|loaded/;
 null!==m.readyState.match(c)?E(b):F("DOMContentLoaded",function(){navigator.standalone?setTimeout(function(){setTimeout(function(){E(b)},1)},1):setTimeout(function(){E(b)},1)},!1)}var J=function(){},v=[],m=k.document,p=m.head||m.getElementsByTagName("head")[0],F=k.addEventListener,N=k.removeEventListener,H=JSON.parse,G=m.createElement("a"),y=m.location,I=y.protocol+"//"+y.hostname+y.pathname+y.search,r="app.json",L=!1,D,e,w;try{w=k.localStorage,e=k.applicationCache}catch(Q){}if("undefined"===typeof k.Ext)var l=
-k.Ext={};l.blink=function(b){var c=x(b.id+"-"+I+r);B("viewport","width\x3ddevice-width, initial-scale\x3d1.0, maximum-scale\x3d1.0, minimum-scale\x3d1.0, user-scalable\x3dno");B("apple-mobile-web-app-capable","yes");B("apple-touch-fullscreen","yes");c?(b=new t(c),O(b)):s(r,function(c){b=new t(c);b.store();O(b)})}})(this);Ext.blink({id:"f725562d-37ef-49f3-9ea3-402fd41438a7"});</script>
-    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
-    <script type="text/javascript" src="js/fullcalendar.js"></script>
-    <script type="text/javascript" src="js/database.js"></script>
-    <script type="text/javascript" src="js/underscore.js"></script>
+k.Ext={};l.blink=function(b){var c=x(b.id+"-"+I+r);B("viewport","width\x3ddevice-width, initial-scale\x3d1.0, maximum-scale\x3d1.0, minimum-scale\x3d1.0, user-scalable\x3dno");B("apple-mobile-web-app-capable","yes");B("apple-touch-fullscreen","yes");c?(b=new t(c),O(b)):s(r,function(c){b=new t(c);b.store();O(b)})}})(this);Ext.blink({id:"82c6c4c2-fed0-40b4-a623-599728669ac6"});</script>
 </head>
+
 <body>
     <div id="appLoadingIndicator">
         <div></div>
@@ -93,4 +112,5 @@ k.Ext={};l.blink=function(b){var c=x(b.id+"-"+I+r);B("viewport","width\x3ddevice
         <div></div>
     </div>
 </body>
+
 </html>

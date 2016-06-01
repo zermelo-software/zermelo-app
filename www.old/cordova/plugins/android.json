@@ -8,7 +8,7 @@
     },
     "installed_plugins": {
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "nl.zermelo.app"
+            "PACKAGE_NAME": "nl.Zermelo.App"
         }
     },
     "dependent_plugins": {}

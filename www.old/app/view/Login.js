@@ -45,7 +45,7 @@ Ext.define('Zermelo.view.Login', {
         },
         layout: {
             type: 'vbox',
-            align: 'stretch',
+            align: 'stretch'
         },
         cls: 'zermelo-login-background',
         padding: '0 5% 0 5%',
@@ -61,7 +61,7 @@ Ext.define('Zermelo.view.Login', {
                 xtype: 'container',
                 padding: '10 0 10 0',
                 locales: {
-                    html: 'login.text',
+                    html: 'login.text'
                 },
                 style: {
                     'font-size': '10pt'
@@ -75,12 +75,12 @@ Ext.define('Zermelo.view.Login', {
                     xtype: 'container',
                     layout: {
                         type: 'hbox',
-                        align: 'stretch',
+                        align: 'stretch'
                     },
                     items: [{
                         //building logo
                         xtype: 'label',
-                        html: '<img height="46px" width="46px" src="resources/images/building_icon.png" style="margin-top: 1px;">',
+                        html: '<img height="46px" width="46px" src="resources/images/building_icon.png" style="margin-top: 1px;">'
                     }, {
                         // text field container
                         xtype: 'container',
@@ -94,7 +94,7 @@ Ext.define('Zermelo.view.Login', {
                                 name: 'institution',
                                 id: 'text_login_institution',
                                 locales: {
-                                    placeHolder: 'login.institution',
+                                    placeHolder: 'login.institution'
                                 },
                                 listeners: {
                                     keyup: function (thisField, e) {
@@ -117,7 +117,7 @@ Ext.define('Zermelo.view.Login', {
                     items: [{
                         //set password icon
                         xtype: 'label',
-                        html: '<img height="46px" src="resources/images/password_icon.png" style="margin-top: 1px;">',
+                        html: '<img height="46px" src="resources/images/password_icon.png" style="margin-top: 1px;">'
                     }, {
                         xtype: 'fieldset',
                         flex: 1,
@@ -127,7 +127,7 @@ Ext.define('Zermelo.view.Login', {
                             name: 'cdoe',
                             id: 'number_login_code',
                             locales: {
-                                placeHolder: 'login.code',
+                                placeHolder: 'login.code'
                             },
                             listeners: {
                                 keyup: function (thisField, e) {
@@ -195,13 +195,17 @@ function authentication() {
 
             // get textfields data
             var value_institution = text_institution.getValue();
-            var value_code = number_code.getValue();
+            var value_code = number_code.getValue().toString();
+            // Number field strips leading zero's so we'll fill them back in here.
+            while (value_code.length < 12) {
+                value_code = '0' + value_code;
+            }
 
             // show loading screen
             thisObj.setMasked({
                 xtype: 'loadmask',
                 locale: {
-                    message: 'loading',
+                    message: 'loading'
                 },
 
                 indicator: true

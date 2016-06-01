@@ -37,6 +37,7 @@ Ext.define('Zermelo.view.SlideView', {
         'Ext.data.ModelManager',
         'Ext.data.Store',
         'Ext.dataview.List',
+        'Ext.MessageBox'
     ],
     xtype: 'slidenavigationview',
 
@@ -380,7 +381,6 @@ Ext.define('Zermelo.view.SlideView', {
             if (layout && Ext.isFunction(layout.setPack)) {
                 layout.setPack(listPosition);
             }
-
             return parent.add(Ext.merge(me._slideButtonConfig, config));
         }
 
@@ -448,7 +448,7 @@ Ext.define('Zermelo.view.SlideView', {
                 buttons: [{
                     itemId: 'ok',
                     locales: {
-                        text: 'ok',
+                        text: 'ok'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -462,7 +462,7 @@ Ext.define('Zermelo.view.SlideView', {
                 }, {
                     itemId: 'cancel',
                     locales: {
-                        text: 'cancel',
+                        text: 'cancel'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -470,7 +470,7 @@ Ext.define('Zermelo.view.SlideView', {
                         this.hide();
                     }
 
-                }],
+                }]
             });
 
         } else if (index == 2) {
@@ -480,6 +480,8 @@ Ext.define('Zermelo.view.SlideView', {
                     'padding': '1em 1em 0.5em 1em'
                 },
                 id: 'user_code_msg',
+                showAnimation: false,
+                hideAnimation: false,
                 items: [{
                     xtype: 'toolbar',
                     //   cls: 'zermelo-error-messagebox',
@@ -491,39 +493,31 @@ Ext.define('Zermelo.view.SlideView', {
                         xtype: 'button',
 
                         locales: {
-                            text: 'own_schedule',
+                            text: 'own_schedule'
                         },
                         ui: 'normal',
                         handler: function() {
                             Zermelo.UserManager.setUser();
-                            if (messageShow)
-                                getAnnoucementsData(Ext.getCmp('messageList'));
-                            else
-                                getAnnoucementsData(Ext.getCmp('schedule'));
-                            refresh();
                             thisobj.closeContainer();
                             this.getParent().getParent().hide();
                         }
-                    }],
+                    }]
                 }, {
                     xtype: 'textfield',
                     label: '',
                     name: 'new_user_code',
                     id: 'new_user_code',
                     style: {
-                        'margin': '10px 10px 10px 10px',
+                        'margin': '10px 10px 10px 10px'
                     },
                     locales: {
                         placeHolder: 'enter_user_code'
-                    },
-
-
-
+                    }
                 }],
                 buttons: [{
                     itemId: 'ok',
                     locales: {
-                        text: 'ok',
+                        text: 'ok'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -540,12 +534,12 @@ Ext.define('Zermelo.view.SlideView', {
                                 buttons: [{
                                     itemId: 'ok',
                                     locales: {
-                                        text: 'ok',
+                                        text: 'ok'
                                     },
-
                                     ui: 'normal'
-                                }],
+                                }]
                             });
+                            thisobj.closeContainer();
                         } else {
                             Zermelo.UserManager.setUser(user_code);
                             if (messageShow)
@@ -561,7 +555,7 @@ Ext.define('Zermelo.view.SlideView', {
                 }, {
                     itemId: 'cancel',
                     locales: {
-                        text: 'cancel',
+                        text: 'cancel'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -569,12 +563,12 @@ Ext.define('Zermelo.view.SlideView', {
                         this.hide();
                     }
 
-                }],
+                }]
             });
 
         } else {
             if (list.isSelected(item) && this.config.closeOnSelect) {
-                this.closeContainer();
+                thisobj.closeContainer();
             }
         }
 
@@ -609,7 +603,7 @@ Ext.define('Zermelo.view.SlideView', {
                         me._cache[index].addListener('painted', function() {
                             // The slight delay here gives the component enough time to update before
                             // the close animation starts.
-                            Ext.defer(me.closeContainer, 100, me, [me.config.selectSlideDuration]);
+                            me.closeContainer();
                         });
                     }
 
@@ -879,7 +873,7 @@ Ext.define('Zermelo.view.SlideView', {
             store: this.store,
             docked: listPosition,
             scrollable: false,
-            height: Ext.Viewport.getWindowHeight(),
+            height: '100%',
             cls: 'zermelo-menu-list',
             itemCls: 'zermelo-menu-list-item',
             pressedCls: 'zermelo-menu-list-item-pressed',
@@ -1007,7 +1001,6 @@ Ext.define('Zermelo.view.SlideView', {
                                         scroller = scrollable.getScroller();
                                         scroller._scrollState = scroller.getDisabled();
 
-                                        console.log(scroller.getDisabled() != false);
 
                                         if (scroller._scrollState != false) {
                                             scroller.setDisabled(true);

@@ -89,7 +89,7 @@ Ext.define('Zermelo.view.Home', {
             maxDrag: 100,
             width: 100,
             style: {
-                'display': 'none',
+                'display': 'none'
             },
             items: []
 
@@ -109,19 +109,18 @@ Ext.define('Zermelo.view.Home', {
             slideButton: true,
             // display schedule image in slide menu list
             urlLogo: 'resources/images/myschedule.' + imageType,
-            title: 'myschedule',
             items: [{
                 // set toolbar with menu, refresh, annoucement buttons
                 xtype: 'toolbar',
                 //css class resources/images/app.css
                 cls: 'zermelo-toolbar',
                 id: 'toolbar_main',
-                centered: false,
                 height: '47px',
+                width: '100%',
                 // set title in multiple language
-                /*locales: {
-                    title: 'menu.myschedule'
-                },*/
+                locales: {
+                    title: 'menu.schedule_self'
+                },
                 docked: 'top',
                 // Add two buttons refresh and new announcement
                 items: [{
@@ -147,11 +146,10 @@ Ext.define('Zermelo.view.Home', {
 
                 id: 'toolbar_day_back',
                 hidden: true,
-                centered: false,
                 // set title in multiple language
-                /*locales: {
-                    title: 'menu.daily_schedule'
-                },*/
+                locales: {
+                    title: 'menu.schedule_self'
+                },
                 docked: 'top',
                 // Add two buttons refresh and new announcement 
                 items: [{
@@ -194,7 +192,7 @@ Ext.define('Zermelo.view.Home', {
                 }]
             }, {
                 // open schedule view
-                xtype: 'schedule',
+                xtype: 'schedule'
             }]
         }, {
             slideButton: true,
@@ -208,9 +206,9 @@ Ext.define('Zermelo.view.Home', {
                 height: '47px',
                 // set title in multiple language
                 id:'message_title',
-               /* locales: {
-                    title: 'menu.announcement'
-                },*/
+                locales: {
+                    title: 'menu.announcement_self'
+                },
                 docked: 'top',
                 items:[{
                     // refresh button
@@ -229,18 +227,18 @@ Ext.define('Zermelo.view.Home', {
                 }]
             }, {
                 // open message list view
-                xtype: 'messageList',
-            }],
+                xtype: 'messageList'
+            }]
         },
         {
             //switch user button
             urlLogo: 'resources/images/user_switch.' + imageType,
-            title: 'swtich User',
+            title: 'swtich User'
         },
-         {
+        {
             //logout and move to login screen
             urlLogo: 'resources/images/logout.' + imageType,
-            title: 'logout',
+            title: 'logout'
         }
         ]
     }
@@ -257,13 +255,14 @@ function refresh() {
 
     // call appointment api and announcement api at start
     getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, true, '', false);
-    getAnnoucementData(Ext.getCmp('schedule'))
+    getAnnoucementData(Ext.getCmp('schedule'));
 }
+
 function getAnnoucementsData(thisObj) {   
     Ext.Viewport.setMasked({
         xtype: 'loadmask',
         locale: {
-            message: 'loading',
+            message: 'loading'
         },
 
         indicator: true
@@ -282,7 +281,7 @@ function getAnnoucementsData(thisObj) {
             var decoded = Ext.JSON.decode(response.responseText);
             // create store
             mystore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid'],
+                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid']
             });
             mystore.setData(decoded.response.data);
             var readStroe = Ext.getStore('ReadmessageStore');
@@ -298,7 +297,7 @@ function getAnnoucementsData(thisObj) {
                     start: record.data.start,
                     end: record.data.end,
                     title: record.data.title,
-                    text: record.data.text, // in a real app you would not update a real field like this!
+                    text: record.data.text // in a real app you would not update a real field like this!
                 };
                 // add record into localstore one bye one
                 localStore.add(rec);

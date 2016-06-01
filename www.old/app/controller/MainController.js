@@ -69,7 +69,7 @@ Ext.define('Zermelo.controller.MainController', {
             messageList: 'messageList',
             messageDetails: 'messageDetails',
             home: 'home',
-            appointmentDetails: 'appointmentDetails',
+            appointmentDetails: 'appointmentDetails'
         },
         control: {
             announcementlist: {
@@ -81,7 +81,7 @@ Ext.define('Zermelo.controller.MainController', {
             appointmentDetails_back: {
                 tap: 'back_schedule'
             }
-        },
+        }
     },
     // Announcement list item tap
     onItemTap: function (list, index, target, record) {
