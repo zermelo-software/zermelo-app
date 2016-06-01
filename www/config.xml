@@ -3,7 +3,7 @@
 		xmlns:gap = "http://phonegap.com/ns/1.0"
 		id        = "nl.zermelo.opensource.App"
 		versionCode="10"
-		version   = "1.1.4">
+		version   = "1.2.0">
 		<name>Zermelo</name>
 		<description>Toont het schoolrooster en mededelingen van de school.</description>
 		<author href="http://www.zermelo.nl" email="info@zermelo.nl">Zermelo Software B.V.</author>
