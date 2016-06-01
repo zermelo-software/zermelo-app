@@ -62,7 +62,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                 cls: 'zermelo-toolbar-main',
                 height: '47px',
                 locales: {
-                    title: 'menu.announcement'
+                    title: 'menu.announcement_self'
                 },
                 items: [{
                     //back button in title bar

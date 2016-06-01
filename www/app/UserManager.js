@@ -55,35 +55,34 @@ Ext.define('Zermelo.UserManager', {
     },
 
     refreshData: function() {
-        refresh();
-        deleteappointmentdatas();
-        var store = Ext.getStore('AnnouncementStore');
-        store.getProxy().clear();
-        store.data.clear();
-        store.sync();
-        Ext.getCmp('fullCalendarView').renderFullCalendar();
         if (messageShow) {
             getAnnoucementsData(Ext.getCmp('messageList'));
         }
         else {
             getAnnoucementsData(Ext.getCmp('schedule'));
         }
+        refresh();
     },
 
     setTitles: function() {
-    	var title;
+    	var header;
+        var key_suffix = this.userIsSelf() ? 'self' : 'other';
+        var suffix = this.userIsSelf() ? '' : this.getUser();
 
-    	title = Ext.getCmp("toolbar_main");
-    	if (title)
-    		title.setTitle(this.getScheduleTitle());
+    	header = Ext.getCmp("toolbar_main");
+    	if (header) {
+    		header.title = Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+        }
 
-    	title = Ext.getCmp("toolbar_day_back");
-    	if (title)
-    		title.setTitle(this.getScheduleTitle());
+    	header = Ext.getCmp("toolbar_day_back");
+    	if (header) {
+    		header.title = Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+        }
 
-    	title = Ext.getCmp("message_title");
-    	if (title)
-    		title.setTitle(this.getAnnouncementsTitle());
+    	header = Ext.getCmp("message_title");
+    	if (header) {
+    		header.title = Ux.locale.Manager.get('menu.announcement_' + key_suffix) + suffix;
+        }
     },
 
     setUser: function(newCode) {
@@ -95,13 +94,5 @@ Ext.define('Zermelo.UserManager', {
     	this.setCode(newCode);
     	this.refreshData();
     	this.setTitles();
-    },
-
-    getScheduleTitle: function() {
-    	return this.userIsSelf() ? Ux.locale.Manager.get('menu.schedule_self') : Ux.locale.Manager.get('menu.schedule_other') + this.getUser();
-    },
-
-    getAnnouncementsTitle: function() {
-        return this.userIsSelf() ? Ux.locale.Manager.get('menu.announcement_self') : Ux.locale.Manager.get('menu.announcement_other') + this.getUser();
     }
 });
