@@ -11,7 +11,7 @@
 /www/plugins/cordova-plugin-whitelist/
 node_modules
 *.patch
-*/.sass-cache/*
+*sass-cache*
 www/build/
 www/cordova/*/*/
 www/cordova/www
