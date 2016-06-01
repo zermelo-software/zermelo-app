@@ -195,7 +195,11 @@ function authentication() {
 
             // get textfields data
             var value_institution = text_institution.getValue();
-            var value_code = number_code.getValue();
+            var value_code = number_code.getValue().toString();
+            // Number field strips leading zero's so we'll fill them back in here.
+            while (value_code.length < 12) {
+                value_code = '0' + value_code;
+            }
 
             // show loading screen
             thisObj.setMasked({
