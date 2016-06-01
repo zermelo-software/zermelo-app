@@ -523,23 +523,9 @@ Ext.define('Zermelo.view.SlideView', {
                     handler: function() {
                         var user_code = Ext.getCmp('new_user_code').getValue();
                         if (user_code.length == 0) {
-                            Ext.Msg.show({
-                                items: [{
-                                    xtype: 'label',
-                                    cls: 'zermelo-error-messagebox',
-                                    locales: {
-                                        html: 'enter_user_code'
-                                    }
-                                }],
-                                buttons: [{
-                                    itemId: 'ok',
-                                    locales: {
-                                        text: 'ok'
-                                    },
-                                    ui: 'normal'
-                                }]
-                            });
                             thisobj.closeContainer();
+                            this.hide();
+                            Zermelo.ErrorManager.showErrorBox('enter_user_code');
                         } else {
                             Zermelo.UserManager.setUser(user_code);
                             if (messageShow)
