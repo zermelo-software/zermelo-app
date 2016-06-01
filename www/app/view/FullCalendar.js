@@ -51,7 +51,6 @@ function doRefresh(me) {
     //    console.log('Refresh later update');
     //    getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, true, '', false);
     //} else {
-        console.log('Refresh first time');
         getAppointment(Ext.getCmp('schedule'), me, false, startTime, endTime, false, '', false);
     //}
 
@@ -79,7 +78,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         var me = this;
         me.callParent(arguments);
         me.on('activate', function(){
-            console.log('FullCalendar activate');
         	doRefresh(me);
         }, me, {
             single: true
@@ -269,7 +267,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                     } else {
                         // week picker 
                         picker_open = true;
-                        console.log("week view date picker");
                         // weeks array and 
                         var weekArray = new Array();
 

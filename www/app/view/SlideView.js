@@ -475,7 +475,6 @@ Ext.define('Zermelo.view.SlideView', {
 
         } else if (index == 2) {
             // display popup while pressed on change user
-            console.log("Show user picker");
             Ext.Msg.show({
                 style: {
                     'padding': '1em 1em 0.5em 1em'
@@ -560,7 +559,6 @@ Ext.define('Zermelo.view.SlideView', {
                     },
                     ui: 'normal',
                     handler: function() {
-                        console.log("this.hide");
                         thisobj.closeContainer();
                         this.hide();
                     }
@@ -570,7 +568,6 @@ Ext.define('Zermelo.view.SlideView', {
 
         } else {
             if (list.isSelected(item) && this.config.closeOnSelect) {
-                console.log("inside else");
                 thisobj.closeContainer();
             }
         }
@@ -1004,7 +1001,6 @@ Ext.define('Zermelo.view.SlideView', {
                                         scroller = scrollable.getScroller();
                                         scroller._scrollState = scroller.getDisabled();
 
-                                        console.log(scroller.getDisabled() != false);
 
                                         if (scroller._scrollState != false) {
                                             scroller.setDisabled(true);

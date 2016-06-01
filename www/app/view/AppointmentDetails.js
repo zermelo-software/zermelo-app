@@ -44,7 +44,6 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                 for (i = 0; i < multipleids.length; i++) {
 
                     resultObject = search(multipleids[i], eventArray);
-                    console.log(resultObject);
                     var container = Ext.create('Ext.Container', {
                         style: {
                             'font-size': '14px'

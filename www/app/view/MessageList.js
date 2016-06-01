@@ -129,7 +129,6 @@ function getAnnoucementData(thisObj) {
         },
         failure: function (response) {
             if (response.status == 403) {
-                console.log('getAppointment');
                 Zermelo.ErrorManager.showErrorBox('insufficient_permissions');
                 Zermelo.UserManager.setUser();
             }
