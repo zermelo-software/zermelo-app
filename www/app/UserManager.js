@@ -70,18 +70,18 @@ Ext.define('Zermelo.UserManager', {
         var suffix = this.userIsSelf() ? '' : this.getUser();
 
     	header = Ext.getCmp("toolbar_main");
-    	if (header) {
-    		header.title = Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+        if (header) {
+            header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
         }
 
     	header = Ext.getCmp("toolbar_day_back");
     	if (header) {
-    		header.title = Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+    		header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
         }
 
     	header = Ext.getCmp("message_title");
     	if (header) {
-    		header.title = Ux.locale.Manager.get('menu.announcement_' + key_suffix) + suffix;
+    		header.setTitle(Ux.locale.Manager.get('menu.announcement_' + key_suffix) + suffix);
         }
     },
 
@@ -94,5 +94,9 @@ Ext.define('Zermelo.UserManager', {
     	this.setCode(newCode);
     	this.refreshData();
     	this.setTitles();
+    },
+
+    getScheduleTitle: function() {
+        return Ux.locale.Manager.get('menu.schedule_self');
     }
 });
