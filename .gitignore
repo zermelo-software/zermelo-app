@@ -16,6 +16,8 @@ www/build/
 www/cordova/*/*/
 www/cordova/www
 conversion/
-*.old
+*.old*
 zip.sh
 *.keystore
+*.png
+*.svg
