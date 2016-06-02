@@ -89,7 +89,8 @@ var picker_close = false;
 var refreshDate;
 var messageShow = false;
 var userChange = false;
-var localStore;
+var localStore = {};
+localStore.getCount = function() {return 1};
 var full_calendar_obj;
 Ext
 		.application({
@@ -121,17 +122,21 @@ Ext
 					'AppointmentDetails'
 			],
 
+			models : ['Appointment', 'Announcement'],
+
 			// controller load
 			controllers : ['MainController'],
 
 			// store load
-			stores : [ 'AnnouncementStore', 'ReadmessageStore' ],
+			stores : [ 'AnnouncementStore', 'ReadmessageStore', 'AppointmentStore'],
 
 			isIconPrecomposed : true,
 
 			// Launch application
 
 			launch : function() {
+				Ext.create('Zermelo.store.AppointmentStore');
+				Ext.create('Zermelo.store.AnnouncementStore')
 				Ext.Msg.defaultAllowedConfig.showAnimation = false;
 				// display magnified glass press on textbox
 				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;

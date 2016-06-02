@@ -28,7 +28,7 @@
 Ext.define('Zermelo.store.ReadmessageStore', {
     extend: 'Ext.data.Store',
     config: {
-        fields: ['readId'],
+        fields: [{name: 'readId', isUnique: true}],
         proxy: {
             type: 'localstorage',
             id: 'read'

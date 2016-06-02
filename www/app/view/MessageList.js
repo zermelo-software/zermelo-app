@@ -99,6 +99,7 @@ function getAnnoucementData(thisObj) {
         useDefaultXhrHeader: false,
 
         success: function (response) {
+            return;
             var decoded = Ext.JSON.decode(response.responseText);
             // create store
             mystore = Ext.create('Ext.data.Store', {

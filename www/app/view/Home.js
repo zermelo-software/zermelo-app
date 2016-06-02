@@ -277,32 +277,24 @@ function getAnnoucementsData(thisObj) {
         useDefaultXhrHeader: false,
 
         success: function (response) {
-           // console.log(response);
-            var decoded = Ext.JSON.decode(response.responseText);
-            // create store
-            mystore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid']
-            });
-            mystore.setData(decoded.response.data);
-            var readStroe = Ext.getStore('ReadmessageStore');
-            // all data remove from localstore
+            var decoded = Ext.JSON.decode(response.responseText).response.data;
 
-            localStore = new Zermelo.store.AnnouncementStore();
-            localStore.removeAll();
-            // set data into store
+            var announcementStore = Ext.getStore('AnnouncementStore');
 
-            mystore.each(function (record) {
-                var rec = {
-                    announcement_id: record.data.id,
-                    start: record.data.start,
-                    end: record.data.end,
-                    title: record.data.title,
-                    text: record.data.text // in a real app you would not update a real field like this!
-                };
-                // add record into localstore one bye one
-                localStore.add(rec);
-                localStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
+            decoded.forEach(function(record) {
+                var announcement = announcementStore.getById(record.id);
+                if (announcement) {
+                    delete record.id;
+                    announcement.set(record);
+                    announcement.save();
+                }
+                else {
+                    announcement = Ext.create('Zermelo.model.Announcement');
+                    announcementStore.insert(0, announcement);
+                }
             });
+            announcementStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
+
             // loading screen disappear
             Ext.Viewport.setMasked(false);
             thisObj.show();

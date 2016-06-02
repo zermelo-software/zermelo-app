@@ -95,13 +95,27 @@ function fix(x) {
     @param datepickerGo:goto selected date or week
     @param week:date
 */
-function insertData(decode, currentObj, refresh, m, nextprev, datepickerGo, week) {
+function insertData(input_list, currentObj, refresh, m, nextprev, datepickerGo, week) {
+    decode = input_list;
     refreshData = refresh
     currentobj = currentObj;
     me = m;
     nextPrev = nextprev;
     datepickergo = datepickerGo;
     Week = week;
+
+    var appointment_store = Ext.getStore('appointment_store');
+
+    input_list.forEach(function(input) {
+        var weeknumber = new Date(input.start * 1000).getWeek();
+        input.weeknumber = weeknumber + "" + new Date(input.start * 1000).getFullYear();
+        appointment_store.insert(input);
+    });
+
+    appointment_store.each(function(record) {
+        console.log(record);
+    });
+
     db.transaction(function insertData(tx) {
             var q = 'INSERT INTO APPOINTMENTS (' +
                 'appointment_id ,' +
