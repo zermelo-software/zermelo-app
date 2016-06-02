@@ -10,6 +10,10 @@
 		<!-- <preference name='phonegap-version' value='cli-5.1.1' /> -->
 		<!-- <preference name="phonegap-version" value="3.7.0" /> -->
 
+		<access origin="https://*.zportal.nl/*" />
+        <plugin name="cordova-plugin-whitelist" version="1" />
+        <allow-intent href="https://*.zportal.nl/*" />
+
 		<preference name="orientation" value="portrait" />
 		<preference name="autorotate" value="false" readonly="true"/> <!-- Lock screen rotation on Android -->
 		<preference name="fullscreen" value="false" />
@@ -60,8 +64,6 @@
 		<gap:splash src="resources/screens/screen-iphone-portrait-568h-2x.png" gap:platform="ios"     width="640" height="1136" />
 		<gap:splash src="resources/screens/screen-ipad-portrait.png"           gap:platform="ios"     width="768" height="1024" />
 		<gap:splash src="resources/screens/screen-ipad-landscape.png"          gap:platform="ios"     width="1024" height="768" />
-
-		<access origin="*.zportal.nl" />
 
 		<!-- Icons to make Apples Application Loader happy -->
 		<icon src="resources/icons/57.png" width="57" height="57" />
