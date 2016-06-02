@@ -607,14 +607,10 @@ Ext.define('Zermelo.view.SlideView', {
             }
             if (index == 0) {
                 messageShow = false;
-                if (Zermelo.UserManager.pluckUserChanged()) {
-                    getAnnoucementsData(Ext.getCmp('schedule'));
-                }
+                Zermelo.UserManager.refreshDataIfNeeded()
             } else {
                 messageShow = true;
-                if (Zermelo.UserManager.pluckUserChanged()) {
-                    getAnnoucementsData(Ext.getCmp('messageList'));
-                }
+                Zermelo.UserManager.refreshDataIfNeeded()
             }
         }
     },

@@ -54,6 +54,13 @@ Ext.define('Zermelo.UserManager', {
         this.setAccessToken('');
     },
 
+    refreshDataIfNeeded: function() {
+        if (this.userChanged == false)
+            return;
+        this.userChanged = false;
+        this.refreshData();
+    },
+
     refreshData: function() {
         if (messageShow) {
             getAnnoucementsData(Ext.getCmp('messageList'));
@@ -99,15 +106,5 @@ Ext.define('Zermelo.UserManager', {
 
     getScheduleTitle: function() {
         return Ux.locale.Manager.get('menu.schedule_self');
-    },
-
-    pluckUserChanged: function() {
-        if (this.userChanged) {
-            this.userChanged = false;
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 });
