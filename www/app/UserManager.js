@@ -85,11 +85,6 @@ Ext.define('Zermelo.UserManager', {
     	if (header) {
     		header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
         }
-
-    	header = Ext.getCmp("message_title");
-    	if (header) {
-    		header.setTitle(Ux.locale.Manager.get('menu.announcement_' + key_suffix) + suffix);
-        }
     },
 
     setUser: function(newCode) {
