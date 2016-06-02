@@ -528,10 +528,6 @@ Ext.define('Zermelo.view.SlideView', {
                             Zermelo.ErrorManager.showErrorBox('enter_user_code');
                         } else {
                             Zermelo.UserManager.setUser(user_code);
-                            if (messageShow)
-                                getAnnoucementsData(Ext.getCmp('messageList'));
-                            else
-                                getAnnoucementsData(Ext.getCmp('schedule'));
                             thisobj.closeContainer();
                             this.hide();
                         }
@@ -611,8 +607,14 @@ Ext.define('Zermelo.view.SlideView', {
             }
             if (index == 0) {
                 messageShow = false;
+                if (Zermelo.UserManager.pluckUserChanged()) {
+                    getAnnoucementsData(Ext.getCmp('schedule'));
+                }
             } else {
                 messageShow = true;
+                if (Zermelo.UserManager.pluckUserChanged()) {
+                    getAnnoucementsData(Ext.getCmp('messageList'));
+                }
             }
         }
     },

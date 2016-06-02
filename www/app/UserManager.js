@@ -91,6 +91,7 @@ Ext.define('Zermelo.UserManager', {
     	if (this.code == newCode)
     		return;
 
+        this.userChanged = true;
     	this.setCode(newCode);
     	this.refreshData();
     	this.setTitles();
@@ -98,5 +99,15 @@ Ext.define('Zermelo.UserManager', {
 
     getScheduleTitle: function() {
         return Ux.locale.Manager.get('menu.schedule_self');
+    },
+
+    pluckUserChanged: function() {
+        if (this.userChanged) {
+            this.userChanged = false;
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 });
