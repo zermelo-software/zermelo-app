@@ -89,12 +89,6 @@ var picker_close = false;
 var refreshDate;
 var messageShow = false;
 var userChange = false;
-var localStore = {
-	getCount: function() {return 1},
-	getAt: function() {return {get: function() {return 1;}};},
-	findRecord: function() {return {get: function() {return 1;}, set: function() {return 1;}};},
-	sync: function() {return 1;}
-};
 var full_calendar_obj;
 Ext
 		.application({
