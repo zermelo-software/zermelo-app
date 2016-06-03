@@ -279,7 +279,7 @@ function getannouncementsData(thisObj) {
         success: function (response) {
             var decoded = Ext.JSON.decode(response.responseText).response.data;
 
-            var announcementStore = Ext.getStore('Announcementshoi');
+            var announcementStore = Ext.getStore('Announcements');
             announcementStore.each(function(record) {
                 var stillExists = 
                 decoded.some(function(entry, index) {

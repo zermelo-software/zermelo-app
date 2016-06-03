@@ -34,14 +34,15 @@ Ext.define("Zermelo.view.MessageList", {
     requires: ['Ext.data.proxy.JsonP'],
     xtype: 'messageList',
     id: 'messageList',
+    store: 'Announcements',
     config: {
         listeners: {
             show: function () {
                 messageShow=true;
-                if (localStore.getCount() == 0) {
+                if (Ext.getStore('Announcements').getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
                 }
-				dataFilter(this, localStore);
+				dataFilter(this, Ext.getStore('Announcements'));
 				Zermelo.UserManager.setTitles();
 
             }, //end show
@@ -50,10 +51,10 @@ Ext.define("Zermelo.view.MessageList", {
              },
             // record update with read and unread
             painted_disabled: function () {
-                if (localStore.getCount() == 0) {
+                if (Ext.getStore('Announcements').getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
                 }
-                dataFilter(this, localStore);
+                dataFilter(this, Ext.getStore('Announcements'));
             } //end painted
         }, // end listeners
         layout: 'fit',
@@ -76,9 +77,8 @@ Ext.define("Zermelo.view.MessageList", {
             itemCls: 'zermelo-message-list-item',
             // css class resources/css/app.css selected items
             selectedCls: 'zermelo-menu-list-item-select',
-            //data store
-            store: localStore,
             grouped: false,
+            store: 'Announcements',
             itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
         }]
     },
@@ -142,81 +142,25 @@ function getAnnoucementData(thisObj) {
 }
 // filter data with read, unread and valid with feature date
 function dataFilter(thisObj, localStore) {
-    // var readStore = Ext.getStore('ReadmessageStore');
-    var announcement_id=[];
-    // localStore = Ext.getStore('Announcements');
-    for(i=0;i<localStore.getCount();i++)
-    {
-        announcement_id.push({id:localStore.getAt(i).get('announcement_id')});
-    }
-    // read and unread data update
-    for (i = 0; i < localStore.getCount(); i++) {
-        var flag = false;
-        var record = localStore.findRecord('announcement_id',announcement_id[i].id);
-        var id = record.get('announcement_id');
-        // for (j = 0; j < readStore.getCount(); j++) {
-        //     var readid = readStore.getAt(j);
-        //     if (id == readid.get('readId')) {
-        //         flag = true;
-        //     }
-        // }
-        if (flag) {
-            record.set('read', 1);
-        } else {
-            record.set('read', 0);
-        }
-        localStore.sync();
-    }
-   
-    //only feature date valid 
-    for (i = 0;false && i < announcement_id.length; i++) {
-        var record = localStore.findRecord('announcement_id',announcement_id[i].id);
-        var startDate = new Date(record.get('start') * 1000);
-        var endDate = new Date(record.get('end') * 1000);
-        var current_date = new Date();
-        var format_startDate = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate());
-        var format_endDate = new Date(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate())
-        var format_currentDate = new Date(current_date.getUTCFullYear(), current_date.getUTCMonth(), current_date.getUTCDate())
-        if (format_startDate.getTime() > format_currentDate.getTime()) {
-			// not visible yet
-			record.set('valid', 'false');
-        } else if (format_endDate.getTime() >= format_currentDate.getTime()) {
-			// visible
-            record.set('valid', 'true');
-        } else {
-			// no longer visible
-            record.set('valid', 'false');
-        }
-        localStore.sync();
-    }
-    // localStore.filter([{
-    //     property: 'read',
-    //     value: 0
-    // }, {
-    //     property: 'valid',
-    //     value: 'true'
-    // }]);
-   
-    Ext.getCmp('home')._slideButtonConfig.setBadgeText(localStore.getCount());
+    // return;
+    announcementStore = Ext.getStore('Announcements');
+    var count = 0;
+    announcementStore.each(function(record) {
+        record.set('valid', record.start * 1000 >= Date.now() && record.end * 1000 <= Date.now());
+        if(!record.read)
+            count++;
+    });
+    announcementStore.sync();
+
+    Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
     // In menu announcement count display
-    if(localStore.getCount()!=0)
+    if(count!=0)
     {
         document.getElementById('messageCount').style.display="";
-        document.getElementById('messageCount').innerHTML=localStore.getCount();
+        document.getElementById('messageCount').innerHTML=count;
     }
     else
     {
         document.getElementById('messageCount').style.display="none";
     }
-    // localStore.clearFilter();
-    // localStore.filter('valid', 'true');
-    // localStore.sort([{property:'start', direction:'ASC'},{property:'end', direction:'ASC'}]);
-    
-    var list = Ext.getCmp('announcementlist')
-	if (list) {
-		if (list.getStore() != null)
-			list.getStore().removeAll(); // to prevent an error inside setStore
-		list.setStore(localStore);
-		list.refresh();
-	}
 }

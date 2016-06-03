@@ -31,7 +31,7 @@ Ext.define('Zermelo.store.AnnouncementStore', {
     requires: ['Ext.data.proxy.LocalStorage', 'Zermelo.model.Announcement'],
     config: {
         model: 'Zermelo.model.Announcement',
-        storeId: 'Announcementshoi',
+        storeId: 'Announcements',
         // //sorting field name
         // sorters: 'start',
         // grouper: {

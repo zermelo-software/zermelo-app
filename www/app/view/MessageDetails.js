@@ -32,16 +32,13 @@ Ext.define('Zermelo.view.MessageDetails', {
     id: 'messageDetails',
     config: {
         listeners: {
-            show: function () {
+            show: function (messageDetails) {
                 // check if this message is unread then add in localstoreage message id as read
                 if (messageDetails.read == 0) {
-                    return;
-                    // var mystore = Ext.getStore('ReadmessageStore');
-                    // mystore.add({
-                    //     readId: messageDetails.announcement_id
-                    // });
-                    // mystore.sync();
-                    // Ext.getCmp('messageList').refresh();
+                    var announcementStore = Ext.getStore('Announcements');
+                    announcementStore.findById(messageDetails.id).set('read', true);
+                    announcementStore.sync();
+                    Ext.getCmp('messageList').refresh();
                 }
                 // set message details in labels
                 Ext.getCmp('messageDetails_title_lbl').setHtml(messageDetails.title);

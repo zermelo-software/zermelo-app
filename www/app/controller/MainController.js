@@ -91,10 +91,10 @@ Ext.define('Zermelo.controller.MainController', {
         messagedetails = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
         //get selected index record
         var rec = list.getStore().getAt(index);
-        messageDetails = rec.data;
+        // messageDetails = rec.data;
         //add messagedetail in viewport
         Ext.Viewport.add(messagedetails);
-        messagedetails.show();
+        messagedetails.show(rec.data);
         home.hide();
         currentView="messageDetail";
     },
