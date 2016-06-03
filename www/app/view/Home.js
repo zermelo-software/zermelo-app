@@ -221,7 +221,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '4px'
                     },
                     handler: function () {
-                        getannouncementsData(Ext.getCmp('messageList'))
+                        Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'))
 
                     }
                 }]
@@ -255,81 +255,6 @@ function refresh() {
 
     // call appointment api and announcement api at start
     getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, true, '', false);
-    getannouncementData(Ext.getCmp('schedule'));
+    Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('schedule'));
 }
 
-function getannouncementsData(thisObj) {   
-    Ext.Viewport.setMasked({
-        xtype: 'loadmask',
-        locale: {
-            message: 'loading'
-        },
-
-        indicator: true
-        });
-    
-    thisObj.hide();
-
-    // send request to server using ajax with http GET
-    Ext.Ajax.request({
-        url: 'https://' + Zermelo.UserManager.getInstitution() + '.zportal.nl/api/v3/announcements?current=true&user=' + Zermelo.UserManager.getUser() + '&access_token=' + Zermelo.UserManager.getAccessToken(), // url : this.getUrl(),
-        method: "GET",
-        useDefaultXhrHeader: false,
-
-        success: function (response) {
-            var decoded = Ext.JSON.decode(response.responseText).response.data;
-
-            var announcementStore = Ext.getStore('Announcements');
-            announcementStore.each(function(record) {
-                var stillExists = 
-                decoded.some(function(entry, index) {
-                    if (record.announcement_id != entry.id)
-                        return false;
-
-                    record.set('start', decoded[index].start);
-                    record.set('end', decoded[index].end);
-                    record.set('title', decoded[index].title);
-                    record.set('text', decoded[index].text);    
-                    decoded.splice(index, 1);
-                    return true;
-                });
-
-                if (!stillExists)
-                    announcementStore.remove(record);
-                record.commit();
-            });
-            announcementStore.sync();
-
-            console.log(decoded);
-            decoded.forEach(function(record) {
-                // record.announcement_id = record.id;
-                // // record.id = 0;
-                // delete record.id;
-                // announcement = Ext.create('Zermelo.model.Announcement');
-                // announcement.set(record);
-                announcementStore.add({
-                    announcement_id: record.id,
-                    start: record.start,
-                    end: record.end,
-                    title: record.title,
-                    text: record.text
-                });
-            });
-            announcementStore.sync();
-            // loading screen disappear
-            Ext.Viewport.setMasked(false);
-            thisObj.show();
-        },
-        failure: function (response) {
-            if (response.status == 403) {
-                Zermelo.ErrorManager.showErrorBox('insufficient_permissions');
-                Zermelo.UserManager.setUser();
-            }
-            else {
-                Zermelo.ErrorManager.showErrorBox('network_error');
-            }
-            Ext.Viewport.setMasked(false);
-            thisObj.show();
-        }
-    });
-}

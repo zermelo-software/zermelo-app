@@ -83,63 +83,10 @@ Ext.define("Zermelo.view.MessageList", {
         }]
     },
     refresh: function() {
-        getAnnoucementData(this);
+        Zermelo.AjaxManager.getAnnoucementData(this);
     }
 });
 
-//below function fetches the list of annoucement using webservice.
-function getAnnoucementData(thisObj) {       
-    if (!Zermelo.UserManager.loggedIn())
-		return;
-    // send request to server using ajax
-    Ext.Ajax.request({
-        url: 'https://' + Zermelo.UserManager.getInstitution() + '.zportal.nl/api/v3/announcements?current=true&user=~me&access_token=' + Zermelo.UserManager.getAccessToken(), // url : this.getUrl(),
-        method: "GET",
-        useDefaultXhrHeader: false,
-
-        success: function (response) {
-            return;
-            // var decoded = Ext.JSON.decode(response.responseText);
-            // // create store
-            // mystore = Ext.create('Ext.data.Store', {
-            //     fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid']
-            // });
-            // mystore.setData(decoded.response.data);
-            // var readStore = Ext.getStore('ReadmessageStore');
-            // // all data remove from localstore
-
-            // localStore = new Zermelo.store.AnnouncementStore();
-            // localStore.removeAll();
-            // // set data into sotre
-
-            // mystore.each(function (record) {
-            //     var rec = {
-            //         announcement_id: record.data.id,
-            //         start: record.data.start,
-            //         end: record.data.end,
-            //         title: record.data.title,
-            //         text: record.data.text // in a real app you would not update a real field like this!
-            //     };
-            //     // add reocrd into localstore one bye one
-            //     localStore.add(rec);
-            //     localStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
-            // });
-            // dataFilter(thisObj, localStore);
-            // //thisObj.unmask();
-        },
-        failure: function (response) {
-            if (response.status == 403) {
-                Zermelo.ErrorManager.showErrorBox('insufficient_permissions');
-                Zermelo.UserManager.setUser();
-            }
-            else {
-                Zermelo.ErrorManager.showErrorBox('network_error');
-            }
-            Ext.Viewport.setMasked(false);
-            thisObj.show();
-        }
-    });
-}
 // filter data with read, unread and valid with feature date
 function dataFilter(thisObj, localStore) {
     // return;

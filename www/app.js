@@ -111,7 +111,8 @@ Ext
 					'Ux.locale.override.st.Msgbox',
 					'Ux.locale.override.st.LoadMask',
 					'Zermelo.UserManager',
-					'Zermelo.ErrorManager'
+					'Zermelo.ErrorManager',
+					'Zermelo.AjaxManager'
 					],
 
 			// views load

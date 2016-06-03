@@ -54,7 +54,7 @@ function doRefresh(me) {
         getAppointment(Ext.getCmp('schedule'), me, false, startTime, endTime, false, '', false);
     //}
 
-    getAnnoucementData(Ext.getCmp('messageList'));
+    Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
 }
 
 var weeknumbers = [];
