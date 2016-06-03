@@ -104,17 +104,17 @@ function insertData(input_list, currentObj, refresh, m, nextprev, datepickerGo, 
     datepickergo = datepickerGo;
     Week = week;
 
-    var appointment_store = Ext.getStore('appointment_store');
+    // var appointment_store = Ext.getStore('Zermelo.store.AppointmentStore');
 
-    input_list.forEach(function(input) {
-        var weeknumber = new Date(input.start * 1000).getWeek();
-        input.weeknumber = weeknumber + "" + new Date(input.start * 1000).getFullYear();
-        appointment_store.insert(input);
-    });
+    // input_list.forEach(function(input) {
+    //     var weeknumber = new Date(input.start * 1000).getWeek();
+    //     input.weeknumber = weeknumber + "" + new Date(input.start * 1000).getFullYear();
+    //     appointment_store.insert(input);
+    // });
 
-    appointment_store.each(function(record) {
-        console.log(record);
-    });
+    // appointment_store.each(function(record) {
+    //     console.log(record);
+    // });
 
     db.transaction(function insertData(tx) {
             var q = 'INSERT INTO APPOINTMENTS (' +

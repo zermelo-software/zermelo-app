@@ -110,7 +110,7 @@ Ext.define('Zermelo.view.Home', {
             // display schedule image in slide menu list
             urlLogo: 'resources/images/myschedule.' + imageType,
             items: [{
-                // set toolbar with menu, refresh, annoucement buttons
+                // set toolbar with menu, refresh, announcement buttons
                 xtype: 'toolbar',
                 //css class resources/images/app.css
                 cls: 'zermelo-toolbar',
@@ -199,7 +199,7 @@ Ext.define('Zermelo.view.Home', {
             urlLogo: 'resources/images/messages.' + imageType,
             title: 'Messages',
             items: [{
-                // set toolbar with menu, refresh, annoucement buttons
+                // set toolbar with menu, refresh, announcement buttons
                 xtype: 'toolbar',
                 //css class resources/images/app.css
                 cls: 'zermelo-toolbar-main',
@@ -221,7 +221,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '4px'
                     },
                     handler: function () {
-                        getAnnoucementsData(Ext.getCmp('messageList'))
+                        getannouncementsData(Ext.getCmp('messageList'))
 
                     }
                 }]
@@ -255,10 +255,10 @@ function refresh() {
 
     // call appointment api and announcement api at start
     getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, true, '', false);
-    getAnnoucementData(Ext.getCmp('schedule'));
+    getannouncementData(Ext.getCmp('schedule'));
 }
 
-function getAnnoucementsData(thisObj) {   
+function getannouncementsData(thisObj) {   
     Ext.Viewport.setMasked({
         xtype: 'loadmask',
         locale: {
@@ -279,22 +279,43 @@ function getAnnoucementsData(thisObj) {
         success: function (response) {
             var decoded = Ext.JSON.decode(response.responseText).response.data;
 
-            var announcementStore = Ext.getStore('AnnouncementStore');
+            var announcementStore = Ext.getStore('Announcementshoi');
+            announcementStore.each(function(record) {
+                var stillExists = 
+                decoded.some(function(entry, index) {
+                    if (record.announcement_id != entry.id)
+                        return false;
 
-            decoded.forEach(function(record) {
-                var announcement = announcementStore.getById(record.id);
-                if (announcement) {
-                    delete record.id;
-                    announcement.set(record);
-                    announcement.save();
-                }
-                else {
-                    announcement = Ext.create('Zermelo.model.Announcement');
-                    announcementStore.insert(0, announcement);
-                }
+                    record.set('start', decoded[index].start);
+                    record.set('end', decoded[index].end);
+                    record.set('title', decoded[index].title);
+                    record.set('text', decoded[index].text);    
+                    decoded.splice(index, 1);
+                    return true;
+                });
+
+                if (!stillExists)
+                    announcementStore.remove(record);
+                record.commit();
             });
-            announcementStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
+            announcementStore.sync();
 
+            console.log(decoded);
+            decoded.forEach(function(record) {
+                // record.announcement_id = record.id;
+                // // record.id = 0;
+                // delete record.id;
+                // announcement = Ext.create('Zermelo.model.Announcement');
+                // announcement.set(record);
+                announcementStore.add({
+                    announcement_id: record.id,
+                    start: record.start,
+                    end: record.end,
+                    title: record.title,
+                    text: record.text
+                });
+            });
+            announcementStore.sync();
             // loading screen disappear
             Ext.Viewport.setMasked(false);
             thisObj.show();

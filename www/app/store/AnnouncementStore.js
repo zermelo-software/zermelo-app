@@ -26,30 +26,31 @@
  */
 
 Ext.define('Zermelo.store.AnnouncementStore', {
-    id: 'AnnouncementStore',
+    // id: 'AnnouncementStore',
     extend: 'Ext.data.Store',
-    requires: ['Ext.data.proxy.LocalStorage'],
+    requires: ['Ext.data.proxy.LocalStorage', 'Zermelo.model.Announcement'],
     config: {
         model: 'Zermelo.model.Announcement',
-        //sorting field name
-        sorters: 'start',
-        grouper: {
-            sortProperty: 'start',
-            groupFn: function (record) {
-                // set group header
-                var d = new Date(record.get('start') * 1000);
-                var endDate = new Date(record.get('end') * 1000).setSeconds(-1);
-                if (Ext.Date.format(d, 'F j, Y') == Ext.Date.format(new Date(endDate), 'F j, Y'))
-                    return Ext.Date.format(d, 'F j, Y');
-                else
-                    return Ext.Date.format(d, 'F j, Y') + '-' + Ext.Date.format(new Date(endDate), 'F j, Y');
-            }
-        },
+        storeId: 'Announcementshoi',
+        // //sorting field name
+        // sorters: 'start',
+        // grouper: {
+        //     sortProperty: 'start',
+        //     groupFn: function (record) {
+        //         // set group header
+        //         var d = new Date(record.get('start') * 1000);
+        //         var endDate = new Date(record.get('end') * 1000).setSeconds(-1);
+        //         if (Ext.Date.format(d, 'F j, Y') == Ext.Date.format(new Date(endDate), 'F j, Y'))
+        //             return Ext.Date.format(d, 'F j, Y');
+        //         else
+        //             return Ext.Date.format(d, 'F j, Y') + '-' + Ext.Date.format(new Date(endDate), 'F j, Y');
+        //     }
+        // },
         proxy: {
             type: 'localstorage',
-            id: 'announcementstore'
+            id: 'AnnouncementStore'
         },
-        root: 'user',
-        autoLoad: true
+        autoLoad: true,
+        autoSync: true
     }
 });

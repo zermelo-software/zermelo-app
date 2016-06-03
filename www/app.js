@@ -89,8 +89,12 @@ var picker_close = false;
 var refreshDate;
 var messageShow = false;
 var userChange = false;
-var localStore = {};
-localStore.getCount = function() {return 1};
+var localStore = {
+	getCount: function() {return 1},
+	getAt: function() {return {get: function() {return 1;}};},
+	findRecord: function() {return {get: function() {return 1;}, set: function() {return 1;}};},
+	sync: function() {return 1;}
+};
 var full_calendar_obj;
 Ext
 		.application({
@@ -122,21 +126,21 @@ Ext
 					'AppointmentDetails'
 			],
 
-			models : ['Appointment', 'Announcement'],
+			models : ['Zermelo.model.Appointment', 'Zermelo.model.Announcement'],
 
 			// controller load
 			controllers : ['MainController'],
 
 			// store load
-			stores : [ 'AnnouncementStore', 'ReadmessageStore', 'AppointmentStore'],
+			stores : [ 'AnnouncementStore', 'AppointmentStore'],
 
 			isIconPrecomposed : true,
 
 			// Launch application
 
 			launch : function() {
-				Ext.create('Zermelo.store.AppointmentStore');
-				Ext.create('Zermelo.store.AnnouncementStore')
+				// Ext.create('Zermelo.store.AppointmentStore');
+				// Ext.create('Zermelo.store.AnnouncementStore');
 				Ext.Msg.defaultAllowedConfig.showAnimation = false;
 				// display magnified glass press on textbox
 				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;

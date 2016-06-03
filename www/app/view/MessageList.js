@@ -91,7 +91,6 @@ Ext.define("Zermelo.view.MessageList", {
 function getAnnoucementData(thisObj) {       
     if (!Zermelo.UserManager.loggedIn())
 		return;
-    
     // send request to server using ajax
     Ext.Ajax.request({
         url: 'https://' + Zermelo.UserManager.getInstitution() + '.zportal.nl/api/v3/announcements?current=true&user=~me&access_token=' + Zermelo.UserManager.getAccessToken(), // url : this.getUrl(),
@@ -100,33 +99,33 @@ function getAnnoucementData(thisObj) {
 
         success: function (response) {
             return;
-            var decoded = Ext.JSON.decode(response.responseText);
-            // create store
-            mystore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid']
-            });
-            mystore.setData(decoded.response.data);
-            var readStore = Ext.getStore('ReadmessageStore');
-            // all data remove from localstore
+            // var decoded = Ext.JSON.decode(response.responseText);
+            // // create store
+            // mystore = Ext.create('Ext.data.Store', {
+            //     fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid']
+            // });
+            // mystore.setData(decoded.response.data);
+            // var readStore = Ext.getStore('ReadmessageStore');
+            // // all data remove from localstore
 
-            localStore = new Zermelo.store.AnnouncementStore();
-            localStore.removeAll();
-            // set data into sotre
+            // localStore = new Zermelo.store.AnnouncementStore();
+            // localStore.removeAll();
+            // // set data into sotre
 
-            mystore.each(function (record) {
-                var rec = {
-                    announcement_id: record.data.id,
-                    start: record.data.start,
-                    end: record.data.end,
-                    title: record.data.title,
-                    text: record.data.text // in a real app you would not update a real field like this!
-                };
-                // add reocrd into localstore one bye one
-                localStore.add(rec);
-                localStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
-            });
-            dataFilter(thisObj, localStore);
-            //thisObj.unmask();
+            // mystore.each(function (record) {
+            //     var rec = {
+            //         announcement_id: record.data.id,
+            //         start: record.data.start,
+            //         end: record.data.end,
+            //         title: record.data.title,
+            //         text: record.data.text // in a real app you would not update a real field like this!
+            //     };
+            //     // add reocrd into localstore one bye one
+            //     localStore.add(rec);
+            //     localStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
+            // });
+            // dataFilter(thisObj, localStore);
+            // //thisObj.unmask();
         },
         failure: function (response) {
             if (response.status == 403) {
@@ -143,8 +142,9 @@ function getAnnoucementData(thisObj) {
 }
 // filter data with read, unread and valid with feature date
 function dataFilter(thisObj, localStore) {
-    var readStore = Ext.getStore('ReadmessageStore');
+    // var readStore = Ext.getStore('ReadmessageStore');
     var announcement_id=[];
+    // localStore = Ext.getStore('Announcements');
     for(i=0;i<localStore.getCount();i++)
     {
         announcement_id.push({id:localStore.getAt(i).get('announcement_id')});
@@ -154,12 +154,12 @@ function dataFilter(thisObj, localStore) {
         var flag = false;
         var record = localStore.findRecord('announcement_id',announcement_id[i].id);
         var id = record.get('announcement_id');
-        for (j = 0; j < readStore.getCount(); j++) {
-            var readid = readStore.getAt(j);
-            if (id == readid.get('readId')) {
-                flag = true;
-            }
-        }
+        // for (j = 0; j < readStore.getCount(); j++) {
+        //     var readid = readStore.getAt(j);
+        //     if (id == readid.get('readId')) {
+        //         flag = true;
+        //     }
+        // }
         if (flag) {
             record.set('read', 1);
         } else {
@@ -169,7 +169,7 @@ function dataFilter(thisObj, localStore) {
     }
    
     //only feature date valid 
-    for (i = 0; i < announcement_id.length; i++) {
+    for (i = 0;false && i < announcement_id.length; i++) {
         var record = localStore.findRecord('announcement_id',announcement_id[i].id);
         var startDate = new Date(record.get('start') * 1000);
         var endDate = new Date(record.get('end') * 1000);
@@ -189,13 +189,13 @@ function dataFilter(thisObj, localStore) {
         }
         localStore.sync();
     }
-    localStore.filter([{
-        property: 'read',
-        value: 0
-    }, {
-        property: 'valid',
-        value: 'true'
-    }]);
+    // localStore.filter([{
+    //     property: 'read',
+    //     value: 0
+    // }, {
+    //     property: 'valid',
+    //     value: 'true'
+    // }]);
    
     Ext.getCmp('home')._slideButtonConfig.setBadgeText(localStore.getCount());
     // In menu announcement count display
@@ -208,9 +208,9 @@ function dataFilter(thisObj, localStore) {
     {
         document.getElementById('messageCount').style.display="none";
     }
-    localStore.clearFilter();
-    localStore.filter('valid', 'true');
-    localStore.sort([{property:'start', direction:'ASC'},{property:'end', direction:'ASC'}]);
+    // localStore.clearFilter();
+    // localStore.filter('valid', 'true');
+    // localStore.sort([{property:'start', direction:'ASC'},{property:'end', direction:'ASC'}]);
     
     var list = Ext.getCmp('announcementlist')
 	if (list) {
