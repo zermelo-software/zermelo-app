@@ -36,13 +36,10 @@ Ext.define('Zermelo.view.MessageDetails', {
             show: function () {
                 // check if this message is unread then add in localstoreage message id as read
                 if (!this.message.read) {
-                    console.log('this.message', this.message);
                     var announcementStore = Ext.getStore('Announcements');
                     var announcement = announcementStore.findRecord('announcement_id', this.message.announcement_id);
-                    console.log(announcement);
                     announcement.set('read', true)
                     announcement.commit();
-                    Ext.getCmp('messageList').refresh();
                 }
                 // set message details in labels
                 Ext.getCmp('messageDetails_title_lbl').setHtml(this.message.title);

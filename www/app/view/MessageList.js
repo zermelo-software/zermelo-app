@@ -38,7 +38,7 @@ Ext.define("Zermelo.view.MessageList", {
         listeners: {
             show: function () {
                 messageShow=true;
-                dataFilter(this, Ext.getStore('Announcements'));
+                this.updateNewMessagesIndicator();
                 if (Ext.getStore('Announcements').getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
                 }
@@ -81,35 +81,30 @@ Ext.define("Zermelo.view.MessageList", {
             itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
         }]
     },
-    refresh: function() {
-        dataFilter();
-        // Zermelo.AjaxManager.getAnnouncementData(this);
+
+    updateNewMessagesIndicator: function() {
+        var announcementStore = Ext.getStore('Announcements');
+        var count = 0;
+        var valid;
+        announcementStore.each(function(record) {
+            valid = record.get('start') * 1000 >= Date.now() && record.get('end') * 1000 <= Date.now();
+            record.set('valid', valid);
+            if(!record.get('read')) {
+                count++;
+            }
+        });
+
+        Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
+
+        if(count != 0)
+        {
+            document.getElementById('messageCount').style.display="";
+            document.getElementById('messageCount').innerHTML=count;
+        }
+        else
+        {
+            console.log('display: none');
+            document.getElementById('messageCount').style.display="none";
+        }
     }
 });
-
-// filter data with read, unread and valid with feature date
-function dataFilter() {
-    var announcementStore = Ext.getStore('Announcements');
-    var count = 0;
-    var valid;
-    announcementStore.each(function(record) {
-        valid = record.get('start') * 1000 >= Date.now() && record.get('end') * 1000 <= Date.now();
-        record.set('valid', valid);
-        if(!record.get('read')) {
-            count++;
-        }
-    });
-
-    Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
-    // In menu announcement count display
-    if(count != 0)
-    {
-        document.getElementById('messageCount').style.display="";
-        document.getElementById('messageCount').innerHTML=count;
-    }
-    else
-    {
-        console.log('display: none');
-        document.getElementById('messageCount').style.display="none";
-    }
-}

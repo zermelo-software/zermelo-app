@@ -102,8 +102,12 @@ Ext.define('Zermelo.controller.MainController', {
     back_messageList: function () {
         home = this.getHome() || Ext.create('Zermelo.view.Home');
         home.list.removeCls('zermelo-menu-list');
-        messagedetails = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
-        messagedetails.hide();
+        
+        var messageListView = this.getMessageList() || Ext.create('Zermelo.view.MessageList');
+        messageListView.updateNewMessagesIndicator();
+
+        var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
+        messageDetailsView.hide();
         home.show();
         currentView="";
     },
