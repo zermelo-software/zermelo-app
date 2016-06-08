@@ -42,7 +42,6 @@ Ext.define('Zermelo.view.MessageDetails', {
                     console.log(announcement);
                     announcement.set('read', true)
                     announcement.commit();
-                    announcementStore.sync();
                     Ext.getCmp('messageList').refresh();
                 }
                 // set message details in labels

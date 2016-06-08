@@ -28,7 +28,7 @@ Ext.define('Zermelo.AjaxManager', {
 	        },
 
 	        indicator: true
-	        });
+	    });
 	    
 	    Ext.Ajax.request({
 	        url: this.getUrl('announcements'),
@@ -43,7 +43,7 @@ Ext.define('Zermelo.AjaxManager', {
 	            announcementStore.each(function(record) {
 	                var stillExists = 
 	                decoded.some(function(entry, index) {
-	                    if (record.announcement_id != entry.id)
+	                    if (record.get('announcement_id') != entry.id)
 	                        return false;
 
 	                    record.set('start', decoded[index].start);
@@ -56,11 +56,10 @@ Ext.define('Zermelo.AjaxManager', {
 
 	                if (!stillExists)
 	                    announcementStore.remove(record);
+	                
 	                record.commit();
 	            });
-	            announcementStore.sync();
 
-	            // console.log(decoded);
 	            decoded.forEach(function(record) {
 	                announcementStore.add({
 	                    announcement_id: record.id,
@@ -70,7 +69,6 @@ Ext.define('Zermelo.AjaxManager', {
 	                    text: record.text
 	                });
 	            });
-	            announcementStore.sync();
 	            Ext.Viewport.setMasked(false);
 	        },
 	        failure: function (response) {

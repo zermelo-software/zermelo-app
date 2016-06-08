@@ -38,10 +38,10 @@ Ext.define("Zermelo.view.MessageList", {
         listeners: {
             show: function () {
                 messageShow=true;
+                dataFilter(this, Ext.getStore('Announcements'));
                 if (Ext.getStore('Announcements').getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
                 }
-				dataFilter(this, Ext.getStore('Announcements'));
             }, //end show
 
             hide:function(){
@@ -93,13 +93,12 @@ function dataFilter() {
     var count = 0;
     var valid;
     announcementStore.each(function(record) {
-        valid = record.start * 1000 >= Date.now() && record.end * 1000 <= Date.now();
+        valid = record.get('start') * 1000 >= Date.now() && record.get('end') * 1000 <= Date.now();
         record.set('valid', valid);
-        if(!record.data.read) {
+        if(!record.get('read')) {
             count++;
         }
     });
-    announcementStore.sync();
 
     Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
     // In menu announcement count display
