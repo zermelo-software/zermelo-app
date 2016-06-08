@@ -8,8 +8,11 @@ Ext.define('Zermelo.model.Announcement', {
 			{name: 'end', 						type: 'int'},
 			{name: 'title', 					type: 'string'},
 			{name: 'text', 						type: 'string'},
-			{name: 'read', 						type: 'string'},
-			{name: 'valid', 					type: 'bool'}
+			{name: 'read', 						type: 'string'}
 		]
+	},
+
+	valid: function() {
+		return this.get('start') * 1000 <= Date.now() && this.get('end') * 1000 >= Date.now();
 	}
 });

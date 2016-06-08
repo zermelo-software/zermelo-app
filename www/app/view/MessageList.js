@@ -31,14 +31,12 @@ var mystore;
 
 Ext.define("Zermelo.view.MessageList", {
     extend: 'Ext.Container',
-    requires: ['Ext.data.proxy.JsonP'],
     xtype: 'messageList',
     id: 'messageList',
     config: {
         listeners: {
             show: function () {
                 messageShow=true;
-                this.updateNewMessagesIndicator();
                 if (Ext.getStore('Announcements').getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
                 }
@@ -53,7 +51,6 @@ Ext.define("Zermelo.view.MessageList", {
                 if (Ext.getStore('Announcements').getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
                 }
-                dataFilter(this, Ext.getStore('Announcements'));
             } //end painted
         }, // end listeners
         layout: 'fit',
@@ -85,11 +82,8 @@ Ext.define("Zermelo.view.MessageList", {
     updateNewMessagesIndicator: function() {
         var announcementStore = Ext.getStore('Announcements');
         var count = 0;
-        var valid;
         announcementStore.each(function(record) {
-            valid = record.get('start') * 1000 >= Date.now() && record.get('end') * 1000 <= Date.now();
-            record.set('valid', valid);
-            if(!record.get('read')) {
+            if(!record.get('read') && record.valid()) {
                 count++;
             }
         });
@@ -106,5 +100,10 @@ Ext.define("Zermelo.view.MessageList", {
             console.log('display: none');
             document.getElementById('messageCount').style.display="none";
         }
+    },
+
+    initialize: function() {
+        Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
+        this.updateNewMessagesIndicator();
     }
 });
