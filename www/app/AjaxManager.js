@@ -8,15 +8,19 @@ Ext.define('Zermelo.AjaxManager', {
 			'https://' + 
 			Zermelo.UserManager.getInstitution() + 
 			'.zportal.nl/api/v3/' +
-			target +
-			'?current=true&user=' + 
-			Zermelo.UserManager.getUser() + 
-			'&access_token=' + 
-			Zermelo.UserManager.getAccessToken()
-		);
+			target
+		)
+	},
+
+	getParams: function() {
+		return {
+			current: true,
+			user: Zermelo.UserManager.getUser(),
+			access_token: Zermelo.UserManager.getAccessToken()
+		}
 	},
 	
-	getAnnouncementData: function(thisObj) {   
+	getAnnouncementData: function(currentView) {   
 	    Ext.Viewport.setMasked({
 	        xtype: 'loadmask',
 	        locale: {
@@ -26,15 +30,13 @@ Ext.define('Zermelo.AjaxManager', {
 	        indicator: true
 	        });
 	    
-	    // thisObj.hide();
-	    console.log(this.getUrl('announcements'));
-	    // send request to server using ajax with http GET
 	    Ext.Ajax.request({
 	        url: this.getUrl('announcements'),
+	        params: this.getParams(),
 	        method: "GET",
 	        useDefaultXhrHeader: false,
 
-	        success: function (response) {
+	        success: function (response, opts) {
 	            var decoded = Ext.JSON.decode(response.responseText).response.data;
 
 	            var announcementStore = Ext.getStore('Announcements');
@@ -58,7 +60,7 @@ Ext.define('Zermelo.AjaxManager', {
 	            });
 	            announcementStore.sync();
 
-	            console.log(decoded);
+	            // console.log(decoded);
 	            decoded.forEach(function(record) {
 	                announcementStore.add({
 	                    announcement_id: record.id,
@@ -69,9 +71,7 @@ Ext.define('Zermelo.AjaxManager', {
 	                });
 	            });
 	            announcementStore.sync();
-	            // loading screen disappear
 	            Ext.Viewport.setMasked(false);
-	            thisObj.show();
 	        },
 	        failure: function (response) {
 	            if (response.status == 403) {
@@ -82,7 +82,6 @@ Ext.define('Zermelo.AjaxManager', {
 	                Zermelo.ErrorManager.showErrorBox('network_error');
 	            }
 	            Ext.Viewport.setMasked(false);
-	            thisObj.show();
 	        }
 	    });
 	}

@@ -68,7 +68,6 @@ if (typeof Ext.Logger === 'undefined') {
 }
 
 //Global variable
-var messageDetails;
 var db;
 var eventArray = [];
 var eventDetails;

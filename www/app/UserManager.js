@@ -63,10 +63,10 @@ Ext.define('Zermelo.UserManager', {
 
     refreshData: function() {
         if (messageShow) {
-            getAnnoucementsData(Ext.getCmp('messageList'));
+            Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
         }
         else {
-            getAnnoucementsData(Ext.getCmp('schedule'));
+            Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('schedule'));
         }
         refresh();
     },

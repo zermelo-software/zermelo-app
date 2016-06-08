@@ -30,21 +30,26 @@ Ext.define('Zermelo.view.MessageDetails', {
     extend: 'Ext.Container',
     xtype: 'messageDetails',
     id: 'messageDetails',
+    message: null,
     config: {
         listeners: {
-            show: function (messageDetails) {
+            show: function () {
                 // check if this message is unread then add in localstoreage message id as read
-                if (messageDetails.read == 0) {
+                if (!this.message.read) {
+                    console.log('this.message', this.message);
                     var announcementStore = Ext.getStore('Announcements');
-                    announcementStore.findById(messageDetails.id).set('read', true);
+                    var announcement = announcementStore.findRecord('announcement_id', this.message.announcement_id);
+                    console.log(announcement);
+                    announcement.set('read', true)
+                    announcement.commit();
                     announcementStore.sync();
                     Ext.getCmp('messageList').refresh();
                 }
                 // set message details in labels
-                Ext.getCmp('messageDetails_title_lbl').setHtml(messageDetails.title);
+                Ext.getCmp('messageDetails_title_lbl').setHtml(this.message.title);
                 //Ext.getCmp('messageDetails_startDate_lbl').setHtml(Ext.Date.format(new Date(messageDetails.start * 1000), 'F j, Y'));
                 //Ext.getCmp('messageDetails_endDate_lbl').setHtml(Ext.Date.format(new Date(new Date(messageDetails.end * 1000).setSeconds(-1)), 'F j, Y'));
-                Ext.getCmp('messageDetails_description_lbl').setHtml(messageDetails.text);
+                Ext.getCmp('messageDetails_description_lbl').setHtml(this.message.text);
             }
         },
         layout: {

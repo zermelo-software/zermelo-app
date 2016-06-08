@@ -88,13 +88,13 @@ Ext.define('Zermelo.controller.MainController', {
         // create home view object
         home = this.getHome() || Ext.create('Zermelo.view.Home');
         // create messagedetail view object
-        messagedetails = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
+        var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
         //get selected index record
         var rec = list.getStore().getAt(index);
-        // messageDetails = rec.data;
-        //add messagedetail in viewport
-        Ext.Viewport.add(messagedetails);
-        messagedetails.show(rec.data);
+        console.log('messageDetailsView', messageDetailsView);
+        messageDetailsView.message = rec.data;
+        Ext.Viewport.add(messageDetailsView);
+        messageDetailsView.show();
         home.hide();
         currentView="messageDetail";
     },

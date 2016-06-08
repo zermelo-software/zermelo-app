@@ -34,7 +34,6 @@ Ext.define("Zermelo.view.MessageList", {
     requires: ['Ext.data.proxy.JsonP'],
     xtype: 'messageList',
     id: 'messageList',
-    store: 'Announcements',
     config: {
         listeners: {
             show: function () {
@@ -43,12 +42,12 @@ Ext.define("Zermelo.view.MessageList", {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
                 }
 				dataFilter(this, Ext.getStore('Announcements'));
-				Zermelo.UserManager.setTitles();
-
             }, //end show
-             hide:function(){
+
+            hide:function(){
                 messageShow=false;
-             },
+            },
+
             // record update with read and unread
             painted_disabled: function () {
                 if (Ext.getStore('Announcements').getCount() == 0) {
@@ -83,31 +82,35 @@ Ext.define("Zermelo.view.MessageList", {
         }]
     },
     refresh: function() {
-        Zermelo.AjaxManager.getAnnoucementData(this);
+        dataFilter();
+        // Zermelo.AjaxManager.getAnnouncementData(this);
     }
 });
 
 // filter data with read, unread and valid with feature date
-function dataFilter(thisObj, localStore) {
-    // return;
-    announcementStore = Ext.getStore('Announcements');
+function dataFilter() {
+    var announcementStore = Ext.getStore('Announcements');
     var count = 0;
+    var valid;
     announcementStore.each(function(record) {
-        record.set('valid', record.start * 1000 >= Date.now() && record.end * 1000 <= Date.now());
-        if(!record.read)
+        valid = record.start * 1000 >= Date.now() && record.end * 1000 <= Date.now();
+        record.set('valid', valid);
+        if(!record.data.read) {
             count++;
+        }
     });
     announcementStore.sync();
 
     Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
     // In menu announcement count display
-    if(count!=0)
+    if(count != 0)
     {
         document.getElementById('messageCount').style.display="";
         document.getElementById('messageCount').innerHTML=count;
     }
     else
     {
+        console.log('display: none');
         document.getElementById('messageCount').style.display="none";
     }
 }
