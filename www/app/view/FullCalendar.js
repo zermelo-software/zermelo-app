@@ -667,34 +667,30 @@ function gotoWeek_Day(week, me) {
         me.changeTitle();
     }
 }
-function getAppointments(me, currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week)
-{
-    // var query = 'select appointment_id,start_time,end_time,subjects,teacher,locations,groups,type,cancelled,modified,moved,new_appointment,remark,change_description ,valid from APPOINTMENTS ';
-            // getAppointmentData(query, function () {
-                if (refresh) {
-                    //calendar view only current day calendar view refresh
-                    if (todayFlag && !datepickerGo && nextPrev == '') {
-                        currentobj.destroyCalendar();
-                        currentobj.renderFullCalendar();
-                        if (dayview == "dayview")
-                            currentobj.changeCalendarView('agendaDay');
-                        currentobj.getScrollable().getScroller().scrollTo(0, scrollTopHeight - (scrollTopHeight * 10 / 100));
-                    } else if (nextprev != '') {
-                        currentobj.navigateCalendar(nextprev);
+function getAppointments(currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week) {
+    if (refresh) {
+        //calendar view only current day calendar view refresh
+        if (todayFlag && !datepickerGo && nextPrev == '') {
+            currentobj.destroyCalendar();
+            currentobj.renderFullCalendar();
+            if (dayview == "dayview")
+                currentobj.changeCalendarView('agendaDay');
+            currentobj.getScrollable().getScroller().scrollTo(0, scrollTopHeight - (scrollTopHeight * 10 / 100));
+        } else if (nextprev != '') {
+            currentobj.navigateCalendar(nextprev);
 
-                    } else if (datepickerGo) {
-                        $('#' + currentobj.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
-                        currentobj.changeTitle();
-                    } else {
-                        currentobj.renderCalendar();
-                    }
-                    updateView(currentobj);
+        } else if (datepickerGo) {
+            $('#' + currentobj.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
+            currentobj.changeTitle();
+        } else {
+            currentobj.renderCalendar();
+        }
+        updateView(currentobj);
 
-                }
-                // only first time render after getting  data from server
-                else {
-                    currentobj.renderFullCalendar();
-                    updateView(currentobj);
-                }
-            // });
+    }
+    // only first time render after getting  data from server
+    else {
+        currentobj.renderFullCalendar();
+        updateView(currentobj);
+    }
 }
