@@ -118,5 +118,38 @@ Ext.define('Zermelo.controller.MainController', {
         home.show();
         appointmentDetail.hide();
         currentView="";
+    },
+
+    updateNewMessagesIndicator: function() {
+        var announcementStore = Ext.getStore('Announcements');
+        var count = 0;
+        announcementStore.each(function(record) {
+            if(!record.get('read') && record.valid()) {
+                count++;
+            }
+        });
+
+        Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
+
+        if(count != 0)
+        {
+            document.getElementById('messageCount').style.display="";
+            document.getElementById('messageCount').innerHTML=count;
+        }
+        else
+        {
+            console.log('display: none');
+            document.getElementById('messageCount').style.display="none";
+        }
+    },
+
+    launch: function() {
+        Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
+        this.updateNewMessagesIndicator();
     }
+    // ,
+
+    // launch: function() {
+    //     Ext.create('Zermelo.view.MessageList');
+    // }
 });

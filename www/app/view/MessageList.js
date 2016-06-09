@@ -77,33 +77,5 @@ Ext.define("Zermelo.view.MessageList", {
             store: 'Announcements',
             itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
         }]
-    },
-
-    updateNewMessagesIndicator: function() {
-        var announcementStore = Ext.getStore('Announcements');
-        var count = 0;
-        announcementStore.each(function(record) {
-            if(!record.get('read') && record.valid()) {
-                count++;
-            }
-        });
-
-        Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
-
-        if(count != 0)
-        {
-            document.getElementById('messageCount').style.display="";
-            document.getElementById('messageCount').innerHTML=count;
-        }
-        else
-        {
-            console.log('display: none');
-            document.getElementById('messageCount').style.display="none";
-        }
-    },
-
-    initialize: function() {
-        Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
-        this.updateNewMessagesIndicator();
     }
 });
