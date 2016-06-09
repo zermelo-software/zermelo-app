@@ -37,13 +37,14 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                 appointment_detail_open = true;
                 thisObj = this;
                 var multipleids = [];
+                appointmentStore = Ext.getStore('Appointments');
                 if (eventDetails.multiid.length != 0)
                     multipleids = eventDetails.multiid.split(",");
                 else
                     multipleids[0] = String(eventDetails.id);
                 for (i = 0; i < multipleids.length; i++) {
 
-                    resultObject = search(multipleids[i], eventArray);
+                    resultObject = appointmentStore.find('appointmentInstance', multipleids[i]).getData();
                     var container = Ext.create('Ext.Container', {
                         style: {
                             'font-size': '14px'
@@ -390,11 +391,3 @@ Ext.define('Zermelo.view.AppointmentDetails', {
         //end main container
     } //end config
 });
-
-function search(nameKey, myArray) {
-    for (var i = 0; i < myArray.length; i++) {
-        if (String(myArray[i].id) === nameKey) {
-            return myArray[i];
-        }
-    }
-}

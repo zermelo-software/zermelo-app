@@ -254,7 +254,7 @@ function refresh() {
     var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12) / 1000);
 
     // call appointment api and announcement api at start
-    getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, true, '', false);
+    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, true, '', false);
     Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('schedule'));
 }
 
