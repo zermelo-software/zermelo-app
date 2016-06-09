@@ -86,7 +86,7 @@ Ext.define('Zermelo.controller.MainController', {
     // Announcement list item tap
     onItemTap: function (list, index, target, record) {
         // create home view object
-        home = this.getHome() || Ext.create('Zermelo.view.Home');
+        var home = this.getHome() || Ext.create('Zermelo.view.Home');
         // create messagedetail view object
         var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
         //get selected index record
@@ -100,7 +100,7 @@ Ext.define('Zermelo.controller.MainController', {
     },
     // tap back button on annoucement detail view
     back_messageList: function () {
-        home = this.getHome() || Ext.create('Zermelo.view.Home');
+        var home = this.getHome() || Ext.create('Zermelo.view.Home');
         home.list.removeCls('zermelo-menu-list');
 
         var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
@@ -112,7 +112,7 @@ Ext.define('Zermelo.controller.MainController', {
     back_schedule: function () {
         console.log("back");
         appointment_detail_open=false;
-        home = this.getHome() || Ext.create('Zermelo.view.Home');
+        var home = this.getHome() || Ext.create('Zermelo.view.Home');
         home.list.removeCls('zermelo-menu-list');
         appointmentDetail = this.getAppointmentDetails() || Ext.create('Zermelo.view.AppointmentDetails');
         home.show();
