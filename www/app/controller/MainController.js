@@ -85,19 +85,17 @@ Ext.define('Zermelo.controller.MainController', {
     },
     // Announcement list item tap
     onItemTap: function (list, index, target, record) {
-        // create home view object
         var home = this.getHome() || Ext.create('Zermelo.view.Home');
-        // create messagedetail view object
         var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
-        //get selected index record
         var rec = list.getStore().getAt(index);
-        console.log('messageDetailsView', messageDetailsView);
+
         messageDetailsView.message = rec.data;
         Ext.Viewport.add(messageDetailsView);
         messageDetailsView.show();
         home.hide();
         currentView="messageDetail";
     },
+    
     // tap back button on annoucement detail view
     back_messageList: function () {
         var home = this.getHome() || Ext.create('Zermelo.view.Home');
@@ -108,9 +106,9 @@ Ext.define('Zermelo.controller.MainController', {
         home.show();
         currentView="";
     },
+
     // tap back button on appointment detail view
     back_schedule: function () {
-        console.log("back");
         appointment_detail_open=false;
         var home = this.getHome() || Ext.create('Zermelo.view.Home');
         home.list.removeCls('zermelo-menu-list');
@@ -129,15 +127,14 @@ Ext.define('Zermelo.controller.MainController', {
             }
         });
 
-        Ext.getCmp('home')._slideButtonConfig.setBadgeText(count);
+        var home = this.getHome() || Ext.create('Zermelo.view.Home');
+        home._slideButtonConfig.setBadgeText(count);
 
-        if(count != 0)
-        {
+        if(count != 0) {
             document.getElementById('messageCount').style.display="";
             document.getElementById('messageCount').innerHTML=count;
         }
-        else
-        {
+        else {
             console.log('display: none');
             document.getElementById('messageCount').style.display="none";
         }
@@ -147,9 +144,4 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
         this.updateNewMessagesIndicator();
     }
-    // ,
-
-    // launch: function() {
-    //     Ext.create('Zermelo.view.MessageList');
-    // }
 });
