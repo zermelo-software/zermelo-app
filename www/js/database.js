@@ -235,51 +235,51 @@ function detectCollision(i, j) {
     }
 }
 
-function getAppointmentData(query, callBack) {
-    db.transaction(function (tx) {
-        tx.executeSql(query, [], function (tx, results) {
-            eventArray.length = 0;
-            for (i = 0; i < results.rows.length; i++) {
-                var start_date = new Date((results.rows.item(i).start_time) * 1000);
-               // console.log("start : "+start_date);
-                var end_date = new Date((results.rows.item(i).end_time) * 1000);
-                //console.log("date : "+end_date);
-                var obj = {
-                    id: results.rows.item(i).appointment_id,
-                    start: start_date,
-                    end: end_date,
-                    start_time:results.rows.item(i).start_time,
-                    end_time:results.rows.item(i).end_time,
-                    teacher: (results.rows.item(i).teacher).toUpperCase(),
-                    subject: results.rows.item(i).subjects,
-                    locations: results.rows.item(i).locations,
-                    groups: results.rows.item(i).groups,
-                    type: results.rows.item(i).type,
-                    cancelled: results.rows.item(i).cancelled,
-                    modified: results.rows.item(i).modified,
-                    moved: results.rows.item(i).moved,
-                    new_appointment: results.rows.item(i).new_appointment,
-                    remark: results.rows.item(i).remark,
-                    change_description: results.rows.item(i).change_description,
-                    valid: results.rows.item(i).valid,
-                    collision:false,
-                    multiid:"",
-                    allDay: false
-                };
-                eventArray.push(obj);
-            }
-            //get multiple appointment from data 
-            for ( i = 0; i < eventArray.length; i++) {
-                for ( j = i + 1; j < eventArray.length; j++) {
-                    detectCollision(eventArray[i], eventArray[j]);
-                }
-            }
+// function getAppointmentData(query, callBack) {
+//     db.transaction(function (tx) {
+//         tx.executeSql(query, [], function (tx, results) {
+//             eventArray.length = 0;
+//             for (i = 0; i < results.rows.length; i++) {
+//                 var start_date = new Date((results.rows.item(i).start_time) * 1000);
+//                // console.log("start : "+start_date);
+//                 var end_date = new Date((results.rows.item(i).end_time) * 1000);
+//                 //console.log("date : "+end_date);
+//                 var obj = {
+//                     id: results.rows.item(i).appointment_id,
+//                     start: start_date,
+//                     end: end_date,
+//                     start_time:results.rows.item(i).start_time,
+//                     end_time:results.rows.item(i).end_time,
+//                     teacher: (results.rows.item(i).teacher).toUpperCase(),
+//                     subject: results.rows.item(i).subjects,
+//                     locations: results.rows.item(i).locations,
+//                     groups: results.rows.item(i).groups,
+//                     type: results.rows.item(i).type,
+//                     cancelled: results.rows.item(i).cancelled,
+//                     modified: results.rows.item(i).modified,
+//                     moved: results.rows.item(i).moved,
+//                     new_appointment: results.rows.item(i).new_appointment,
+//                     remark: results.rows.item(i).remark,
+//                     change_description: results.rows.item(i).change_description,
+//                     valid: results.rows.item(i).valid,
+//                     collision:false,
+//                     multiid:"",
+//                     allDay: false
+//                 };
+//                 eventArray.push(obj);
+//             }
+//             //get multiple appointment from data 
+//             for ( i = 0; i < eventArray.length; i++) {
+//                 for ( j = i + 1; j < eventArray.length; j++) {
+//                     detectCollision(eventArray[i], eventArray[j]);
+//                 }
+//             }
             
-            callBack();
-        }, errorCB);
+//             callBack();
+//         }, errorCB);
 
-    });
-}
+//     });
+// }
 
 //fail query fire 
 function errorCB(err) {

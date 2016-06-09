@@ -677,6 +677,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ux.locale.override.st.navigation.View": [],
   "Ux.locale.override.st.picker.Date": [],
   "Ux.locale.override.st.picker.Picker": [],
+  "Zermelo.AjaxManager": [
+    "AjaxManager"
+  ],
   "Zermelo.ErrorManager": [
     "ErrorManager"
   ],
@@ -684,8 +687,10 @@ Ext.ClassManager.addNameAlternateMappings({
     "UserManager"
   ],
   "Zermelo.controller.MainController": [],
+  "Zermelo.model.Announcement": [],
+  "Zermelo.model.Appointment": [],
   "Zermelo.store.AnnouncementStore": [],
-  "Zermelo.store.ReadmessageStore": [],
+  "Zermelo.store.AppointmentStore": [],
   "Zermelo.view.AppointmentDetails": [],
   "Zermelo.view.FullCalendar": [],
   "Zermelo.view.Home": [],
@@ -1430,11 +1435,14 @@ Ext.ClassManager.addNameAliasMappings({
   "Ux.locale.override.st.navigation.View": [],
   "Ux.locale.override.st.picker.Date": [],
   "Ux.locale.override.st.picker.Picker": [],
+  "Zermelo.AjaxManager": [],
   "Zermelo.ErrorManager": [],
   "Zermelo.UserManager": [],
   "Zermelo.controller.MainController": [],
+  "Zermelo.model.Announcement": [],
+  "Zermelo.model.Appointment": [],
   "Zermelo.store.AnnouncementStore": [],
-  "Zermelo.store.ReadmessageStore": [],
+  "Zermelo.store.AppointmentStore": [],
   "Zermelo.view.AppointmentDetails": [
     "widget.appointmentDetails"
   ],

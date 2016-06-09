@@ -82,12 +82,12 @@ Ext.define('Zermelo.view.FullCalendar', {
         }, me, {
             single: true
         });
-        // me.on('painted', function(){
+        //me.on('painted', function(){
         //    console.log('FullCalendar activate');
-        // 	doRefresh(me);
-        // }, me, {
+        //	doRefresh(me);
+        //}, me, {
         //    single: true
-        // });
+        //});
         // create topbar contaier with vertical box and top
         me.topBar = Ext.create('Ext.Container', {
             xtype: 'container',
@@ -404,8 +404,6 @@ Ext.define('Zermelo.view.FullCalendar', {
 
     renderFullCalendar: function () {
         var me = this;
-        var appointmentData = Ext.getStore('Appointments').getData();
-        console.log(appointmentData);
         $('#' + me.getPlaceholderid()).fullCalendar({
             hideHeaders: true, //new property to hide full calendar header
             editable: false,
@@ -615,34 +613,29 @@ function getWeekData(nextprev, me, dayview) {
         }
     }
     // if already get data from server ,next time does not go on server for getting data
-    if (flag || true) {
-        var appointmentStore = Ext.getStore('Appointments');
-        appointmentStore.filter(function(record) {return record.get('start') * 1000 > Date.now();});
-        var count = appointmentStore.getCount();
-        console.log(count);
-        appointmentStore.clearFilter();
-        // var query = 'SELECT count(*) as count FROM APPOINTMENTS WHERE weeknumber=? & refreshFlag=?';
-        // console.log(query, weeknumber);
-        if (count == 0) {
-            var starttime = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-            var startTime = Math.round(starttime.getTime() / 1000);
-            if (nextprev == "left") {
-                var endTime = Math.round(starttime.setDate(starttime.getDate() + 12) / 1000);
-                Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, false, nextprev, false);
-            } else {
-                var endTime = Math.round(starttime.setDate(starttime.getDate() - 12) / 1000);
-                Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, endTime, startTime, false, nextprev, false);
-            }
+    if (flag) {
+        var query = 'SELECT count(*) as count FROM APPOINTMENTS WHERE weeknumber=? & refreshFlag=?';
+        getRecodrdCount(query, weeknumber, function (result) {
+            if (result == 0) {
+                var starttime = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
+                var startTime = Math.round(starttime.getTime() / 1000);
+                if (nextprev == "left") {
+                    var endTime = Math.round(starttime.setDate(starttime.getDate() + 12) / 1000);
+                    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, false, nextprev, false);
+                } else {
+                    var endTime = Math.round(starttime.setDate(starttime.getDate() - 12) / 1000);
+                    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, endTime, startTime, false, nextprev, false);
+                }
 
-        } else {
-            me.navigateCalendar(nextprev);
-        }
-        if (dayview == 'dayview' && nextprev == 'right') {
-            if (currentDay.getDay() == 6) 
-                currentDay.setDate(currentDay.getDate() - 1);
-        }
-    }
-    else {
+            } else {
+                me.navigateCalendar(nextprev);
+            }
+            if (dayview == 'dayview' && nextprev == 'right')
+                if (currentDay.getDay() == 6) {
+                    currentDay.setDate(currentDay.getDate() - 1);
+                }
+        });
+    } else {
         me.navigateCalendar(nextprev);
         if (dayview == 'dayview' && nextprev == 'right')
             if (currentDay.getDay() == 6) {
@@ -676,30 +669,32 @@ function gotoWeek_Day(week, me) {
 }
 function getAppointments(me, currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week)
 {
-    console.log(currentObj);
-    var appointmentStore = Ext.getStore('Appointments');
-    if (refresh || true) {
-        //calendar view only current day calendar view refresh
-        if (todayFlag && !datepickerGo && nextPrev == '') {
-            currentobj.destroyCalendar();
-            currentobj.renderFullCalendar();
-            if (dayview == "dayview")
-                currentobj.changeCalendarView('agendaDay');
-            currentobj.getScrollable().getScroller().scrollTo(0, scrollTopHeight - (scrollTopHeight * 10 / 100));
-        } else if (nextprev != '') {
-            currentobj.navigateCalendar(nextprev);
+    // var query = 'select appointment_id,start_time,end_time,subjects,teacher,locations,groups,type,cancelled,modified,moved,new_appointment,remark,change_description ,valid from APPOINTMENTS ';
+            // getAppointmentData(query, function () {
+                if (refresh) {
+                    //calendar view only current day calendar view refresh
+                    if (todayFlag && !datepickerGo && nextPrev == '') {
+                        currentobj.destroyCalendar();
+                        currentobj.renderFullCalendar();
+                        if (dayview == "dayview")
+                            currentobj.changeCalendarView('agendaDay');
+                        currentobj.getScrollable().getScroller().scrollTo(0, scrollTopHeight - (scrollTopHeight * 10 / 100));
+                    } else if (nextprev != '') {
+                        currentobj.navigateCalendar(nextprev);
 
-        } else if (datepickerGo) {
-            $('#' + currentobj.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
-            currentobj.changeTitle();
-        } else {
-            currentobj.renderCalendar();
-        }
-        updateView(currentobj);
-    }
-    // only first time render after getting  data from server
-    else {
-        currentobj.renderFullCalendar();
-        updateView(currentobj);
-    }
+                    } else if (datepickerGo) {
+                        $('#' + currentobj.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
+                        currentobj.changeTitle();
+                    } else {
+                        currentobj.renderCalendar();
+                    }
+                    updateView(currentobj);
+
+                }
+                // only first time render after getting  data from server
+                else {
+                    currentobj.renderFullCalendar();
+                    updateView(currentobj);
+                }
+            // });
 }

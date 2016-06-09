@@ -68,13 +68,14 @@ if (typeof Ext.Logger === 'undefined') {
 }
 
 //Global variable
+var db;
+var eventArray = [];
 var eventDetails;
 var loc = '';
 var scrollTopHeight = 0;
 var startFlag = false;
 var currentView;
-var eventArray = [];
-var dayData = '';
+var dayData = [];
 var dayview = "";
 var week_day_view = "";
 var picker_open = false;
@@ -132,6 +133,8 @@ Ext
 			// Launch application
 
 			launch : function() {
+				// Ext.create('Zermelo.store.AppointmentStore');
+				// Ext.create('Zermelo.store.AnnouncementStore');
 				Ext.Msg.defaultAllowedConfig.showAnimation = false;
 				// display magnified glass press on textbox
 				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;

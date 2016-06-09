@@ -9,7 +9,7 @@
  * restriction, including without limitation the rights to use,
  * copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
+ * Software is furnished to do so, subjects to the following
  * conditions:
  * 
  * The above copyright notice and this permission notice shall be
@@ -642,7 +642,6 @@
 
         // go selected day of date 
         function gotoDate(year, month, dateOfMonth) {
-            //console.log(year);
             if (year instanceof Date) {
                 date = cloneDate(year); // provided 1 argument, a Date
             } else {
@@ -1155,7 +1154,7 @@
                     } else {
                         e.end = null;
                     }
-                    e.title = event.teacher;
+                    e.title = event.teachers;
                     e.url = event.url;
                     e.allDay = event.allDay;
                     e.className = event.className;
@@ -1991,6 +1990,9 @@
 
 
     function htmlEscape(s) {
+        if (Array.isArray(s))
+            s = s.join(', ');
+        
         return s.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
@@ -3658,7 +3660,7 @@ function enableTextSelection(element) {
                     if (seg.contentTop !== undefined && height - seg.contentTop < 10) {
                         // not enough room for title, put it in the time header
                         eventElement.find('div.fc-event-time')
-                            .text(formatDate(event.start, opt('timeFormat')) + ' - ' + event.teacher);
+                            .text(formatDate(event.start, opt('timeFormat')) + ' - ' + event.teachers);
                         eventElement.find('div.fc-event-title')
                             .remove();
                     }
@@ -3745,6 +3747,7 @@ function enableTextSelection(element) {
 
 
             if (url) {
+                console.log('url', event);
                 html += "a href='" + htmlEscape(event.url) + "'";
             } else {
                 html += "div";
@@ -3779,11 +3782,12 @@ function enableTextSelection(element) {
                     "<div class='fc-event-content'>";
            
             if (week_day_view == "agendaWeek" || week_day_view == "") {
+                console.log('agendaWeek', event);
                 html += "<div class='fc-event-title'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -3793,14 +3797,15 @@ function enableTextSelection(element) {
                     "</div>" +
                     "<div class='fc-icon-align-bottom-right'>";
             } else {
+                console.log('agendaWhatever', event);
                 html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title' style='position: absolute;right: 0;top: 0;'>" +
                     htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
                     "</div>" +
                     "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -3929,10 +3934,10 @@ function enableTextSelection(element) {
 
             if (week_day_view == "agendaWeek" || week_day_view == "") {
                 html += "<div class='fc-event-title'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjectss) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -3943,13 +3948,13 @@ function enableTextSelection(element) {
                     "<div class='fc-icon-align-bottom-right'>";
             } else {
                 html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title' style='position: absolute;right: 0;top: 0;'>" +
                     htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
                     "</div>" +
                     "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjectss) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -4448,7 +4453,7 @@ function enableTextSelection(element) {
                         }
                 );
             }
-            // TODO: don't fire eventMouseover/eventMouseout *while* dragging is occuring (on subject element)
+            // TODO: don't fire eventMouseover/eventMouseout *while* dragging is occuring (on subjects element)
             // TODO: same for resizing
         }
 
@@ -4668,6 +4673,7 @@ function enableTextSelection(element) {
             var skinCss;
             var html = '';
             // calculate desired position/dimensions, create html
+            console.log(segs);
             for (i = 0; i < segCnt; i++) {
                 seg = segs[i];
                 event = seg.event;
@@ -4705,6 +4711,7 @@ function enableTextSelection(element) {
                 url = event.url;
                 skinCss = getSkinCss(event, opt);
                 if (url) {
+                    console.log('url', event);
                     html += "<a href='" + htmlEscape(url) + "'";
                 } else {
                     html += "<div";
@@ -4724,7 +4731,7 @@ function enableTextSelection(element) {
                         "</span>";
                 }
                 html +=
-                    "<span class='fc-event-title'>" + htmlEscape(event.teacher) + "</span>" +
+                    "<span class='fc-event-title'>" + htmlEscape(event.teachers) + "</span>" +
                     "</div>";
                 if (seg.isEnd && isEventResizable(event)) {
                     html +=
@@ -4841,7 +4848,6 @@ function enableTextSelection(element) {
                 seg = segs[i];
                 element = seg.element;
                 if (element) {
-                    conlse.log(element + Math.max(0, seg.outerWidth - seg.hsides) + 'px');
                     element[0].style.width = Math.max(0, seg.outerWidth - seg.hsides) + 'px';
                 }
             }
