@@ -1251,7 +1251,6 @@
 
         function normalizeEvent(event) {
             var source = event.source || {};
-            console.log('normalizeEvent', event);
             var ignoreTimezone = firstDefined(source.ignoreTimezone, options.ignoreTimezone);
             event._id = event._id || (event.id === undefined ? '_fc' + eventGUID++ : event.id + '');
             if (event.date) {
@@ -2171,7 +2170,6 @@ function enableTextSelection(element) {
         var opt = t.opt;
         var renderAgenda = t.renderAgenda;
         var formatDate = calendar.formatDate;
-        //console.log(calendar);
 
 
         function render(date, delta) {
@@ -2866,7 +2864,6 @@ function enableTextSelection(element) {
             var bodyCell;
             var date;
             var today = clearTime(new Date());
-            //console.log(colCnt);
             if (colCnt != 1)
                 for (i = 0; i < colCnt; i++) {
                     date = colDate(i);
@@ -3581,11 +3578,8 @@ function enableTextSelection(element) {
                     var newChild;
                     newChild = slotSegHtml_ios(event, seg);
                     slotSegmentContainer[0].appendChild(newChild);
-                    //console.log("newchild::" + newChild);
                     newChild.addEventListener("touchend", function (events, e) {
-                        //console.log(id);
                         if (!isTouch) {
-                            //   console.log("end" + events.id + ":" + events.type);
                             trigger('eventClick', events, events, e);
                         }
                         isTouch = false;
@@ -3653,7 +3647,6 @@ function enableTextSelection(element) {
             for (i = 0; i < segCnt; i++) {
                 seg = segs[i];
                 if (eventElement = seg.element) {
-                    //console.log(Math.max(0, seg.outerWidth) + 'px');
                     eventElement[0].style.width = Math.max(0, seg.outerWidth) + 'px';
                     height = Math.max(0, seg.outerHeight - seg.vsides);
                     eventElement[0].style.height = height + 'px';
@@ -3748,7 +3741,6 @@ function enableTextSelection(element) {
 
 
             if (url) {
-                console.log('url', event);
                 html += "a href='" + htmlEscape(event.url) + "'";
             } else {
                 html += "div";
@@ -3783,7 +3775,6 @@ function enableTextSelection(element) {
                     "<div class='fc-event-content'>";
            
             if (week_day_view == "agendaWeek" || week_day_view == "") {
-                console.log('agendaWeek', event);
                 html += "<div class='fc-event-title'>" +
                     htmlEscape(event.teachers) +
                     "</div>" +
@@ -3798,7 +3789,6 @@ function enableTextSelection(element) {
                     "</div>" +
                     "<div class='fc-icon-align-bottom-right'>";
             } else {
-                console.log('agendaWhatever', event);
                 html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
                     htmlEscape(event.teachers) +
                     "</div>" +
@@ -3833,7 +3823,6 @@ function enableTextSelection(element) {
             }
             // display appointment on single slot
             if (event.collision) {
-              //  console.log(event.multiid);
                 var multiid=event.multiid.split(",");
                 for(i=1; i<multiid.length;i++)
                     html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
@@ -3982,7 +3971,6 @@ function enableTextSelection(element) {
             }
            // display appointment on single slot
             if (event.collision) {
-              //  console.log(event.multiid);
                 var multiid=event.multiid.split(",");
                 for(i=1; i<multiid.length;i++)
                     html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
@@ -4034,7 +4022,6 @@ function enableTextSelection(element) {
 
         function performEventClicks() {
             $(function () {
-                //console.log("perform events called");
             });
         }
 
@@ -4225,7 +4212,6 @@ function enableTextSelection(element) {
                     allDay = false;
                 }
             }
-          //  console.log("sjfslfslfsfsflskfuertioetioeurt");
         }
 
 
@@ -4439,7 +4425,6 @@ function enableTextSelection(element) {
                              }
                             else
                              clickButton=false;*/
-                           // console.log("clcik collsdfk");
 
                             return trigger('eventClick', this, event, ev);
 
@@ -4674,7 +4659,6 @@ function enableTextSelection(element) {
             var skinCss;
             var html = '';
             // calculate desired position/dimensions, create html
-            console.log(segs);
             for (i = 0; i < segCnt; i++) {
                 seg = segs[i];
                 event = seg.event;
@@ -4712,7 +4696,6 @@ function enableTextSelection(element) {
                 url = event.url;
                 skinCss = getSkinCss(event, opt);
                 if (url) {
-                    console.log('url', event);
                     html += "<a href='" + htmlEscape(url) + "'";
                 } else {
                     html += "<div";

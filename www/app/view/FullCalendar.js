@@ -83,15 +83,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         }, me, {
             single: true
         });
-        me.on('painted', function(){
-            // console.log('FullCalendar activate');
-        	doRefresh();
-            console.log('eventArray in painted', eventArray);
-            $('#calendar').fullCalendar('render');
-            me.renderFullCalendar();
-        }, me, {
-           single: true
-        });
         // create topbar contaier with vertical box and top
         me.topBar = Ext.create('Ext.Container', {
             xtype: 'container',
@@ -408,10 +399,15 @@ Ext.define('Zermelo.view.FullCalendar', {
 
     renderFullCalendar: function () {
         var me = this;
+        var appointmentArray = [];
+        var appointmentStore = Ext.getStore('Appointments');
+        appointmentStore.each(function(record) {
+            appointmentArray.push(record.getData());
+        });
         $('#' + me.getPlaceholderid()).fullCalendar({
             hideHeaders: true, //new property to hide full calendar header
             editable: false,
-            events: eventArray, // set Appointents
+            events: appointmentArray, // set Appointents
             eventClick: function (calEvent, jsEvent, view) {
                 me.fireEvent('eventclick', calEvent, jsEvent, view, this);
             },

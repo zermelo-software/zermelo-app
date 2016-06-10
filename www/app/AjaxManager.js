@@ -13,7 +13,7 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getParams: function(additional_args) {
-		return ret = Object.assign({
+		return Object.assign({
 			user: Zermelo.UserManager.getUser(),
 			access_token: Zermelo.UserManager.getAccessToken()
 		}, additional_args);
@@ -83,12 +83,10 @@ Ext.define('Zermelo.AjaxManager', {
 	    });
 	},
 
-	//below function fetches the list of appointments using webservice.
 	getAppointment: function(me, currentobj, startTime, endTime) {
 		startTime = Math.floor(startTime / 1000);
 		endTime = Math.floor(endTime / 1000);
-		// startTime = Math.floor(Date.now() / 1000 -72000)
-		// endTime = Math.floor(Date.now() / 1000 + 72000)
+
 	    me.setMasked({
 	        xtype: 'loadmask',
 	        locale: {
@@ -133,25 +131,12 @@ Ext.define('Zermelo.AjaxManager', {
 	            decoded.forEach(function(record) {
 	            	record.start = new Date(record.start * 1000);
 	            	record.end = new Date(record.end * 1000);
-	            	record.allDay = false;
-	            	record.refreshFlag = true;
+
 	                appointmentStore.add(record);
 	            });
-	            eventArray = [];
-	            appointmentStore.each(function(record) {
-	            	eventArray.push(record.getData());
-	            });
-	            console.log('appointmentStore', appointmentStore.getData());
-	            console.log('eventArray', eventArray);
+
 	            me.setMasked(false);
-	            // console.log(me);
-	            // me.innerItems[0].renderFullCalendar();
-	            // currentobj.destroyCalendar();
-	            // console.log(currentobj);
-                var fullCalendar = Ext.getCmp('fullCalendarView');
-                fullCalendar.destroyCalendar();
-                fullCalendar.renderFullCalendar();
-                // getAppointments(currentobj, true);
+                Ext.getCmp('fullCalendarView').renderFullCalendar();
 	        },
 	        failure: function (response) {
 	            var error_msg = 'network_error';

@@ -2,6 +2,7 @@ Ext.define('Zermelo.model.Appointment', {
 	extend: 'Ext.data.Model',
 	config: {
 		fields: [
+			{name: 'allDay',					type: 'bool'},
 			{name: 'appointmentInstance', 		type: 'int'},
 			{name: 'cancelled', 				type: 'bool'},
 			{name: 'changeDescription', 		type: 'string'},
@@ -21,7 +22,6 @@ Ext.define('Zermelo.model.Appointment', {
 			{name: 'teachers', 					type: 'string'},
 			{name: 'type', 						type: 'string'},
 			{name: 'refreshFlag',				type: 'bool'},
-			{name: 'allDay',					type: 'bool'},
 			{name: 'valid', 					type: 'bool'}
 		]
 	}
