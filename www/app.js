@@ -68,7 +68,6 @@ if (typeof Ext.Logger === 'undefined') {
 }
 
 //Global variable
-var db;
 var eventArray = [];
 var eventDetails;
 var loc = '';
@@ -299,8 +298,6 @@ Ext
 				}
 				// Destroy the #appLoadingIndicator element
 				Ext.fly('appLoadingIndicator').destroy();
-				// create database and appointment table js/database.js
-				createDatabase();
 				// Initialize the main view
 				Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
 			},

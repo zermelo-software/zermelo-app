@@ -32,8 +32,8 @@ function doRefresh(me) {
     var currentweekdate = new Date();
     currentweekdate = new Date(currentweekdate.getFullYear(), currentweekdate.getMonth(), currentweekdate.getDate());
     currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
-    var startTime = Math.round(currentweekdate.getTime() / 1000);
-    var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12) / 1000);
+    var startTime = Math.round(currentweekdate.getTime());
+    var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12));
     // call appointment api and annoucement api at start
     var refreshMin=0;
     //  console.log(refreshMin);
@@ -51,10 +51,11 @@ function doRefresh(me) {
     //    console.log('Refresh later update');
     //    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, true, '', false);
     //} else {
-        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, false, startTime, endTime, false, '', false);
+        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, startTime, endTime);
     //}
 
     Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
+
 }
 
 var weeknumbers = [];
@@ -78,16 +79,19 @@ Ext.define('Zermelo.view.FullCalendar', {
         var me = this;
         me.callParent(arguments);
         me.on('activate', function(){
-        	doRefresh(me);
+        	doRefresh();
         }, me, {
             single: true
         });
-        //me.on('painted', function(){
-        //    console.log('FullCalendar activate');
-        //	doRefresh(me);
-        //}, me, {
-        //    single: true
-        //});
+        me.on('painted', function(){
+            // console.log('FullCalendar activate');
+        	doRefresh();
+            console.log('eventArray in painted', eventArray);
+            $('#calendar').fullCalendar('render');
+            me.renderFullCalendar();
+        }, me, {
+           single: true
+        });
         // create topbar contaier with vertical box and top
         me.topBar = Ext.create('Ext.Container', {
             xtype: 'container',
@@ -614,28 +618,29 @@ function getWeekData(nextprev, me, dayview) {
     }
     // if already get data from server ,next time does not go on server for getting data
     if (flag) {
-        var query = 'SELECT count(*) as count FROM APPOINTMENTS WHERE weeknumber=? & refreshFlag=?';
-        getRecodrdCount(query, weeknumber, function (result) {
-            if (result == 0) {
-                var starttime = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-                var startTime = Math.round(starttime.getTime() / 1000);
-                if (nextprev == "left") {
-                    var endTime = Math.round(starttime.setDate(starttime.getDate() + 12) / 1000);
-                    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, false, nextprev, false);
-                } else {
-                    var endTime = Math.round(starttime.setDate(starttime.getDate() - 12) / 1000);
-                    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, endTime, startTime, false, nextprev, false);
-                }
+        var appointmentStore = Ext.getStore('Appointments');
+        var count = appointmentStore.getCount();
 
+        if (count == 0) {
+            var starttime = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
+            var startTime = Math.round(starttime.getTime());
+            if (nextprev == "left") {
+                var endTime = Math.round(starttime.setDate(starttime.getDate() + 12));
+                Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, startTime, endTime, false, nextprev, false);
             } else {
-                me.navigateCalendar(nextprev);
+                var endTime = Math.round(starttime.setDate(starttime.getDate() - 12));
+                Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, endTime, startTime, false, nextprev, false);
             }
-            if (dayview == 'dayview' && nextprev == 'right')
-                if (currentDay.getDay() == 6) {
-                    currentDay.setDate(currentDay.getDate() - 1);
-                }
-        });
-    } else {
+
+        } else {
+            me.navigateCalendar(nextprev);
+        }
+        if (dayview == 'dayview' && nextprev == 'right')
+            if (currentDay.getDay() == 6) {
+                currentDay.setDate(currentDay.getDate() - 1);
+            }
+    }
+    else {
         me.navigateCalendar(nextprev);
         if (dayview == 'dayview' && nextprev == 'right')
             if (currentDay.getDay() == 6) {
@@ -661,7 +666,7 @@ function gotoWeek_Day(week, me) {
         }
     }
     if (flag)
-        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, false, '', true, week);
+        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), startTime, endTime, false, '', true, week);
     else {
         $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
         me.changeTitle();

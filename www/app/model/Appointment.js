@@ -20,7 +20,9 @@ Ext.define('Zermelo.model.Appointment', {
 			{name: 'subjects', 					type: 'string'},
 			{name: 'teachers', 					type: 'string'},
 			{name: 'type', 						type: 'string'},
-			{name: 'refreshFlag',				type: 'bool'}
+			{name: 'refreshFlag',				type: 'bool'},
+			{name: 'allDay',					type: 'bool'},
+			{name: 'valid', 					type: 'bool'}
 		]
 	}
 });

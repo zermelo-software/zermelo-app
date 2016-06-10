@@ -1251,6 +1251,7 @@
 
         function normalizeEvent(event) {
             var source = event.source || {};
+            console.log('normalizeEvent', event);
             var ignoreTimezone = firstDefined(source.ignoreTimezone, options.ignoreTimezone);
             event._id = event._id || (event.id === undefined ? '_fc' + eventGUID++ : event.id + '');
             if (event.date) {
@@ -3692,8 +3693,8 @@ function enableTextSelection(element) {
             var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
             var classes = ['fc-event', 'fc-event-vert'];
             if (week_day_view == "agendaWeek" || week_day_view == "") {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3711,8 +3712,8 @@ function enableTextSelection(element) {
                     classes.push('fc-event-skin-valid-false');
                 }
             } else {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-day-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3752,14 +3753,14 @@ function enableTextSelection(element) {
             } else {
                 html += "div";
             }
-            if (event.valid == "false")
+            if (!event.valid)
                 html +=
                     " class='" + classes.join(' ') + "'" +
                     " style='position:absolute;z-index:5;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
                     ">" +
                     "<div class='fc-event-inner'" + skinCssAttr + ">" +
                     "<div class='fc-event-content'>";
-            else if (event.cancelled == "true")
+            else if (event.cancelled)
                 html +=
                     " class='" + classes.join(' ') + "'" +
                     " style='position:absolute;z-index:6;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
@@ -3815,7 +3816,7 @@ function enableTextSelection(element) {
                     "</div>" +
                     "<div class='fc-icon-align-bottom-right'>";
             }
-            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment == "true") {
+            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment) {
                  
 
                 if (event.cancelled == 'true') {
@@ -3824,7 +3825,7 @@ function enableTextSelection(element) {
                 if (event.moved == 'true') {
                     html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
                 }
-                if (event.new_appointment == "true") {
+                if (event.new_appointment) {
                     html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
                 }
             } else if (event.modified == 'true' || event.remark.length != 0) {
@@ -3864,8 +3865,8 @@ function enableTextSelection(element) {
             var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
             var classes = ['fc-event', 'fc-event-vert'];
             if (week_day_view == "agendaWeek" || week_day_view == "") {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3883,8 +3884,8 @@ function enableTextSelection(element) {
                     classes.push('fc-event-skin-valid-false');
                 }
             } else {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-day-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3917,10 +3918,10 @@ function enableTextSelection(element) {
                 classes = classes.concat(event.source.className || []);
             }
             child.setAttribute("class", classes.join(' '));
-            if (event.valid == "false")
+            if (!event.valid)
                 child.setAttribute("style", "position:absolute;z-index:5;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss);
 
-            else if (event.cancelled == "true")
+            else if (event.cancelled)
                 child.setAttribute("style", "position:absolute;z-index:6;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss);
 
             else if (event.type == 'lesson')
@@ -3965,7 +3966,7 @@ function enableTextSelection(element) {
                     "<div class='fc-icon-align-bottom-right'>";
             }
 
-            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment == "true") {
+            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment) {
                 
                 if (event.cancelled == 'true') {
                     html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
@@ -3973,7 +3974,7 @@ function enableTextSelection(element) {
                 if (event.moved == 'true') {
                     html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
                 }
-                if (event.new_appointment == "true") {
+                if (event.new_appointment) {
                     html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
                 }
             } else if (event.modified == 'true' || event.remark.length != 0) {

@@ -84,7 +84,11 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	//below function fetches the list of appointments using webservice.
-	getAppointment: function(me, currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week) {
+	getAppointment: function(me, currentobj, startTime, endTime) {
+		startTime = Math.floor(startTime / 1000);
+		endTime = Math.floor(endTime / 1000);
+		// startTime = Math.floor(Date.now() / 1000 -72000)
+		// endTime = Math.floor(Date.now() / 1000 + 72000)
 	    me.setMasked({
 	        xtype: 'loadmask',
 	        locale: {
@@ -103,7 +107,6 @@ Ext.define('Zermelo.AjaxManager', {
 	        method: "GET",
 	        useDefaultXhrHeader: false,
 	        success: function (response) {
-	        	eventArray = [];
 	        	var decoded = Ext.JSON.decode(response.responseText).response.data;
 	            window.localStorage.setItem('startApp',"True");
 	            window.localStorage.setItem('refresh_time_interval',new Date().getTime());
@@ -111,39 +114,44 @@ Ext.define('Zermelo.AjaxManager', {
 
 	            var appointmentStore = Ext.getStore('Appointments');
 	            appointmentStore.each(function(record) {
-	                var stillExists = decoded.some(function(entry, index) {
+	                decoded.some(function(entry, index) {
 	                    if (record.get('appointmentInstance') != entry.id)
 	                        return false;
 	                    if (!entry.valid || entry.hidden) {
 	                    	appointmentStore.remove(record);
-	                    	return true;
 	                    }
 	                    else if (record.get('lastModified') < entry.lastModified) {
-		                    // do update
+		                    console.log('should update');
 	                    }
 
 	                    decoded.splice(index, 1);
+	                    record.commit();
 	                    return true;
-	                });
-
-	                if (!stillExists)
-	                	appointmentStore.remove(record);
-
-	                record.commit();
+	                });	                
 	            });
 
 	            decoded.forEach(function(record) {
 	            	record.start = new Date(record.start * 1000);
 	            	record.end = new Date(record.end * 1000);
+	            	record.allDay = false;
+	            	record.refreshFlag = true;
 	                appointmentStore.add(record);
-	                eventArray.push(record);
 	            });
-	            console.log(eventArray);
+	            eventArray = [];
+	            appointmentStore.each(function(record) {
+	            	eventArray.push(record.getData());
+	            });
+	            console.log('appointmentStore', appointmentStore.getData());
+	            console.log('eventArray', eventArray);
 	            me.setMasked(false);
+	            // console.log(me);
+	            // me.innerItems[0].renderFullCalendar();
 	            // currentobj.destroyCalendar();
-	            console.log(currentobj);
-                // currentobj.renderFullCalendar();
-                getAppointments(currentobj, true);
+	            // console.log(currentobj);
+                var fullCalendar = Ext.getCmp('fullCalendarView');
+                fullCalendar.destroyCalendar();
+                fullCalendar.renderFullCalendar();
+                // getAppointments(currentobj, true);
 	        },
 	        failure: function (response) {
 	            var error_msg = 'network_error';
