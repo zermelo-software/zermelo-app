@@ -139,7 +139,7 @@ Ext.define('Zermelo.AjaxManager', {
 	            appointmentStore.detectCollisions();
 
 	            me.setMasked(false);
-                Ext.getCmp('fullCalendarView').renderFullCalendar();
+                Ext.getCmp('fullCalendarView').refreshOrStart();
 	        },
 	        failure: function (response) {
 	            var error_msg = 'network_error';

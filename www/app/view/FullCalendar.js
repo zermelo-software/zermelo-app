@@ -62,6 +62,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         defaultview: 'agendaWeek',
         scrollable: 'vertical'
     },
+    started: false,
     initialize: function () {
         // get screen width
         screenWidth = Ext.getBody().getSize().width;
@@ -357,7 +358,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 docked: 'left',
                 ui: 'plain',
                 handler: function () {
-                    getWeekData('right', me, dayview);
+                    getWeekData('left', me, dayview);
                 }
             }, {
                 // next button
@@ -367,7 +368,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 docked: 'right',
                 ui: 'plain',
                 handler: function () {
-                    getWeekData('left', me, dayview);
+                    getWeekData('right', me, dayview);
                 }
             }]
         });
@@ -382,7 +383,6 @@ Ext.define('Zermelo.view.FullCalendar', {
 
         // add items in main container
         this.setItems([me.topBar, me.calendarPanel])
-
     }, // end initialize
 
     /**
@@ -391,15 +391,11 @@ Ext.define('Zermelo.view.FullCalendar', {
 
     renderFullCalendar: function () {
         var me = this;
-        var appointmentArray = [];
-        var appointmentStore = Ext.getStore('Appointments');
-        appointmentStore.each(function(record) {
-            appointmentArray.push(record.getData());
-        });
+        console.log(Ext.getStore('Appointments').getData().all);
         $('#' + me.getPlaceholderid()).fullCalendar({
             hideHeaders: true, //new property to hide full calendar header
             editable: false,
-            events: appointmentArray, // set Appointents
+            events: Ext.getStore('Appointments').getAsArray(), // set Appointments source
             eventClick: function (calEvent, jsEvent, view) {
                 me.fireEvent('eventclick', calEvent, jsEvent, view, this);
             },
@@ -468,7 +464,9 @@ Ext.define('Zermelo.view.FullCalendar', {
     },
     changeTitle: function () {
         var me = this;
-        Ext.getCmp("btn_datePicker").setText($('#' + me.getPlaceholderid()).fullCalendar('getView').title);
+        var text = $('#' + me.getPlaceholderid()).fullCalendar('getView').title;
+        console.log(text);
+        Ext.getCmp("btn_datePicker").setText(text);
     },
 
     viewToday: function () {
@@ -478,13 +476,27 @@ Ext.define('Zermelo.view.FullCalendar', {
     // navigate calendar next prev
     navigateCalendar: function (direction) {
         var me = this;
-        if (direction == "left") {
+        if (direction == "right") {
             $('#' + me.getPlaceholderid()).fullCalendar('next');
-
-        } else if (direction == "right") {
+        } else if (direction == "left") {
             $('#' + me.getPlaceholderid()).fullCalendar('prev');
         }
         me.changeTitle();
+    },
+
+    refreshOrStart: function() {
+        if (this.started) {
+            this.refreshEvents();
+        }
+        else {
+            this.started = true;
+            this.renderFullCalendar();
+        }
+    },
+
+    refreshEvents: function () {
+        $('#' + this.getPlaceholderid()).fullCalendar('removeEvents');
+        $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', Ext.getStore('Appointments').getAsArray());
     }
 });
 
@@ -568,33 +580,23 @@ function getISOWeeks(y) {
 // 
 
 function getWeekData(nextprev, me, dayview) {
-    // set current day for get data on swipe
-    currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-    if (dayview != "dayview") {
-        currentDay.setDate(currentDay.getDate() - currentDay.getDay() + 1);
-        if (nextprev == "left")
-            currentDay.setDate(currentDay.getDate() - currentDay.getDay() + 8);
-        else
-            currentDay.setDate(currentDay.getDate() - currentDay.getDay() - 1);
-    } else {
-        if (nextprev == "left") {
-            currentDay.setDate(currentDay.getDate() + 7);
-        }
-    }
+    var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
+    var direction = nextprev == 'left' ? -1 : 1;    // subtract days for left, add for right
 
-    var appointmentStore = Ext.getStore('Appointments');
+    currentDay.setDate(currentDay.getDate() + offset * direction);
     var endOfWeek = new Date(currentDay.valueOf());
     endOfWeek.setDate(endOfWeek.getDate() + 5);        // 5 full days later
-    var count = appointmentStore.getAppointmentCountInInterval(currentDay, endOfWeek);
 
-    if (count == 0) {
+    if (Ext.getStore('Appointments').getAppointmentCountInInterval(currentDay, endOfWeek) == 0) {
         Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, currentDay.valueOf(), endOfWeek.valueOf());
     }
-    
+
+    me.refreshEvents();
     me.navigateCalendar(nextprev);
 }
 
 function gotoWeek_Day(week, me) {
+    console.log(week);
     var localCurrentDay = new Date(currentDay.valueOf());
     var currentweekdate = new Date(localCurrentDay.getFullYear(), localCurrentDay.getMonth(), localCurrentDay.getDate());
     currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
@@ -611,14 +613,15 @@ function gotoWeek_Day(week, me) {
     }
     localCurrentDay = new Date(week.getFullYear(), week.getMonth(), week.getDate());
 
-    // if (flag)
-    //     Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), startTime, endTime);
-    // else {
-    //     $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
-    //     me.changeTitle();
-    // }
+    if (flag)
+        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), startTime, endTime);
+    else {
+        $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
+        me.changeTitle();
+    }
 }
 function getAppointments(currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week) {
+    return;
     if (refresh) {
         //calendar view only current day calendar view refresh
         if (todayFlag && !datepickerGo && nextPrev == '') {
