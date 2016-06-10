@@ -73,5 +73,16 @@ Ext.define('Zermelo.store.AppointmentStore', {
         this.resumeEvents(true);
 
         return count;
+	},
+
+	getWeekIfNeeded: function(schedule, calendar, target) {
+		var monday = new Date(target.valueOf());
+		monday = monday.setDate(monday.getDate() + (1 - monday.getDay()));
+		var saturday = new Date(monday.valueOf());
+	    saturday.setDate(saturday.getDate() + 5);
+
+	    if (this.getAppointmentCountInInterval(monday, saturday) == 0) {
+	        Zermelo.AjaxManager.getAppointment(schedule, calendar, monday.valueOf(), saturday.valueOf());
+	    }
 	}
 });
