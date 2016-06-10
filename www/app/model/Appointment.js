@@ -3,9 +3,9 @@ Ext.define('Zermelo.model.Appointment', {
 	config: {
 		fields: [
 			{name: 'allDay',					type: 'bool'},
-			{name: 'appointmentInstance', 		type: 'int'},
 			{name: 'cancelled', 				type: 'bool'},
 			{name: 'changeDescription', 		type: 'string'},
+			{name: 'collidingIds',				type: 'auto'},		// type: array
 			{name: 'created', 					type: 'int'},
 			{name: 'end', 						type: 'date', dateFormat: "l, F d, Y g:i:s A"},
 			{name: 'endTimeSlot', 				type: 'int'},

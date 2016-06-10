@@ -10,6 +10,60 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		proxy: {
 			type: 'localstorage',
 			id: 'AppointmentStore'
-		}
+		},
+		sorters: [
+			{
+				property: 'start',
+				direction: 'ASC'
+			},
+			{
+				property: 'end',
+				direction: 'DESC'
+			}
+		]
+	},
+
+	detectCollisions: function() {
+		if(!this.isSorted())
+			this.sort();
+
+		this.each(function(record, index, length) {
+			if (index != 0) {
+				var prev_collisions = this.getAt(index - 1).get('collidingIds');
+				if (prev_collisions.length > 1) {
+					record.set('collidingIds', prev_collisions);
+					return;
+				}
+			}
+
+			// NB: This works because the store is already sorted by start time
+			var collidingIds = [record.getId()];
+			var overlap = true;
+			for(var i = index + 1; i < length && overlap; i++) {
+				var next = this.getAt(i);
+
+				if(next.get('start') < record.get('end')) {
+					collidingIds.push(next.getId());
+				}
+				else {
+					overlap = false;
+				}
+			}
+			record.set('collidingIds', collidingIds);
+		}, this);
+	},
+
+	getAppointmentCountInInterval: function(start, end) {
+		this.suspendEvents();
+		this.filterBy(function(record) {
+            return record.get('start') >= start && record.get('end') <= end;
+        });
+
+        var count = this.getCount();
+
+        this.clearFilter();
+        this.resumeEvents(true);
+
+        return count;
 	}
 });

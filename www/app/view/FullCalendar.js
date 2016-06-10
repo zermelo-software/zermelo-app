@@ -36,7 +36,6 @@ function doRefresh(me) {
     var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12));
     // call appointment api and annoucement api at start
     var refreshMin=0;
-    //  console.log(refreshMin);
     if(window.localStorage.getItem('refresh_time_interval')!=null)
     {
         var date=new Date();
@@ -44,15 +43,8 @@ function doRefresh(me) {
         var refreshTime=window.localStorage.getItem('refresh_time_interval');
 
         refreshMin=parseInt(((currentTime -refreshTime)/(1000*60*60))%24*60);
-        // console.log(refreshMin);
     }
-    // de "refresh later update" call werkt helemaal niet, tekent geen rooster
-    //if( window.localStorage.getItem('startApp')=='True' && refreshMin >=15){
-    //    console.log('Refresh later update');
-    //    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, true, '', false);
-    //} else {
-        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, startTime, endTime);
-    //}
+    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, startTime, endTime);
 
     Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
 
@@ -523,7 +515,7 @@ function openDayView(selectedDate, me) {
     me.day.hide();
     Ext.getCmp('toolbar_main').setHidden(true);
     Ext.getCmp('toolbar_day_back').setHidden(false);
-    currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+    // currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
     dayview = "dayview";
 }
 // update redline every 5 mins only current day is open
@@ -577,83 +569,39 @@ function getISOWeeks(y) {
 
 function getWeekData(nextprev, me, dayview) {
     // set current day for get data on swipe
+    currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
     if (dayview != "dayview") {
-        currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
         currentDay.setDate(currentDay.getDate() - currentDay.getDay() + 1);
         if (nextprev == "left")
             currentDay.setDate(currentDay.getDate() - currentDay.getDay() + 8);
         else
             currentDay.setDate(currentDay.getDate() - currentDay.getDay() - 1);
     } else {
-        currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-
         if (nextprev == "left") {
-            if (currentDay.getDay() == 0) {
-                currentDay.setDate(currentDay.getDate() + 1)
-            } else if (currentDay.getDay() == 5) {
-                currentDay.setDate(currentDay.getDate() + 2);
-            }
-            currentDay.setDate(currentDay.getDate() + 1);
-        } else {
-            if (currentDay.getDay() == 1) {
-                currentDay.setDate(currentDay.getDate() - 2);
-            } else
-                currentDay.setDate(currentDay.getDate() - 1);
+            currentDay.setDate(currentDay.getDate() + 7);
         }
     }
-    var weeknumber = new Date(Math.round(currentDay.getTime())).getWeek();
-    weeknumber = weeknumber + "" + new Date(Math.round(currentDay.getTime())).getFullYear();
 
-    var flag = true;
-  //  console.log(weeknumbers);
-    for (var i = 0; i < weeknumbers.length; i++) {
-        if (weeknumbers[i].week == weeknumber) {
-            flag = false;
-            break;
-        }
+    var appointmentStore = Ext.getStore('Appointments');
+    var endOfWeek = new Date(currentDay.valueOf());
+    endOfWeek.setDate(endOfWeek.getDate() + 5);        // 5 full days later
+    var count = appointmentStore.getAppointmentCountInInterval(currentDay, endOfWeek);
+
+    if (count == 0) {
+        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, currentDay.valueOf(), endOfWeek.valueOf());
     }
-    // if already get data from server ,next time does not go on server for getting data
-    if (flag) {
-        var appointmentStore = Ext.getStore('Appointments');
-        var count = appointmentStore.getCount();
-
-        if (count == 0) {
-            var starttime = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-            var startTime = Math.round(starttime.getTime());
-            if (nextprev == "left") {
-                var endTime = Math.round(starttime.setDate(starttime.getDate() + 12));
-                Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, startTime, endTime, false, nextprev, false);
-            } else {
-                var endTime = Math.round(starttime.setDate(starttime.getDate() - 12));
-                Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, endTime, startTime, false, nextprev, false);
-            }
-
-        } else {
-            me.navigateCalendar(nextprev);
-        }
-        if (dayview == 'dayview' && nextprev == 'right')
-            if (currentDay.getDay() == 6) {
-                currentDay.setDate(currentDay.getDate() - 1);
-            }
-    }
-    else {
-        me.navigateCalendar(nextprev);
-        if (dayview == 'dayview' && nextprev == 'right')
-            if (currentDay.getDay() == 6) {
-                currentDay.setDate(currentDay.getDate() - 1);
-            }
-    }
-
+    
+    me.navigateCalendar(nextprev);
 }
 
 function gotoWeek_Day(week, me) {
-    currentDay = new Date(week.getFullYear(), week.getMonth(), week.getDate());
-    var currentweekdate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
+    var localCurrentDay = new Date(currentDay.valueOf());
+    var currentweekdate = new Date(localCurrentDay.getFullYear(), localCurrentDay.getMonth(), localCurrentDay.getDate());
     currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
     var startTime = Math.round(currentweekdate.getTime() / 1000);
     var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12) / 1000);
-    var weeknumber = new Date(Math.round(currentDay.getTime())).getWeek();
-    weeknumber = weeknumber + "" + new Date(Math.round(currentDay.getTime())).getFullYear();
+    var weeknumber = new Date(Math.round(localCurrentDay.getTime())).getWeek();
+    weeknumber = weeknumber + "" + new Date(Math.round(localCurrentDay.getTime())).getFullYear();
     var flag = true;
     for (var i = 0; i < weeknumbers.length; i++) {
         if (weeknumbers[i].week == weeknumber) {
@@ -661,12 +609,14 @@ function gotoWeek_Day(week, me) {
             break;
         }
     }
-    if (flag)
-        Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), startTime, endTime, false, '', true, week);
-    else {
-        $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
-        me.changeTitle();
-    }
+    localCurrentDay = new Date(week.getFullYear(), week.getMonth(), week.getDate());
+
+    // if (flag)
+    //     Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), startTime, endTime);
+    // else {
+    //     $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
+    //     me.changeTitle();
+    // }
 }
 function getAppointments(currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week) {
     if (refresh) {

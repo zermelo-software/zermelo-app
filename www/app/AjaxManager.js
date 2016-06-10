@@ -84,6 +84,7 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(me, currentobj, startTime, endTime) {
+		// Real unix timestamps use seconds, javascript uses milliseconds
 		startTime = Math.floor(startTime / 1000);
 		endTime = Math.floor(endTime / 1000);
 
@@ -94,7 +95,6 @@ Ext.define('Zermelo.AjaxManager', {
 	        },
 	        indicator: true
 	    });
-	    var thisMe = currentobj;
 	    
 	    if (!Zermelo.UserManager.loggedIn())
 	        return;
@@ -131,9 +131,12 @@ Ext.define('Zermelo.AjaxManager', {
 	            decoded.forEach(function(record) {
 	            	record.start = new Date(record.start * 1000);
 	            	record.end = new Date(record.end * 1000);
+	            	record.id = record.appointmentInstance;
 
 	                appointmentStore.add(record);
 	            });
+
+	            appointmentStore.detectCollisions();
 
 	            me.setMasked(false);
                 Ext.getCmp('fullCalendarView').renderFullCalendar();
