@@ -514,56 +514,57 @@ Ext.define('Zermelo.view.FullCalendar', {
       
         $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
         this.changeTitle();
-    }
-});
+    },
 
-//Below function opens dayview with selected date
-function openDayView(selectedDate, me) {
-    if (!Ext.os.is.iOS) {
-        if (webkitVersion < 537.36) {
-            clickButton = true;
-            var timer = $.timer(function () {
-                clickButton = false;
-                timer.stop();
-            });
-            if (version == 2)
-                timer.set({
-                    time: 6000,
-                    autostart: true
+    //Below function opens dayview with selected date
+    openDayView: function(selectedDate) {
+        if (!Ext.os.is.iOS) {
+            if (webkitVersion < 537.36) {
+                clickButton = true;
+                var timer = $.timer(function () {
+                    clickButton = false;
+                    timer.stop();
                 });
-            else
-                timer.set({
-                    time: 4000,
-                    autostart: true
-                });
-        }
-    }
-    week_day_view = "agendaDay";
-    me.changeCalendarView('agendaDay');
-    $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-    me.day.hide();
-    Ext.getCmp('toolbar_main').setHidden(true);
-    Ext.getCmp('toolbar_day_back').setHidden(false);
-    // currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-    dayview = "dayview";
-}
-// update redline every 5 mins only current day is open
-function updateView(me) {
-    var timer = $.timer(function () {
-        if (!appointment_detail_open) {
-            if ((todayFlag && Ext.getCmp('home').list.getSelection()[0].raw.index == "0")) {
-                me.destroyCalendar();
-                me.renderFullCalendar();
-                if (dayview == "dayview")
-                    me.changeCalendarView('agendaDay');
+                if (version == 2)
+                    timer.set({
+                        time: 6000,
+                        autostart: true
+                    });
+                else
+                    timer.set({
+                        time: 4000,
+                        autostart: true
+                    });
             }
         }
-    });
-    timer.set({
-        time: 60000,
-        autostart: true
-    });
-}
+        week_day_view = "agendaDay";
+        me.changeCalendarView('agendaDay');
+        $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+        this.day.hide();
+        Ext.getCmp('toolbar_main').setHidden(true);
+        Ext.getCmp('toolbar_day_back').setHidden(false);
+        // currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+        dayview = "dayview";
+    },
+
+    // update redline every 5 mins only current day is open
+    updateView: function() {
+        var timer = $.timer(function () {
+            if (!appointment_detail_open) {
+                if ((todayFlag && Ext.getCmp('home').list.getSelection()[0].raw.index == "0")) {
+                    this.destroyCalendar();
+                    this.renderFullCalendar();
+                    if (dayview == "dayview")
+                        this.changeCalendarView('agendaDay');
+                }
+            }
+        });
+        timer.set({
+            time: 60000,
+            autostart: true
+        });
+    }
+});
 
 function setClickButton() {
     var timer = $.timer(function () {
