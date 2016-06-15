@@ -95,6 +95,7 @@ Ext.define('Zermelo.UserManager', {
 
         this.userChanged = true;
     	this.setCode(newCode);
+        Ext.getStore('Appointments').changeUser(newCode);
     	this.refreshData();
     	this.setTitles();
     },

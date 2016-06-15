@@ -37,8 +37,8 @@ Ext.define('Zermelo.AjaxManager', {
 
 	        success: function (response, opts) {
 	            var decoded = Ext.JSON.decode(response.responseText).response.data;
-
 	            var announcementStore = Ext.getStore('Announcements');
+
 	            announcementStore.each(function(record) {
 	                var stillExists = 
 	                decoded.some(function(entry, index) {
@@ -71,13 +71,10 @@ Ext.define('Zermelo.AjaxManager', {
 	            Ext.Viewport.setMasked(false);
 	        },
 	        failure: function (response) {
-	            if (response.status == 403) {
-	                Zermelo.ErrorManager.showErrorBox('insufficient_permissions');
-	                Zermelo.UserManager.setUser();
-	            }
-	            else {
+	            if (response.status != 403) {
 	                Zermelo.ErrorManager.showErrorBox('network_error');
 	            }
+
 	            Ext.Viewport.setMasked(false);
 	        }
 	    });
@@ -131,12 +128,13 @@ Ext.define('Zermelo.AjaxManager', {
 	            decoded.forEach(function(record) {
 	            	record.start = new Date(record.start * 1000);
 	            	record.end = new Date(record.end * 1000);
-	            	// record.id = record.appointmentInstance;
+	            	record.user = Zermelo.UserManager.getUser();
 
 	                appointmentStore.add(record);
 	            });
 
 	            appointmentStore.detectCollisions();
+	            appointmentStore.pruneLocalStorageWithDelay();
 
 	            me.setMasked(false);
                 Ext.getCmp('fullCalendarView').refreshOrStart();
