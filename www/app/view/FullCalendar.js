@@ -111,7 +111,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 handler: function () {
                     var date = dayData[0].split("T")[0].split("-");
                     var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                 }
             }, {
                 // Tuesday button    
@@ -126,7 +126,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                     var date = dayData[1].split("T")[0].split("-");
                     var selectedDate = new Date(date[0], date[1] - 1, date[2]);
                     //console.log(selectedDate);
-                    openDayView(selectedDate, me);
+                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                 }
             }, {
                 //Wednesday button
@@ -140,7 +140,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 handler: function () {
                     var date = dayData[2].split("T")[0].split("-");
                     var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                 }
             }, {
                 //Thursday button
@@ -154,7 +154,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 handler: function () {
                     var date = dayData[3].split("T")[0].split("-");
                     var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                 }
             }, {
                 //Friday button
@@ -168,7 +168,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 handler: function () {
                     var date = dayData[4].split("T")[0].split("-");
                     var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                 }
             }]
         }); // end day container
@@ -538,7 +538,7 @@ Ext.define('Zermelo.view.FullCalendar', {
             }
         }
         week_day_view = "agendaDay";
-        me.changeCalendarView('agendaDay');
+        this.changeCalendarView('agendaDay');
         $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
         this.day.hide();
         Ext.getCmp('toolbar_main').setHidden(true);
