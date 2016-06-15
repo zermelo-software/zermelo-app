@@ -8,7 +8,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		autoLoad: true,
 		autoSync: true,
 		autoSort: false,
-		remoteSort: false,
 		proxy: {
 			type: 'localstorage',
 			id: 'AppointmentStore'
@@ -39,7 +38,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		var currentCollision;
 		var collisionEnd = 0;
 		this.getData().each(function(record, index, length) {
-			console.log(record.get('id'));
 			if (record.get('start') < collisionEnd) {
 				record.set('collidingIds', currentCollision);
 				return true;
@@ -51,7 +49,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			var overlap = true;
 			for(var i = index + 1; i < length && overlap; i++) {
 				var next = this.getAt(i);
-				console.log('record', record.get('id'), 'next', next.get('id'));
 
 				if(next.get('start') < record.get('end')) {
 					currentCollision.push(next.get('id'));
