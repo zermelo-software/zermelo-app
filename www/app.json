@@ -76,16 +76,6 @@
             "path": "js/fullcalendar.js",
             "update": "full",
             "includeInBundle": true
-        },
-        // {
-        //     "path": "js/database.js",
-        //     "update": "full",
-        //     "includeInBundle": true
-        // },
-        {
-            "path": "js/underscore.js",
-            "update": "full",
-            "includeInBundle": true
         }
     ],
 
