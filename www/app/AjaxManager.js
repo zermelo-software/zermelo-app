@@ -131,7 +131,7 @@ Ext.define('Zermelo.AjaxManager', {
 	            decoded.forEach(function(record) {
 	            	record.start = new Date(record.start * 1000);
 	            	record.end = new Date(record.end * 1000);
-	            	record.id = record.appointmentInstance;
+	            	// record.id = record.appointmentInstance;
 
 	                appointmentStore.add(record);
 	            });

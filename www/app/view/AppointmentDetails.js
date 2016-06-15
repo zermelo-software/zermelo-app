@@ -36,11 +36,13 @@ Ext.define('Zermelo.view.AppointmentDetails', {
             show: function() {
                 appointment_detail_open = true;
                 thisObj = this;
-                var collidingIds = eventDetails.collidingIds;
+                var collidingIds = eventDetails.collidingIds.split(',');
+                console.log(collidingIds);
                 appointmentStore = Ext.getStore('Appointments');
+                console.log('eventDetails', eventDetails);
 
                 for (i = 0; i < collidingIds.length; i++) {
-                    var appointmentData = appointmentStore.getById(collidingIds[i]).getData();
+                    var appointmentData = appointmentStore.findRecord('id', collidingIds[i]).getData();
                     var container = Ext.create('Ext.Container', {
                         style: {
                             'font-size': '14px'
