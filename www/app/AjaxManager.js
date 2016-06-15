@@ -153,5 +153,5 @@ Ext.define('Zermelo.AjaxManager', {
 	            thisObj.show();
 	        }
 	    }); // end ajax request
-	},
+	}
 })
