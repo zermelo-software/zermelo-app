@@ -6,7 +6,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		model: 'Zermelo.model.Appointment',
 		storeId: 'Appointments',
 		autoLoad: true,
-		autoSync: true,
+		autoSync: false,
 		autoSort: false,
 		proxy: {
 			type: 'localstorage',
@@ -88,10 +88,11 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	    }
 	},
 
-	pruneLocalStorageWithDelay: function(delay) {
+	queueDelayedEvents: function(delay) {
 		if (delay === undefined)
-			delay = 10 * 1000;
+			delay = 5 * 1000;
 		Ext.defer(this.pruneLocalStorage, delay, this);
+		Ext.defer(this.sync, delay, this);
 	},
 
 	pruneLocalStorage: function() {

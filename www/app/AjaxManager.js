@@ -134,7 +134,7 @@ Ext.define('Zermelo.AjaxManager', {
 	            });
 
 	            appointmentStore.detectCollisions();
-	            appointmentStore.pruneLocalStorageWithDelay();
+	            appointmentStore.queueDelayedEvents();
 
 	            me.setMasked(false);
                 Ext.getCmp('fullCalendarView').refreshOrStart();
