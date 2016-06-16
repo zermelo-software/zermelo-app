@@ -102,6 +102,7 @@ Ext.define('Zermelo.AjaxManager', {
 	        method: "GET",
 	        useDefaultXhrHeader: false,
 	        success: function (response) {
+	        	// myNewTimer = Date.now();
 	        	var decoded = Ext.JSON.decode(response.responseText).response.data;
 	        	var currentUser = Zermelo.UserManager.getUser();
 	            window.localStorage.setItem('startApp',"True");
@@ -127,6 +128,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 	            me.setMasked(false);
                 Ext.getCmp('fullCalendarView').refreshOrStart();
+                // console.log('time spent: ' + (Date.now() - myNewTimer) + ' ms.');
 	        },
 	        failure: function (response) {
 	            var error_msg = 'network_error';
