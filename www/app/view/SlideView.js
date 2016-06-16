@@ -607,10 +607,9 @@ Ext.define('Zermelo.view.SlideView', {
             }
             if (index == 0) {
                 messageShow = false;
-                Zermelo.UserManager.refreshDataIfNeeded()
+                Ext.getStore('Appointments').refreshCurrentWeek(true);
             } else {
                 messageShow = true;
-                Zermelo.UserManager.refreshDataIfNeeded()
             }
         }
     },

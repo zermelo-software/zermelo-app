@@ -11,15 +11,8 @@ Ext.define('Zermelo.AjaxManager', {
 			target
 		)
 	},
-
-	getParams: function(additional_args) {
-		return Object.assign({
-			user: Zermelo.UserManager.getUser(),
-			access_token: Zermelo.UserManager.getAccessToken()
-		}, additional_args);
-	},
 	
-	getAnnouncementData: function(currentView) {   
+	getAnnouncementData: function() {   
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
@@ -34,7 +27,11 @@ Ext.define('Zermelo.AjaxManager', {
 		
 		Ext.Ajax.request({
 			url: this.getUrl('announcements'),
-			params: this.getParams({current: true}),
+			params: {
+				user: '~me',
+				access_token: Zermelo.UserManager.getAccessToken(),
+				current: true
+			},
 			method: "GET",
 			useDefaultXhrHeader: false,
 
@@ -83,7 +80,7 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
-	getAppointment: function(me, currentobj, startTime, endTime) {
+	getAppointment: function(me, startTime, endTime) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 		
@@ -91,7 +88,7 @@ Ext.define('Zermelo.AjaxManager', {
 		startTime = Math.floor(startTime / 1000);
 		endTime = Math.floor(endTime / 1000);
 
-		me.setMasked({
+		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
 				message: 'loading'
@@ -102,7 +99,12 @@ Ext.define('Zermelo.AjaxManager', {
 		// send request to server using ajax
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
-			params: this.getParams({'start': startTime, 'end': endTime}),
+			params: {
+				user: Zermelo.UserManager.getUser(),
+				access_token: Zermelo.UserManager.getAccessToken(),
+				start: startTime,
+				end: endTime
+			},
 			method: "GET",
 			useDefaultXhrHeader: false,
 			success: function (response) {
@@ -143,7 +145,6 @@ Ext.define('Zermelo.AjaxManager', {
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 
 				me.setMasked(false);
-				thisObj.show();
 			}
 		}); // end ajax request
 	}

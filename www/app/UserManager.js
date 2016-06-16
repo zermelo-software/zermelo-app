@@ -54,23 +54,6 @@ Ext.define('Zermelo.UserManager', {
         this.setAccessToken('');
     },
 
-    refreshDataIfNeeded: function() {
-        if (this.userChanged == false)
-            return;
-        this.userChanged = false;
-        this.refreshData();
-    },
-
-    refreshData: function() {
-        if (messageShow) {
-            Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
-        }
-        else {
-            Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('schedule'));
-        }
-        refresh();
-    },
-
     setTitles: function() {
     	var header;
         var key_suffix = this.userIsSelf() ? 'self' : 'other';
@@ -96,7 +79,6 @@ Ext.define('Zermelo.UserManager', {
         this.userChanged = true;
     	this.setCode(newCode);
         Ext.getStore('Appointments').changeUser(newCode);
-    	this.refreshData();
     	this.setTitles();
     },
 

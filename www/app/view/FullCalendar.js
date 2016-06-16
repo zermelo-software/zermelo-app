@@ -44,7 +44,7 @@ function doRefresh(me) {
 
         refreshMin=parseInt(((currentTime -refreshTime)/(1000*60*60))%24*60);
     }
-    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), me, startTime, endTime);
+    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), startTime, endTime);
 
     Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
 
@@ -63,6 +63,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         scrollable: 'vertical'
     },
     started: false,
+    currentDay: new Date(),
     initialize: function () {
         // get screen width
         screenWidth = Ext.getBody().getSize().width;
@@ -501,16 +502,16 @@ Ext.define('Zermelo.view.FullCalendar', {
         var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
         var direction = nextprev == 'left' ? -1 : 1;    // subtract days for left, add for right
 
-        currentDay.setDate(currentDay.getDate() + offset * direction);
+        this.currentDay.setDate(this.currentDay.getDate() + offset * direction);
 
-        Ext.getStore('Appointments').getWeekIfNeeded(Ext.getCmp('schedule'), this, currentDay);
+        Ext.getStore('Appointments').getWeekIfNeeded(this, this.currentDay);
 
         this.refreshEvents();
         this.navigateCalendar(nextprev);
     },
 
     gotoWeek_Day: function(week) {
-        Ext.getStore('Appointments').getWeekIfNeeded(Ext.getCmp('schedule'), this, week);
+        Ext.getStore('Appointments').getWeekIfNeeded(this, week);
       
         $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
         this.changeTitle();

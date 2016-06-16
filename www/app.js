@@ -80,7 +80,6 @@ var picker_open = false;
 var datePicker;
 var todayFlag = false;
 var appointment_detail_open = false;
-var currentDay = new Date();
 var clickButton = false;
 var picker_close = false;
 var refreshDate;

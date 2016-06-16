@@ -243,18 +243,8 @@ Ext.define('Zermelo.view.Home', {
         ]
     }
 });
-// refresh schedule and announcement 
+
 function refresh() {
-    refreshDate=new Date();
-    window.localStorage.setItem('refreshTime',refreshDate.getTime());
-    window.localStorage.setItem('refresh_time_interval',refreshDate.getTime());
-    var currentweekdate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-    currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
-    var startTime = Math.round(currentweekdate.getTime() / 1000);
-    var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12) / 1000);
-
-    // call appointment api and announcement api at start
-    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), startTime, endTime, true, '', false);
-    Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('schedule'));
+    Ext.getStore('Appointments').refreshCurrentWeek();
+    Zermelo.AjaxManager.getAnnouncementData();
 }
-

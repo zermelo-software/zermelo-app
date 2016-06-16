@@ -18,7 +18,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	getAsArray: function() {
 		var appointmentArray = [];
         this.each(function(record) {
-            appointmentArray.push(record.getData());
+        	appointmentArray.push(record.getData());
         });
         return appointmentArray;
 	},
@@ -77,14 +77,23 @@ Ext.define('Zermelo.store.AppointmentStore', {
         return count;
 	},
 
-	getWeekIfNeeded: function(schedule, calendar, target) {
+	refreshCurrentWeek: function(forceRefresh) {
+		var calendar = Ext.getCmp('fullCalendarView');
+
+		this.getWeekIfNeeded(calendar, calendar.currentDay, forceRefresh);
+	},
+
+	getWeekIfNeeded: function(calendar, target, forceRefresh) {
 		var monday = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
 		var saturday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
 
 		this.currentStartDate = new Date(monday.valueOf());
 
 	    if (this.getAppointmentCountInInterval(monday, saturday) == 0) {
-	        Zermelo.AjaxManager.getAppointment(schedule, calendar, monday.valueOf(), saturday.valueOf());
+	        Zermelo.AjaxManager.getAppointment(calendar, monday.valueOf(), saturday.valueOf());
+	    }
+	    else if (forceRefresh) {
+	    	calendar.refreshEvents();
 	    }
 	},
 
@@ -112,5 +121,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	changeUser: function(user) {
 		this.clearFilter();
 		this.filter('user', user);
+		this.refreshCurrentWeek(true);
 	}
 });
