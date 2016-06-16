@@ -20,6 +20,9 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function(currentView) {   
+		if (!Zermelo.UserManager.loggedIn())
+			return;
+
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -81,6 +84,9 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(me, currentobj, startTime, endTime) {
+		if (!Zermelo.UserManager.loggedIn())
+			return;
+		
 		// Real unix timestamps use seconds, javascript uses milliseconds
 		startTime = Math.floor(startTime / 1000);
 		endTime = Math.floor(endTime / 1000);
@@ -93,8 +99,6 @@ Ext.define('Zermelo.AjaxManager', {
 			indicator: true
 		});
 		
-		if (!Zermelo.UserManager.loggedIn())
-			return;
 		// send request to server using ajax
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
