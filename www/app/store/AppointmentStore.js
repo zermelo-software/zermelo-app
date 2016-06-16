@@ -90,7 +90,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.currentStartDate = new Date(monday.valueOf());
 
 	    if (this.getAppointmentCountInInterval(monday, saturday) == 0) {
-	        Zermelo.AjaxManager.getAppointment(calendar, monday.valueOf(), saturday.valueOf());
+	        Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
 	    }
 	    else if (forceRefresh) {
 	    	calendar.refreshEvents();

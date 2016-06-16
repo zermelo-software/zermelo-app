@@ -44,7 +44,7 @@ function doRefresh(me) {
 
         refreshMin=parseInt(((currentTime -refreshTime)/(1000*60*60))%24*60);
     }
-    Zermelo.AjaxManager.getAppointment(Ext.getCmp('schedule'), startTime, endTime);
+    Zermelo.AjaxManager.getAppointment(startTime, endTime);
 
     Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
 
