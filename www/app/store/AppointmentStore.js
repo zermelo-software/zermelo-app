@@ -11,14 +11,13 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		proxy: {
 			type: 'localstorage',
 			id: 'AppointmentStore'
-		}
+		},
+		filters: [{
+			property: 'user',
+			value: Zermelo.UserManager.getUser()
+		}]
 	},
 	currentStartDate: new Date(),
-
-	filters: [{
-		property: 'user',
-		value: Zermelo.UserManager.getUser()
-	}],
 
 	getAsArray: function() {
 		var appointmentArray = [];
