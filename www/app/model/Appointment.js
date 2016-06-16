@@ -3,6 +3,7 @@ Ext.define('Zermelo.model.Appointment', {
 	config: {
 		fields: [
 			{name: 'allDay',					type: 'bool'},
+			{name: 'appointmentInstance',		type: 'int'},
 			{name: 'cancelled', 				type: 'bool'},
 			{name: 'changeDescription', 		type: 'string'},
 			{name: 'collidingIds',				type: 'auto'},		// type: array

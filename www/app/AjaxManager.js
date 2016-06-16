@@ -103,32 +103,21 @@ Ext.define('Zermelo.AjaxManager', {
 	        useDefaultXhrHeader: false,
 	        success: function (response) {
 	        	var decoded = Ext.JSON.decode(response.responseText).response.data;
+	        	var currentUser = Zermelo.UserManager.getUser();
 	            window.localStorage.setItem('startApp',"True");
 	            window.localStorage.setItem('refresh_time_interval',new Date().getTime());
 	            window.localStorage.setItem('refreshTime', Date.now());
 
 	            var appointmentStore = Ext.getStore('Appointments');
 	            appointmentStore.each(function(record) {
-	                decoded.some(function(entry, index) {
-	                    if (record.get('appointmentInstance') != entry.id)
-	                        return false;
-	                    if (!entry.valid || entry.hidden) {
-	                    	appointmentStore.remove(record);
-	                    }
-	                    else if (record.get('lastModified') < entry.lastModified) {
-		                    console.log('should update');
-	                    }
-
-	                    decoded.splice(index, 1);
-	                    record.commit();
-	                    return true;
-	                });	                
+	                if (record.get('start') >= startTime && record.get('end') <= endTime && record.get('user') == currentUser)
+	                	appointmentStore.remove(record);
 	            });
 
 	            decoded.forEach(function(record) {
 	            	record.start = new Date(record.start * 1000);
 	            	record.end = new Date(record.end * 1000);
-	            	record.user = Zermelo.UserManager.getUser();
+	            	record.user = currentUser;
 
 	                appointmentStore.add(record);
 	            });
