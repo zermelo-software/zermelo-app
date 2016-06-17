@@ -114,7 +114,7 @@ Ext
 			// views load
 			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
 					'MessageDetails', 'Schedule', 'FullCalendar',
-					'AppointmentDetails'
+					'AppointmentDetails', 'CalendarList'
 			],
 
 			models : ['Zermelo.model.Appointment', 'Zermelo.model.Announcement'],
