@@ -3822,8 +3822,8 @@ function enableTextSelection(element) {
                 html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
             }
             // display appointment on single slot
-            if (event.collision) {
-                var multiid=event.multiid.split(",");
+            if (event.collidingIds != event.id) {
+                var multiid=event.collidingIds.split(",");
                 for(i=1; i<multiid.length;i++)
                     html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
              }
