@@ -23,43 +23,50 @@
 // });
 
 Ext.define("Zermelo.view.CalendarList", {
-	extend: 'Ext.dataview.List'
-	itemId: 'calendarList',
-	store: 'Appointments',
-	itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
-	
-	// config: {
-	// 	listeners: {
-	// 		show: function () {
-	// 			messageShow=true;
-	// 			if (Ext.getStore('Announcements').getCount() == 0) {
-	// 				Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
-	// 			}
-	// 		}
-	// 	},
-	// 	layout: 'fit',
-	// 	style: {
-	// 		'background': '#F0F0F0'
-	// 	},
-	// 	items: [{
-	// 		// list view
-	// 		xtype: 'list',
-	// 		// padding top left bottom right
-	// 		margin: '10 10 10 10',
-	// 		style:{
-	// 			'top': '-50px',
-	// 			'padding-bottom': '50px'
-	// 		},
-	// 		id: 'calendarlist',
-	// 		// css class resources/css/app.css
-	// 		cls: 'zermelo-message-list',
-	// 		// css class resources/css/app.css list items
-	// 		itemCls: 'zermelo-message-list-item',
-	// 		// css class resources/css/app.css selected items
-	// 		selectedCls: 'zermelo-menu-list-item-select',
-	// 		grouped: false,
-	// 		store: 'Appointments',
-	// 		itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
-	// 	}]
-	// }
+	extend: 'Ext.dataview.List',
+	xtype: 'CalendarList',
+	config: {
+		itemId: 'calendarList',
+		store: 'Appointments',
+		cls: 'zermelo-message-list',
+        // css class resources/css/app.css list items
+        itemCls: 'zermelo-message-list-item',
+        // css class resources/css/app.css selected items
+        selectedCls: 'zermelo-menu-list-item-select',
+        useSimpleItems: false,
+		itemTpl: new Ext.XTemplate(
+			'<div class={[this.getClass(values)]} style="padding:0px;">',
+				'<div>',
+					'<b>{subjects}</b> {teachers}',
+				'</div>',
+				'<div>',
+					'{start:date("H:i")} - {end:date("H:i")}',
+				'</div>',
+			'</div>',
+			{
+				getClass: function(event) {
+					if (event.type == 'lesson')
+	                    return ('fc-event-skin-lesson ');
+	                if (event.type == 'exam')
+	                    return ('fc-event-skin-exam ');
+	                if (event.type == 'activity')
+	                    return ('fc-event-skin-activity ');
+	                if (event.type == 'choice')
+	                    return ('fc-event-skin-unknown ');
+	                if (event.type == 'unknown' || event.type == 'other')
+	                    return ('fc-event-skin-unknown ');
+	                return '';
+				},
+				compiled: true
+			}
+		),
+		handlers: {
+			show: {
+				fn: function() {
+					console.log(this.getStore());
+				},
+				scope: this
+			}
+		}
+	}
 });

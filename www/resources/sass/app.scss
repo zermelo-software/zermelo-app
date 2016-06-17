@@ -7928,15 +7928,30 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 .zermelo-message-list .x-list-item {
 	color: #555555;
 	background:#FFF;
-	width: 96%;
-	margin-left: 2%;
+	width: 100%;
+	background-color: fuchsia;
 }
+
+.zermelo-message-list .x-dock .x-inner .x-list-item-body {
+	padding: 0em 0em;
+	background-color: aqua;
+}
+
+.zermelo-message-list.x-list-item {
+	padding: 0em 0em;
+	border: 0em 0em;
+	left: 0em;
+	top: 0em;
+	margin-left: 0em;
+	background-color: silver;
+}
+
 .zermelo-menu-list-item{
 	border: 0px
 }
 .zermelo-message-list-item{
 	border: 0px;
-	margin-top: 18px;
+	// margin-top: 18px;
 }
 .zermelo-menu-list-item-pressed{
 	background: transparent;

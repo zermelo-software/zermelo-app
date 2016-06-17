@@ -239,6 +239,41 @@ Ext.define('Zermelo.view.Home', {
             //logout and move to login screen
             urlLogo: 'resources/images/logout.' + imageType,
             title: 'logout'
+        },
+        {
+            slideButton: true,
+            urlLogo: 'resources/images/password_icon.png',
+            title: 'CalendarList',
+            items: [{
+                xtype: 'toolbar',
+                //css class resources/images/app.css
+                cls: 'zermelo-toolbar-main',
+                height: '47px',
+                // set title in multiple language
+                id:'message_title',
+                locales: {
+                    title: 'menu.announcement_self'
+                },
+                docked: 'top',
+                items:[{
+                    // refresh button
+                    xtype: 'button',
+                    //css class resources/images/app.css
+                    iconCls: 'zermelo-refresh-button-' + imageType,
+                    docked: 'right',
+                    ui: 'plain',
+                    style: {
+                        'padding-right': '4px'
+                    },
+                    handler: function () {
+                        Ext.getStore('Appointments').refreshCurrentWeek();
+
+                    }
+                }]
+            }, {
+                // open message list view
+                xtype: 'CalendarList'
+            }]
         }
         ]
     }

@@ -58,10 +58,7 @@ Ext.define("Zermelo.view.Schedule", {
                             this.parent.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
                             Ext.Viewport.add(this.parent.appointmentDetailView);
                         }
-                        this.parent.appointmentDetailView.show();
-                        //hide home view 
                         home.hide();
-                        // show appointment detail
                         this.parent.appointmentDetailView.show();
                         currentView = "appointmentDetail";
                     }
