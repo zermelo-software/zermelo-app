@@ -244,13 +244,14 @@ Ext.define('Zermelo.view.Home', {
             slideButton: true,
             urlLogo: 'resources/images/password_icon.png',
             title: 'CalendarList',
+
             items: [{
                 xtype: 'toolbar',
                 //css class resources/images/app.css
                 cls: 'zermelo-toolbar-main',
                 height: '47px',
                 // set title in multiple language
-                id:'message_title',
+                id:'calendar_list_title',
                 locales: {
                     title: 'menu.announcement_self'
                 },
@@ -267,7 +268,6 @@ Ext.define('Zermelo.view.Home', {
                     },
                     handler: function () {
                         Ext.getStore('Appointments').refreshCurrentWeek();
-
                     }
                 }]
             }, {

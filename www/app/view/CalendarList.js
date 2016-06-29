@@ -1,41 +1,19 @@
-// Ext.define('Zermelo.view.CalendarList', {
-// 	extend: 'Ext.dataview.List',
-// 	xtype: 'calendarList',
-// 	config: {
-// 		listeners: {
-// 			show: {
-// 				fn: function() {
-// 					var appointmentStore = Ext.getStore('Appointments');
-// 					var events = appointmentStore.getAsArray();
-// 					events.forEach(function(event) {
-// 						this.add(Ext.create('Ext.panel', {
-
-// 						}));
-// 					});
-// 				},
-// 				scope: this
-// 			}
-// 		}
-// 	},
-// 	items: {
-
-// 	}
-// });
-
 Ext.define("Zermelo.view.CalendarList", {
 	extend: 'Ext.dataview.List',
 	xtype: 'CalendarList',
 	config: {
 		itemId: 'calendarList',
 		store: 'Appointments',
-		cls: 'zermelo-message-list',
+		cls: 'zermelo-calendar-list',
         // css class resources/css/app.css list items
-        itemCls: 'zermelo-message-list-item',
+        itemCls: 'zermelo-calendar-list-item',
         // css class resources/css/app.css selected items
         selectedCls: 'zermelo-menu-list-item-select',
-        useSimpleItems: false,
+        useSimpleItems: true,
+        padding: 0,
+        scrollable: false,
 		itemTpl: new Ext.XTemplate(
-			'<div class={[this.getClass(values)]} style="padding:0px;">',
+			'<div class={[this.getClass(values)]}>',
 				'<div>',
 					'<b>{subjects}</b> {teachers}',
 				'</div>',
@@ -60,12 +38,18 @@ Ext.define("Zermelo.view.CalendarList", {
 				compiled: true
 			}
 		),
-		handlers: {
-			show: {
-				fn: function() {
-					console.log(this.getStore());
-				},
-				scope: this
+		listeners: {
+			painted: function() {
+				console.log('show');
+				var today = new Date();
+				today.setHours(0,0,0,0);
+				var tomorrow = new Date(today.valueOf());
+				tomorrow.setDate(tomorrow.getDate() + 1);
+
+				this.getStore().filterBy(function(record) {
+					var start = record.get('start');
+					return (start > today && start < tomorrow);
+				});
 			}
 		}
 	}

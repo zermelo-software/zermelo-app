@@ -20,6 +20,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	currentStartDate: new Date(),
 
 	getAsArray: function() {
+		this.resetFilters();
 		var appointmentArray = [];
         this.each(function(record) {
         	appointmentArray.push(record.getData());
@@ -122,9 +123,13 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.resumeEvents();
 	},
 
-	changeUser: function(user) {
+	resetFilters: function() {
 		this.clearFilter();
-		this.filter('user', user);
+		this.filter('user', Zermelo.UserManager.getUser());
+	},
+
+	changeUser: function(user) {
+		this.resetFilters();
 		this.refreshCurrentWeek(true);
 	}
 });
