@@ -7858,7 +7858,7 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #F7F
 	font-size: 13px;
 	
 }
-.zermelo-button-weeK-day{
+.zermelo-button-week-day{
 	color:#656565;
 	font-size: 13px;
 }
@@ -7928,16 +7928,51 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 .zermelo-message-list .x-list-item {
 	color: #555555;
 	background:#FFF;
-	width: 100%;
-	background-color: fuchsia;
+	width: 96%;
+	margin-left: 2%;
+}
+.zermelo-menu-list-item{
+	border: 0px
+}
+.zermelo-message-list-item{
+	border: 0px;
+	margin-top: 18px;
 }
 
-.zermelo-message-list .x-dock .x-inner .x-list-item-body {
+
+
+
+
+
+.zermelo-calender-list{
+	background:#F0F0F0
+}
+.zermelo-calender-list .x-list-header {
+   height: 25px;
+	border-color: #0054ff;
+	color: #000000;
+	font-weight: bold;
+	background-image: none;
+background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E2E2), color-stop(3%, #E2E2E2), color-stop(100%, #BDBDBD));
+	background-image: -webkit-linear-gradient(top, #E2E2E2, #BDBDBD);
+	border-bottom: 1px solid#2e5fd2;
+	padding: 3px 10px;
+}
+.zermelo-calender-list.x-list-item {
+	color: #555555;
+	background:#FFF;
+	width: 100%;
+	background-color: fuchsia;
+	padding: 0em 0em;
+	border: 0em 0em;
+}
+
+.zermelo-calender-list .x-dock .x-inner .x-list-item-body {
 	padding: 0em 0em;
 	background-color: aqua;
 }
 
-.zermelo-message-list.x-list-item {
+.zermelo-calender-list.x-list-item {
 	padding: 0em 0em;
 	border: 0em 0em;
 	left: 0em;
@@ -7946,13 +7981,17 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	background-color: silver;
 }
 
-.zermelo-menu-list-item{
-	border: 0px
-}
-.zermelo-message-list-item{
+.zermelo-calender-list-item{
 	border: 0px;
 	// margin-top: 18px;
 }
+
+
+
+
+
+
+
 .zermelo-menu-list-item-pressed{
 	background: transparent;
 }

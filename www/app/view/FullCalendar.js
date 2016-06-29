@@ -350,7 +350,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 ui: 'plain',
                 id: 'btn_datePicker',
                 centered: true,
-                labelCls: 'zermelo-button-weeK-day'
+                labelCls: 'zermelo-button-week-day'
             }, {
                 // prev button
                 xtype: 'button',
