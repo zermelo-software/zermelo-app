@@ -37,21 +37,12 @@ Ext.define("Zermelo.view.MessageList", {
         listeners: {
             show: function () {
                 messageShow=true;
-                if (Ext.getStore('Announcements').getCount() == 0) {
-                    Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
-                }
+                Zermelo.AjaxManager.getAnnouncementData();
             }, //end show
 
             hide:function(){
                 messageShow=false;
-            },
-
-            // record update with read and unread
-            painted_disabled: function () {
-                if (Ext.getStore('Announcements').getCount() == 0) {
-                    Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
-                }
-            } //end painted
+            }
         }, // end listeners
         layout: 'fit',
         style: {

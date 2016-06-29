@@ -161,6 +161,7 @@ Ext.define('Zermelo.view.Login', {
 });
 // authentication function call while press login button and go button
 function authentication() {
+    localStorage.clear();
     document.getElementsByName('cdoe').item(0).blur();
     // get textfields object
     var number_code = Ext.getCmp('number_login_code');
