@@ -38,6 +38,7 @@ Ext.define('Zermelo.AjaxManager', {
 			success: function (response, opts) {
 				var decoded = Ext.JSON.decode(response.responseText).response.data;
 				var announcementStore = Ext.getStore('Announcements');
+				announcementStore.suspendEvents(true);
 
 				announcementStore.each(function(record) {
 					var stillExists = 
@@ -68,7 +69,14 @@ Ext.define('Zermelo.AjaxManager', {
 						text: record.text
 					});
 				});
+
+				announcementStore.resumeEvents(false);
+
 				Ext.Viewport.setMasked(false);
+
+				if(announcementStore.getCount() == 0 && messageShow) {
+					Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
+				}
 			},
 			failure: function (response) {
 				if (response.status != 403) {
