@@ -143,6 +143,7 @@ Ext.define('Zermelo.controller.MainController', {
     launch: function() {
         Ext.getStore('Announcements').addAfterListener('addrecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('removerecords', this.updateNewMessagesIndicator, this);
+        Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
         this.updateNewMessagesIndicator();
     }
 });
