@@ -8,10 +8,6 @@ Ext.define("Zermelo.view.CalendarList", {
 			{
 				xtype: 'toolbar',
 				cls: 'zermelo-toolbar-week-day',
-				// title: {
-				// 	title: 'hoi',
-				// 	centered: true
-				// },
 				docked: 'top',
 				items: [
 					{
@@ -21,10 +17,12 @@ Ext.define("Zermelo.view.CalendarList", {
 						docked: 'left',
 						ui: 'plain',
 						handler: function () {
-							Ext.getStore('Appointments').setWindow(-1);
+							console.log(this.up('CalendarList'));
+							this.up('CalendarList').setWindow(-1);
 						}
 					},{
 						xtype: 'button',
+						itemId: 'dateButton',
 						ui: 'plain',
 						centered: true,
 						html: (new Date()).toDateString(),
@@ -36,7 +34,8 @@ Ext.define("Zermelo.view.CalendarList", {
 						docked: 'right',
 						ui: 'plain',
 						handler: function () {
-							Ext.getStore('Appointments').setWindow(1);
+							console.log(this.up('CalendarList'));
+							this.up('CalendarList').setWindow(1);
 						}
 					}
 				]
@@ -84,9 +83,15 @@ Ext.define("Zermelo.view.CalendarList", {
 				listeners: {
 					painted: function() {
 						this.getStore().setWindow(0);
-					},
+					}
 				}
 			}
 		]
+	},
+
+	setWindow: function(direction) {
+		var store = Ext.getStore('Appointments');
+		store.setWindow(direction);
+		this.down('#dateButton').setHtml(store.windowStart.toDateString());
 	}
 });
