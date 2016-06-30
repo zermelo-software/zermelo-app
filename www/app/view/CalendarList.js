@@ -17,7 +17,6 @@ Ext.define("Zermelo.view.CalendarList", {
 						docked: 'left',
 						ui: 'plain',
 						handler: function () {
-							console.log(this.up('CalendarList'));
 							this.up('CalendarList').setWindow(-1);
 						}
 					},{
@@ -34,7 +33,6 @@ Ext.define("Zermelo.view.CalendarList", {
 						docked: 'right',
 						ui: 'plain',
 						handler: function () {
-							console.log(this.up('CalendarList'));
 							this.up('CalendarList').setWindow(1);
 						}
 					}
@@ -50,21 +48,21 @@ Ext.define("Zermelo.view.CalendarList", {
 				// css class resources/css/app.css selected items
 				selectedCls: 'zermelo-menu-list-item-select',
 				useSimpleItems: true,
-				padding: 0,
-				height: 'auto',
-				// flex: 1,
-				grouped: false,
 				itemTpl: new Ext.XTemplate(
-					'<div class={[this.getClass(values)]}>',
-						'<div>',
-							'<b>{subjects}</b> {teachers}',
-						'</div>',
-						'<div>',
+					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content fc-event-day-skin-lesson" style="font-size:16px;">',
+						'<span class="fc-event-title">',
+							'<b>{subjects}</b>',
+						'</span>',
+						'<span style="text-align:right; float:right">',
+						 	'{teachers}',
+						'</span>',
+						'<div class="fc-event-title" style="text-align:right;">',
 							'{start:date("H:i")} - {end:date("H:i")}',
 						'</div>',
 					'</div>',
 					{
 						getClass: function(event) {
+							console.log('------', event, '------');
 							if (event.type == 'lesson')
 								return ('fc-event-skin-lesson ');
 							if (event.type == 'exam')

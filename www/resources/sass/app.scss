@@ -7957,7 +7957,7 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	border-bottom: 1px solid#2e5fd2;
 	padding: 3px 10px;
 }
-.zermelo-calender-list.x-list-item {
+.zermelo-calender-list.x-list-item-tpl {
 	color: #555555;
 	background:#FFF;
 	width: 100%;
@@ -7978,6 +7978,7 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	top: 0em;
 	margin-left: 0em;
 	background-color: silver;
+	font-size: 16px;
 }
 
 .zermelo-calender-list-item{
@@ -8063,6 +8064,10 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	font-size: 20px;
 	margin-bottom:20PX;
 }
+.zermelo-float-right{
+	float: right;
+}
+
 .circle{
 	width: auto;
 	border-radius: 1em;
