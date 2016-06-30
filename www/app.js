@@ -117,7 +117,7 @@ Ext
 					'AppointmentDetails', 'CalendarList'
 			],
 
-			models : ['Zermelo.model.Appointment', 'Zermelo.model.Announcement'],
+			models : ['Appointment', 'Announcement'],
 
 			// controller load
 			controllers : ['MainController'],

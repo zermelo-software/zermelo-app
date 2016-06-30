@@ -35,7 +35,7 @@ Ext.define("Zermelo.view.MessageList", {
     id: 'messageList',
     config: {
         listeners: {
-            show: function () {
+            painted: function () {
                 messageShow=true;
                 Zermelo.AjaxManager.getAnnouncementData();
             }, //end show

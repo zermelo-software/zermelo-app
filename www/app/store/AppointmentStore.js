@@ -131,5 +131,27 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	changeUser: function(user) {
 		this.resetFilters();
 		this.refreshCurrentWeek(true);
+	},
+
+	initialize: function() {
+		this.windowStart = new Date();
+		this.windowStart.setHours(0, 0, 0, 0);
+		this.windowEnd = new Date(this.windowStart.valueOf() + 24 * 60 * 60 * 1000);
+	},
+
+	setWindow: function(direction) {
+		// Jump over weekends
+		if(this.windowStart.getDay() == 5 && direction == 1)
+			direction = 3;
+		else if (this.windowStart.getDay() == 1 && direction == -1)
+			direction = -3;
+
+		this.windowStart.setDate(this.windowStart.getDate() + direction);
+		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
+		this.resetFilters();
+		this.filterBy(function(record) {
+			var start = record.get('start');
+			return (start > this.windowStart && start < this.windowEnd);
+		});
 	}
 });
