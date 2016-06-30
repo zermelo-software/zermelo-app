@@ -1,8 +1,6 @@
 Ext.define("Zermelo.view.CalendarList", {
 	xtype: 'CalendarList',
 	extend: 'Ext.Container',
-	windowStart: null,
-	windowEnd: null,
 	config: {
 		layout: 'fit',
 		fullscreen: true,
@@ -10,31 +8,38 @@ Ext.define("Zermelo.view.CalendarList", {
 			{
 				xtype: 'toolbar',
 				cls: 'zermelo-toolbar-week-day',
-				items: [{
-					// prev button
-					xtype: 'button',
-					iconCls: 'zermelo-prev-button-' + imageType,
-					docked: 'left',
-					ui: 'plain',
-					handler: function () {
-						Ext.getStore('Appointments').setWindow(-1);
+				// title: {
+				// 	title: 'hoi',
+				// 	centered: true
+				// },
+				docked: 'top',
+				items: [
+					{
+						// prev button
+						xtype: 'button',
+						iconCls: 'zermelo-prev-button-' + imageType,
+						docked: 'left',
+						ui: 'plain',
+						handler: function () {
+							Ext.getStore('Appointments').setWindow(-1);
+						}
+					},{
+						xtype: 'button',
+						ui: 'plain',
+						centered: true,
+						html: (new Date()).toDateString(),
+						labelCls: 'zermelo-button-week-day'
+					},{
+						// next button
+						xtype: 'button',
+						iconCls: 'zermelo-next-button-' + imageType,
+						docked: 'right',
+						ui: 'plain',
+						handler: function () {
+							Ext.getStore('Appointments').setWindow(1);
+						}
 					}
-				},{
-					xtype: 'button',
-					ui: 'plain',
-					centered: true,
-					labelCls: 'zermelo-button-week-day',
-					text: 'hoi'
-				},{
-					// next button
-					xtype: 'button',
-					iconCls: 'zermelo-next-button-' + imageType,
-					docked: 'right',
-					ui: 'plain',
-					handler: function () {
-						Ext.getStore('Appointments').setWindow(1);
-					}
-				}]
+				]
 			},{
 				xtype: 'list',
 				layout: 'fit',
@@ -48,7 +53,7 @@ Ext.define("Zermelo.view.CalendarList", {
 				useSimpleItems: true,
 				padding: 0,
 				height: 'auto',
-				flex: 1,
+				// flex: 1,
 				grouped: false,
 				itemTpl: new Ext.XTemplate(
 					'<div class={[this.getClass(values)]}>',
