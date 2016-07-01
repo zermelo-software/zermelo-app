@@ -142,6 +142,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Ext.Viewport.setMasked(false);
 				Ext.getCmp('fullCalendarView').refreshOrStart();
+				// appointmentStore.filter();
 				// console.log('time spent: ' + (Date.now() - myNewTimer) + ' ms.');
 			},
 			failure: function (response) {

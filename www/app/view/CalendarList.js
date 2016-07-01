@@ -24,7 +24,7 @@ Ext.define("Zermelo.view.CalendarList", {
 						itemId: 'dateButton',
 						ui: 'plain',
 						centered: true,
-						html: (new Date()).toDateString(),
+						html: (new Date()).toLocaleDateString(Ux.locale.Manager.getLanguage(), {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}),
 						labelCls: 'zermelo-button-week-day'
 					},{
 						// next button
@@ -49,20 +49,40 @@ Ext.define("Zermelo.view.CalendarList", {
 				selectedCls: 'zermelo-menu-list-item-select',
 				useSimpleItems: true,
 				itemTpl: new Ext.XTemplate(
-					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content fc-event-day-skin-lesson" style="font-size:16px;">',
-						'<span class="fc-event-title">',
+					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content" style="font-size:18px;">',
+						'<span class="z-calender-list-left">',
 							'<b>{subjects}</b>',
 						'</span>',
-						'<span style="text-align:right; float:right">',
-						 	'{teachers}',
+						'<span class="z-calender-list-right">',
+							'{[this.getSchoolHourBlock(values.startTimeSlot, values.endTimeSlot)]}',
 						'</span>',
-						'<div class="fc-event-title" style="text-align:right;">',
-							'{start:date("H:i")} - {end:date("H:i")}',
+						'<div>',
+							'<span class="z-calender-list-left">',
+								'{teachers}',
+							'</span>',
+							'<span class="z-calender-list-right">',
+								'{start:date("H:i")} - {end:date("H:i")}',
+							'</span>',
 						'</div>',
+						'<div>',
+							'<span class="z-calender-list-left">',
+								'{locations}',
+							'</span>',
+							'<span class="z-calender-list-right">',
+								'{groups}',
+							'</span>',
+						'</div>',
+						'<tpl if="values.remark != \'\'"',
+							'<div>',
+								'<span class="z-calender-list-left">',
+									'<i>{remark}</i>',
+								'</span>',
+							'</div>',
+						'</tpl>',
 					'</div>',
 					{
 						getClass: function(event) {
-							console.log('------', event, '------');
+							console.log(event);
 							if (event.type == 'lesson')
 								return ('fc-event-skin-lesson ');
 							if (event.type == 'exam')
@@ -76,11 +96,29 @@ Ext.define("Zermelo.view.CalendarList", {
 							return '';
 						},
 						compiled: true
+					},
+					{
+						getSchoolHourBlock: function(start, end) {
+							var block = '';
+							for(var i = 1; i < 9; i++) {
+								if(start <= i && end >= i)
+									block += '<span class="z-calendar-list-hour-true">&nbsp;' + i + '</span>';
+								else
+									block += '<span class="z-calendar-list-hour-false">&nbsp;' + i + '</span>';
+							}
+							return block;
+						},
+						compiled: true
 					}
 				),
 				listeners: {
-					painted: function() {
-						this.getStore().setWindow(0);
+					painted: {
+						fn: function() {
+							this.getStore().setWindow(0);
+						},
+						options: {
+							order: 'before'
+						}
 					}
 				}
 			}
@@ -90,6 +128,6 @@ Ext.define("Zermelo.view.CalendarList", {
 	setWindow: function(direction) {
 		var store = Ext.getStore('Appointments');
 		store.setWindow(direction);
-		this.down('#dateButton').setHtml(store.windowStart.toDateString());
+		this.down('#dateButton').setHtml(store.windowStart.toLocaleDateString(Ux.locale.Manager.getLanguage(), {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}));
 	}
 });

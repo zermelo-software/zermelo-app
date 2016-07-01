@@ -383,7 +383,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         });
 
         // add items in main container
-        this.setItems([me.topBar, me.calendarPanel])
+        this.setItems([me.topBar, me.calendarPanel]);
     }, // end initialize
 
     /**
@@ -504,7 +504,7 @@ Ext.define('Zermelo.view.FullCalendar', {
 
         this.currentDay.setDate(this.currentDay.getDate() + offset * direction);
 
-        Ext.getStore('Appointments').getWeekIfNeeded(this, this.currentDay);
+        Ext.getStore('Appointments').getWeekIfNeeded(this.currentDay);
 
         this.refreshEvents();
         this.navigateCalendar(nextprev);

@@ -84,21 +84,18 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 	refreshCurrentWeek: function(forceRefresh) {
 		var calendar = Ext.getCmp('fullCalendarView');
-
-		this.getWeekIfNeeded(calendar, calendar.currentDay, forceRefresh);
+		this.getWeekIfNeeded(calendar.currentDay, forceRefresh);
+		calendar.refreshEvents();
 	},
 
-	getWeekIfNeeded: function(calendar, target, forceRefresh) {
+	getWeekIfNeeded: function(target, forceRefresh) {
 		var monday = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
 		var saturday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
 
 		this.currentStartDate = new Date(monday.valueOf());
 
-	    if (this.getAppointmentCountInInterval(monday, saturday) == 0) {
+	    if (this.getAppointmentCountInInterval(monday, saturday) == 0 || forceRefresh) {
 	        Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
-	    }
-	    else if (forceRefresh) {
-	    	calendar.refreshEvents();
 	    }
 	},
 
@@ -134,20 +131,21 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	initialize: function() {
-		this.windowStart = new Date();
+		this.windowStart = new Date(2016, 8, 6);
 		this.windowStart.setHours(0, 0, 0, 0);
 		this.windowEnd = new Date(this.windowStart.valueOf() + 24 * 60 * 60 * 1000);
 	},
 
 	setWindow: function(direction) {
 		// Jump over weekends
-		if(this.windowStart.getDay() == 5 && direction == 1)
-			direction = 3;
-		else if (this.windowStart.getDay() == 1 && direction == -1)
-			direction = -3;
+		if((this.windowStart.getDay() == 5 && direction == 1) || (this.windowStart.getDay() == 1 && direction == -1)) {
+			direction *= 3;
+		}
 
 		this.windowStart.setDate(this.windowStart.getDate() + direction);
 		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
+		this.getWeekIfNeeded(this.windowStart);
+
 		this.resetFilters();
 		this.filterBy(function(record) {
 			var start = record.get('start');
