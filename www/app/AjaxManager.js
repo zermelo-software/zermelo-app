@@ -46,8 +46,8 @@ Ext.define('Zermelo.AjaxManager', {
 						if (record.get('announcement_id') != entry.id)
 							return false;
 
-						record.set('start', decoded[index].start);
-						record.set('end', decoded[index].end);
+						record.set('start', new Date(decoded[index].start * 1000));
+						record.set('end', new Date(decoded[index].end * 1000));
 						record.set('title', decoded[index].title);
 						record.set('text', decoded[index].text);    
 						decoded.splice(index, 1);
@@ -66,7 +66,8 @@ Ext.define('Zermelo.AjaxManager', {
 						start: record.start,
 						end: record.end,
 						title: record.title,
-						text: record.text
+						text: record.text,
+						read: false
 					});
 				});
 
@@ -79,7 +80,19 @@ Ext.define('Zermelo.AjaxManager', {
 				}
 			},
 			failure: function (response) {
-				if (response.status != 403) {
+				if (response.status == 403) {
+					var store = Ext.getStore('Announcements');
+					if (store.find('title', Ux.locale.Manager.get('announcement.no_permission_title')) == -1) {
+						store.add({
+							start: new Date(),
+							end: new Date(2030, 1, 1),
+							title: Ux.locale.Manager.get('announcement.no_permission_title'),
+							text: Ux.locale.Manager.get('announcement.no_permission_message'),
+							read: false
+						});
+					}
+				}
+				else {
 					Zermelo.ErrorManager.showErrorBox('network_error');
 				}
 

@@ -52,6 +52,7 @@ Ext.define('Zermelo.UserManager', {
         this.setCode('');
         this.setInstitution('');
         this.setAccessToken('');
+        localStorage.clear();
     },
 
     setTitles: function() {
