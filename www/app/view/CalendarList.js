@@ -82,7 +82,7 @@ Ext.define("Zermelo.view.CalendarList", {
 					'</div>',
 					{
 						getClass: function(event) {
-							console.log(event);
+							// console.log(event);
 							if (event.type == 'lesson')
 								return ('fc-event-skin-lesson ');
 							if (event.type == 'exam')

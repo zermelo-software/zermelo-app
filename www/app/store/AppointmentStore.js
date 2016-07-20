@@ -131,7 +131,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	initialize: function() {
-		this.windowStart = new Date(2016, 8, 6);
+		this.windowStart = new Date(2016, 6, 6);
 		this.windowStart.setHours(0, 0, 0, 0);
 		this.windowEnd = new Date(this.windowStart.valueOf() + 24 * 60 * 60 * 1000);
 	},
@@ -149,7 +149,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.resetFilters();
 		this.filterBy(function(record) {
 			var start = record.get('start');
-			return (start > this.windowStart && start < this.windowEnd);
+			if(!(start > this.windowStart && start < this.windowEnd))
+				return false;
+			console.log(this.windowStart, start, this.windowEnd);
+			return true;
+			// return (start > this.windowStart && start < this.windowEnd);
 		});
+		console.log(this.getFilters());
 	}
 });
