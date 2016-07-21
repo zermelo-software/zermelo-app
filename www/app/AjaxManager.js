@@ -146,7 +146,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Ext.Viewport.setMasked(false);
 				Ext.getCmp('fullCalendarView').refreshOrStart();
-				if(callback)
+				if(callback) 
 					callback(appointmentStore);
 				// appointmentStore.filter();
 				// console.log('time spent: ' + (Date.now() - myNewTimer) + ' ms.');

@@ -68,7 +68,6 @@ if (typeof Ext.Logger === 'undefined') {
 }
 
 //Global variable
-var eventDetails;
 var loc = '';
 var scrollTopHeight = 0;
 var startFlag = false;

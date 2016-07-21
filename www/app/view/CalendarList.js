@@ -119,6 +119,20 @@ Ext.define("Zermelo.view.CalendarList", {
 						options: {
 							order: 'before'
 						}
+					},
+					itemtap: function(scope, index, target, record, e, eOpts) {
+						var eventDetails = record.getData();
+						console.log(eventDetails);
+						this.appointmentDetailView.setAndShow(eventDetails);
+					},
+					initialize: function() {
+						// this.callParent(arguments);
+						console.log(this);
+						this.appointmentDetailView = Ext.getCmp('appointmentDetails_view');
+						if (!this.appointmentDetailView) {
+							this.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
+							Ext.Viewport.add(this.appointmentDetailView);
+						}
 					}
 				}
 			}
