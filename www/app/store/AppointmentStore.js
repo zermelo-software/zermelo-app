@@ -29,6 +29,8 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	detectCollisions: function() {
+		if(this.getCount() <= 1)
+			return;
 		this.sort([
 			{
 				property: 'start',
@@ -88,14 +90,17 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		calendar.refreshEvents();
 	},
 
-	getWeekIfNeeded: function(target, forceRefresh) {
+	getWeekIfNeeded: function(target, forceRefresh, callback) {
 		var monday = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
 		var saturday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
 
 		this.currentStartDate = new Date(monday.valueOf());
 
 	    if (this.getAppointmentCountInInterval(monday, saturday) == 0 || forceRefresh) {
-	        Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
+	        Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf(), callback);
+	    }
+	    else {
+	    	callback(this);
 	    }
 	},
 
@@ -107,14 +112,17 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	pruneLocalStorage: function() {
-		var cutoff = new Date(Math.min(this.currentStartDate.valueOf(), Date.now()));
-		cutoff = cutoff.setDate(cutoff.getDate() - 14).valueOf() / 1000;
+		var lowerBound = new Date(Math.min(this.currentStartDate.valueOf(), Date.now()));
+		lowerBound = lowerBound.setDate(lowerBound.getDate() - 7);
+		var upperBound = new Date(Math.max(this.currentStartDate.valueOf(), Date.now()));
+		upperBound = upperBound.setDate(upperBound.getDate() + 7);
 
 		this.suspendEvents();
 
 		this.each(function(record) {
-			if (record.get('end') < cutoff)
+			if (record.get('end') < lowerBound || record.get('start') > upperBound) {
 				this.remove(record);
+			}
 		}, this);
 
 		this.resumeEvents();
@@ -144,17 +152,19 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 		this.windowStart.setDate(this.windowStart.getDate() + direction);
 		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
-		this.getWeekIfNeeded(this.windowStart);
 
 		this.resetFilters();
-		this.filterBy(function(record) {
-			var start = record.get('start');
-			if(!(start > this.windowStart && start < this.windowEnd))
-				return false;
-			console.log(this.windowStart, start, this.windowEnd);
-			return true;
-			// return (start > this.windowStart && start < this.windowEnd);
-		});
-		console.log(this.getFilters());
+
+		var callback = function(store) {
+			store.filterBy(function(record) {
+				var start = record.get('start');
+				if(!(start > store.windowStart && start < store.windowEnd))
+					return false;
+				return true;
+				// return (start > this.windowStart && start < this.windowEnd);
+			});
+		};
+
+		this.getWeekIfNeeded(this.windowStart, false, callback);
 	}
 });

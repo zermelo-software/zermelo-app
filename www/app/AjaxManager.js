@@ -88,7 +88,7 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
-	getAppointment: function(startTime, endTime) {
+	getAppointment: function(startTime, endTime, callback) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 		
@@ -124,6 +124,7 @@ Ext.define('Zermelo.AjaxManager', {
 				window.localStorage.setItem('refreshTime', Date.now());
 
 				var appointmentStore = Ext.getStore('Appointments');
+				appointmentStore.suspendEvents();
 				appointmentStore.each(function(record) {
 					if (record.get('start') >= startTime && record.get('end') <= endTime && record.get('user') == currentUser)
 						appointmentStore.remove(record);
@@ -137,11 +138,16 @@ Ext.define('Zermelo.AjaxManager', {
 					appointmentStore.add(record);
 				});
 
+				// appointmentStore.filter(appointmentStore.filters);
 				appointmentStore.detectCollisions();
 				appointmentStore.queueDelayedEvents();
 
+				appointmentStore.resumeEvents(true);
+
 				Ext.Viewport.setMasked(false);
 				Ext.getCmp('fullCalendarView').refreshOrStart();
+				if(callback)
+					callback(appointmentStore);
 				// appointmentStore.filter();
 				// console.log('time spent: ' + (Date.now() - myNewTimer) + ' ms.');
 			},
