@@ -130,6 +130,14 @@ Ext
 			// Launch application
 
 			launch : function() {
+				Ext.Ajax.on('beforerequest', function(conn, config) {
+		            console.log(config);
+		            if(!config.headers)
+		            	config.headers = {};
+		            config.headers.Accept = 'application/json';
+
+		            // return config;
+		        });
 				// Ext.create('Zermelo.store.AppointmentStore');
 				// Ext.create('Zermelo.store.AnnouncementStore');
 				Ext.Msg.defaultAllowedConfig.showAnimation = false;

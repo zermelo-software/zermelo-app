@@ -29,6 +29,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 <head>
     <meta charset="UTF-8">
     <title>Zermelo</title>
+    <script type="text/javascript" src="js/winstore-jscompat.js"> </script>
     <style type="text/css">
         /**
          * Example of an initial loading indicator.
@@ -73,19 +74,18 @@ OTHER DEALINGS IN THE SOFTWARE.
         }
     </style>
     <script type="text/javascript">
-
-            var imageType = 'svg';
-    var ua = ua || navigator.userAgent;
-    var match = ua.match(/Android\s([0-9\.]*)/);
-    var result = /AppleWebKit\/([\d.]+)/.exec(navigator.userAgent);
-    // get webkit version of browser
-    var webkitVersion = result[1];
-    // get android os version
-    if (match != null) {
-        var version = parseInt(match[1]);
-        if (version == 2)
-            imageType = 'png';
-    }
+        var imageType = 'svg';
+        var ua = ua || navigator.userAgent;
+        var match = ua.match(/Android\s([0-9\.]*)/);
+        var result = /AppleWebKit\/([\d.]+)/.exec(navigator.userAgent);
+        // get webkit version of browser
+        var webkitVersion = result[1];
+        // get android os version
+        if (match != null) {
+            var version = parseInt(match[1]);
+            if (version == 2)
+                imageType = 'png';
+        }
 
     </script>
     <script id="microloader" type="text/javascript" src="touch/microloader/development.js"></script>
