@@ -356,6 +356,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                     xtype: 'button',
                     id: 'appointmentDetails_back',
                     // css class resouces/css/app.css
+                    icon: '/resources/images/back_arrow.' + imageType,
                     iconCls: 'zermelo-back-button-' + imageType,
                     align: 'left',
                     ui: 'plain',

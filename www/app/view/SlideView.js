@@ -254,6 +254,7 @@ Ext.define('Zermelo.view.SlideView', {
             iconMask: true,
             ref: '../menuButton',
             docked: 'left',
+            icon: '/resources/images/menu_icon.' + imageType,
             iconCls: 'zermelo-menu-button-' + imageType,
             align: this.getListPosition(),
             name: 'slidebutton',

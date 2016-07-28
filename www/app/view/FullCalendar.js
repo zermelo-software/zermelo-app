@@ -188,7 +188,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 xtype: 'button',
                 id: 'schedule_btn',
                 //css class resouces/css/app.css
-                icon: null, // for Sencha Touch Open Source support
+                icon: '/resources/images/search.' + imageType,
                 iconCls: 'zermelo-schedule-button-' + imageType,
                 //left side
                 docked: 'left',
@@ -355,6 +355,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // prev button
                 xtype: 'button',
                 //css class resouces/css/app.css
+                icon: '/resources/images/leftarrow.' + imageType,
                 iconCls: 'zermelo-prev-button-' + imageType,
                 docked: 'left',
                 ui: 'plain',
@@ -365,6 +366,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // next button
                 xtype: 'button',
                 //css class resouces/css/app.css
+                icon: '/resources/images/rightarrow.' + imageType,
                 iconCls: 'zermelo-next-button-' + imageType,
                 docked: 'right',
                 ui: 'plain',

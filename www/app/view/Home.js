@@ -170,6 +170,7 @@ Ext.define('Zermelo.view.Home', {
                     // announcement button
                     xtype: 'button',
                     //css class resources/images/app.css
+                    icon: '/resources/images/back_arrow.' + imageType,
                     iconCls: 'zermelo-back-button-' + imageType,
                     docked: 'left',
                     locales: {
@@ -214,6 +215,7 @@ Ext.define('Zermelo.view.Home', {
                     // refresh button
                     xtype: 'button',
                     //css class resources/images/app.css
+                    icon: '/resources/images/refresh_icon.' + imageType,
                     iconCls: 'zermelo-refresh-button-' + imageType,
                     docked: 'right',
                     ui: 'plain',
