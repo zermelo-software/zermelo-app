@@ -108,11 +108,11 @@ Ext.define('Zermelo.view.Home', {
             // `slideButtonDefaults`.
             slideButton: true,
             // display schedule image in slide menu list
-            urlLogo: 'resources/images/myschedule.' + imageType,
+            urlLogo: '/www/resources/images/myschedule.' + imageType,
             items: [{
                 // set toolbar with menu, refresh, announcement buttons
                 xtype: 'toolbar',
-                //css class resources/images/app.css
+                //css class /www/resources/images/app.css
                 cls: 'zermelo-toolbar',
                 id: 'toolbar_main',
                 height: '47px',
@@ -126,7 +126,7 @@ Ext.define('Zermelo.view.Home', {
                 items: [{
                     // refresh button
                     xtype: 'button',
-                    //css class resources/images/app.css
+                    //css class /www/resources/images/app.css
                    // iconCls: 'zermelo-refresh-button-' + imageType,
                     docked: 'right',
                     ui: 'plain',
@@ -141,7 +141,7 @@ Ext.define('Zermelo.view.Home', {
             }, {
                 // set toolbar with menu, refresh, announcement buttons
                 xtype: 'toolbar',
-                //css class resources/images/app.css
+                //css class /www/resources/images/app.css
                 cls: 'zermelo-toolbar',
 
                 id: 'toolbar_day_back',
@@ -155,7 +155,7 @@ Ext.define('Zermelo.view.Home', {
                 items: [{
                     // refresh button
                     xtype: 'button',
-                    //css class resources/images/app.css
+                    //css class /www/resources/images/app.css
                     // iconCls: 'zermelo-refresh-button-' + imageType,
                     docked: 'right',
                     ui: 'plain',
@@ -169,8 +169,8 @@ Ext.define('Zermelo.view.Home', {
                 }, {
                     // announcement button
                     xtype: 'button',
-                    //css class resources/images/app.css
-                    icon: '/resources/images/back_arrow.' + imageType,
+                    //css class /www/resources/images/app.css
+                    icon: '/www/resources/images/back_arrow.' + imageType,
                     iconCls: 'zermelo-back-button-' + imageType,
                     docked: 'left',
                     locales: {
@@ -197,12 +197,12 @@ Ext.define('Zermelo.view.Home', {
             }]
         }, {
             slideButton: true,
-            urlLogo: 'resources/images/messages.' + imageType,
+            urlLogo: '/www/resources/images/messages.' + imageType,
             title: 'Messages',
             items: [{
                 // set toolbar with menu, refresh, announcement buttons
                 xtype: 'toolbar',
-                //css class resources/images/app.css
+                //css class /www/resources/images/app.css
                 cls: 'zermelo-toolbar-main',
                 height: '47px',
                 // set title in multiple language
@@ -214,8 +214,8 @@ Ext.define('Zermelo.view.Home', {
                 items:[{
                     // refresh button
                     xtype: 'button',
-                    //css class resources/images/app.css
-                    icon: '/resources/images/refresh_icon.' + imageType,
+                    //css class /www/resources/images/app.css
+                    icon: '/www/resources/images/refresh_icon.' + imageType,
                     iconCls: 'zermelo-refresh-button-' + imageType,
                     docked: 'right',
                     ui: 'plain',
@@ -234,12 +234,12 @@ Ext.define('Zermelo.view.Home', {
         },
         {
             //switch user button
-            urlLogo: 'resources/images/user_switch.' + imageType,
+            urlLogo: '/www/resources/images/user_switch.' + imageType,
             title: 'swtich User'
         },
         {
             //logout and move to login screen
-            urlLogo: 'resources/images/logout.' + imageType,
+            urlLogo: '/www/resources/images/logout.' + imageType,
             title: 'logout'
         }
         ]

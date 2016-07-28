@@ -188,7 +188,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 xtype: 'button',
                 id: 'schedule_btn',
                 //css class resouces/css/app.css
-                icon: '/resources/images/search.' + imageType,
+                icon: '/www/resources/images/search.' + imageType,
                 iconCls: 'zermelo-schedule-button-' + imageType,
                 //left side
                 docked: 'left',
@@ -210,13 +210,8 @@ Ext.define('Zermelo.view.FullCalendar', {
                                 ui: 'noraml',
                                 handler: function (btn) {
 
-                                    if (!Ext.os.is.iOS) {
-                                        //check webkitversion 
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
-                                    }
+                                    clickButton = true;
+                                    setClickButton();
                                     var currentmonth = datePicker.getValue(true).getDate();
                                     // skip weekend days like sat and sun
                                     if (datePicker.getValue(true).getDay() == 0) {
@@ -236,12 +231,8 @@ Ext.define('Zermelo.view.FullCalendar', {
                                 },
                                 handler: function () {
                                     picker_open = false;
-                                    if (!Ext.os.is.iOS) {
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
-                                    }
+                                    clickButton = true;
+                                    setClickButton();
                                 }
                             },
                             // start year from currentyear-1
@@ -314,12 +305,8 @@ Ext.define('Zermelo.view.FullCalendar', {
                                 },
                                 ui: 'noraml',
                                 handler: function () {
-                                    if (!Ext.os.is.iOS) {
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
-                                    }
+                                    clickButton = true;
+                                    setClickButton();
                                     var week = datePicker.getValue().week;
                                     week = new Date(week);
                                     me.gotoWeek_Day(week);
@@ -332,12 +319,8 @@ Ext.define('Zermelo.view.FullCalendar', {
                                 },
                                 handler: function () {
                                     picker_open = false;
-                                    if (!Ext.os.is.iOS) {
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
-                                    }
+                                    clickButton = true;
+                                    setClickButton();
                                 }
                             }
                         });
@@ -355,7 +338,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // prev button
                 xtype: 'button',
                 //css class resouces/css/app.css
-                icon: '/resources/images/leftarrow.' + imageType,
+                icon: '/www/resources/images/leftarrow.' + imageType,
                 iconCls: 'zermelo-prev-button-' + imageType,
                 docked: 'left',
                 ui: 'plain',
@@ -366,7 +349,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // next button
                 xtype: 'button',
                 //css class resouces/css/app.css
-                icon: '/resources/images/rightarrow.' + imageType,
+                icon: '/www/resources/images/rightarrow.' + imageType,
                 iconCls: 'zermelo-next-button-' + imageType,
                 docked: 'right',
                 ui: 'plain',
@@ -521,25 +504,15 @@ Ext.define('Zermelo.view.FullCalendar', {
 
     //Below function opens dayview with selected date
     openDayView: function(selectedDate) {
-        if (!Ext.os.is.iOS) {
-            if (webkitVersion < 537.36) {
-                clickButton = true;
-                var timer = $.timer(function () {
-                    clickButton = false;
-                    timer.stop();
-                });
-                if (version == 2)
-                    timer.set({
-                        time: 6000,
-                        autostart: true
-                    });
-                else
-                    timer.set({
-                        time: 4000,
-                        autostart: true
-                    });
-            }
-        }
+        clickButton = true;
+        var timer = $.timer(function () {
+            clickButton = false;
+            timer.stop();
+        });
+        timer.set({
+            time: 6000,
+            autostart: true
+        });
         week_day_view = "agendaDay";
         this.changeCalendarView('agendaDay');
         $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());

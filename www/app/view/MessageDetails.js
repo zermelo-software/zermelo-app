@@ -72,7 +72,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                     style: {
                         'padding-left': '0px'
                     },
-                    icon: '/resources/images/back_arrow.' + imageType,
+                    icon: '/www/resources/images/back_arrow.' + imageType,
                     iconCls: 'zermelo-back-button-' + imageType,
                     align: 'left',
                     ui: 'plain',
