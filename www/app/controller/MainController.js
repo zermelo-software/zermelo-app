@@ -135,7 +135,6 @@ Ext.define('Zermelo.controller.MainController', {
             document.getElementById('messageCount').innerHTML=count;
         }
         else {
-            console.log('display: none');
             document.getElementById('messageCount').style.display="none";
         }
     },
