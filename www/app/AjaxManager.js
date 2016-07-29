@@ -88,7 +88,7 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
-	getAppointment: function(startTime, endTime, callback) {
+	getAppointment: function(startTime, endTime) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 		
@@ -116,7 +116,6 @@ Ext.define('Zermelo.AjaxManager', {
 			method: "GET",
 			useDefaultXhrHeader: false,
 			success: function (response) {
-				// myNewTimer = Date.now();
 				var decoded = Ext.JSON.decode(response.responseText).response.data;
 				var currentUser = Zermelo.UserManager.getUser();
 				window.localStorage.setItem('startApp',"True");
@@ -138,18 +137,13 @@ Ext.define('Zermelo.AjaxManager', {
 					appointmentStore.add(record);
 				});
 
-				// appointmentStore.filter(appointmentStore.filters);
 				appointmentStore.detectCollisions();
 				appointmentStore.queueDelayedEvents();
 
-				appointmentStore.resumeEvents(true);
-
 				Ext.Viewport.setMasked(false);
 				Ext.getCmp('fullCalendarView').refreshOrStart();
-				if(callback) 
-					callback(appointmentStore);
-				// appointmentStore.filter();
-				// console.log('time spent: ' + (Date.now() - myNewTimer) + ' ms.');
+				appointmentStore.resetFilters();
+				appointmentStore.resumeEvents();
 			},
 			failure: function (response) {
 				var error_msg = 'network_error';
@@ -161,6 +155,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Ext.Viewport.setMasked(false);
 			}
-		}); // end ajax request
+		});
 	}
 })

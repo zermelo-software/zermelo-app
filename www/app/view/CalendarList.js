@@ -114,7 +114,7 @@ Ext.define("Zermelo.view.CalendarList", {
 				listeners: {
 					painted: {
 						fn: function() {
-							this.getStore().setWindow(0);
+							this.getStore().setWindowDay();
 						},
 						options: {
 							order: 'before'

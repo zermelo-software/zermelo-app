@@ -607,7 +607,7 @@ Ext.define('Zermelo.view.SlideView', {
             }
             if (index == 0) {
                 messageShow = false;
-                Ext.getStore('Appointments').refreshCurrentWeek(true);
+                Ext.getStore('Appointments').fetchWeek();
             } else if (index == 1) {
                 messageShow = true;
             }

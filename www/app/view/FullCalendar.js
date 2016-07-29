@@ -60,10 +60,21 @@ Ext.define('Zermelo.view.FullCalendar', {
     config: {
         placeholderid: Ext.id() + '-fullcalendar',
         defaultview: 'agendaWeek',
-        scrollable: 'vertical'
+        scrollable: 'vertical',
+        store: 'Appointments',
+        listeners: {
+            painted: {
+                fn: function() {
+                    console.log('show fullcalendar');
+                    this.gotoWeek_Day();
+                },
+                options: {
+                    order: 'before'
+                }
+            }
+        }
     },
     started: false,
-    currentDay: new Date(),
     initialize: function () {
         // get screen width
         screenWidth = Ext.getBody().getSize().width;
@@ -495,25 +506,25 @@ Ext.define('Zermelo.view.FullCalendar', {
 
     refreshEvents: function () {
         $('#' + this.getPlaceholderid()).fullCalendar('removeEvents');
-        $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', Ext.getStore('Appointments').getAsArray());
+        var array = Ext.getStore('Appointments').getAsArray();
+        $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', array);
     },
 
     getWeekData: function(nextprev, dayview) {
         var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
         var direction = nextprev == 'left' ? -1 : 1;    // subtract days for left, add for right
 
-        this.currentDay.setDate(this.currentDay.getDate() + offset * direction);
-
-        Ext.getStore('Appointments').getWeekIfNeeded(this.currentDay);
+        Ext.getStore('Appointments').setWindow(offset * direction);
 
         this.refreshEvents();
         this.navigateCalendar(nextprev);
     },
 
     gotoWeek_Day: function(week) {
-        Ext.getStore('Appointments').getWeekIfNeeded(this, week);
+        week = Ext.getStore('Appointments').setWindowWeek(week);
+        this.refreshEvents();
       
-        $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
+        $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', week);
         this.changeTitle();
     },
 

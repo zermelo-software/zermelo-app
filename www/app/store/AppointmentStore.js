@@ -11,21 +11,15 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		proxy: {
 			type: 'localstorage',
 			id: 'AppointmentStore'
-		},
-		filters: [{
-			property: 'user',
-			value: Zermelo.UserManager.getUser()
-		}]
+		}
 	},
-	currentStartDate: new Date(),
 
 	getAsArray: function() {
-		this.resetFilters();
 		var appointmentArray = [];
-        this.each(function(record) {
-        	appointmentArray.push(record.getData());
-        });
-        return appointmentArray;
+		this.each(function(record) {
+			appointmentArray.push(record.getData());
+		});
+		return appointmentArray;
 	},
 
 	detectCollisions: function() {
@@ -42,7 +36,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			}
 		]);
 
-		this.suspendEvents();
 		var currentCollision;
 		var collisionEnd = 0;
 		this.getData().each(function(record, index, length) {
@@ -58,7 +51,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			for(var i = index + 1; i < length && overlap; i++) {
 				var next = this.getAt(i);
 
-				if(next.get('start') < record.get('end')) {
+				if(next && next.get('start') < record.get('end')) {
 					currentCollision.push(next.get('id'));
 				}
 				else {
@@ -69,39 +62,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			record.set('collidingIds', currentCollision);			
 			return true;
 		}, this);
-		this.resumeEvents(true);
-	},
-
-	getAppointmentCountInInterval: function(start, end) {
-		var count = 0;
-
-		this.each(function(record) {
-            if (record.get('start') >= start && record.get('end') <= end)
-            	count++;
-            return true;
-        });
-
-        return count;
-	},
-
-	refreshCurrentWeek: function(forceRefresh) {
-		var calendar = Ext.getCmp('fullCalendarView');
-		this.getWeekIfNeeded(calendar.currentDay, forceRefresh);
-		calendar.refreshEvents();
-	},
-
-	getWeekIfNeeded: function(target, forceRefresh, callback) {
-		var monday = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
-		var saturday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
-
-		this.currentStartDate = new Date(monday.valueOf());
-
-	    if (this.getAppointmentCountInInterval(monday, saturday) == 0 || forceRefresh) {
-	        Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf(), callback);
-	    }
-	    else if(callback) {
-	    	callback(this);
-	    }
 	},
 
 	queueDelayedEvents: function(delay) {
@@ -112,36 +72,54 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	pruneLocalStorage: function() {
-		var lowerBound = new Date(Math.min(this.currentStartDate.valueOf(), Date.now()));
+		var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
 		lowerBound = lowerBound.setDate(lowerBound.getDate() - 7);
-		var upperBound = new Date(Math.max(this.currentStartDate.valueOf(), Date.now()));
+		var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
 		upperBound = upperBound.setDate(upperBound.getDate() + 7);
 
 		this.suspendEvents();
-
+		this.clearFilter()
 		this.each(function(record) {
 			if (record.get('end') < lowerBound || record.get('start') > upperBound) {
 				this.remove(record);
 			}
 		}, this);
-
+		this.resetFilters();
 		this.resumeEvents();
 	},
 
 	resetFilters: function() {
 		this.clearFilter();
 		this.filter('user', Zermelo.UserManager.getUser());
-	},
-
-	changeUser: function(user) {
-		this.resetFilters();
-		this.refreshCurrentWeek(true);
+		this.filterBy(function(record) {
+			var start = record.get('start');
+			return (start > this.windowStart && start < this.windowEnd);
+		});
 	},
 
 	initialize: function() {
-		this.windowStart = new Date(2016, 6, 6);
-		this.windowStart.setHours(0, 0, 0, 0);
-		this.windowEnd = new Date(this.windowStart.valueOf() + 24 * 60 * 60 * 1000);
+		this.setWindowWeek(new Date());
+	},
+
+	fetchWeek: function() {
+		var monday = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (1 - this.windowStart.getDay()));
+		var saturday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
+		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
+	},
+
+	setWindowWeek: function(target) {
+		if(target === undefined)
+			target = this.windowStart;
+		this.windowStart = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
+		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 5);
+		this.resetFilters();
+		return this.windowStart;
+	},
+
+	setWindowDay: function() {
+		this.windowStart.setDate(this.windowStart.getDate() + (new Date().getDay() - 1));
+		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 1);
+		this.resetFilters();
 	},
 
 	setWindow: function(direction) {
@@ -154,17 +132,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
 
 		this.resetFilters();
-
-		var callback = function(store) {
-			store.filterBy(function(record) {
-				var start = record.get('start');
-				if(!(start > store.windowStart && start < store.windowEnd))
-					return false;
-				return true;
-				// return (start > this.windowStart && start < this.windowEnd);
-			});
-		};
-
-		this.getWeekIfNeeded(this.windowStart, false, callback);
+		if(this.getCount() == 0) {
+			console.log('fetchWeek');
+			this.fetchWeek();
+		}
 	}
 });
