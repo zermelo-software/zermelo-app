@@ -188,57 +188,6 @@ Ext
 							"April", "Mei", "Juni", "Juli", "Augustus",
 							"September", "Oktober", "November", "December" ];
 				}
-				// Add resume event listener
-				document.addEventListener("resume", Ext.bind(onResume, this),
-						false);
-				// Method call on resume app
-				function onResume() {
-					//console.log("resume");
-					if (window.localStorage.getItem('refreshTime') != null
-							&& window.localStorage.getItem('refreshTime') != '') {
-						var date = new Date();
-						var currentTime = date.getTime();
-						var refreshTime = window.localStorage
-								.getItem('refreshTime');
-
-						/*console.log(new Date(currentTime) + "  "
-								+ new Date(parseInt(refreshTime)));*/
-						var mintue = parseInt(((currentTime - refreshTime) / (1000 * 60 * 60)) % 24);
-						if (mintue > 0) {
-
-							Ext.getCmp('button_week_refresh').setIconCls(
-									'zermelo-exclamation-button-' + imageType);
-							Ext.getCmp('button_day_refresh').setIconCls(
-									'zermelo-exclamation-button-' + imageType);
-						} else {
-							Ext.getCmp('button_week_refresh').setIconCls(
-									'zermelo-refresh-button-' + imageType);
-							Ext.getCmp('button_day_refresh').setIconCls(
-									'zermelo-refresh-button-' + imageType);
-						}
-					} else {
-						Ext.getCmp('button_week_refresh').setIconCls(
-								'zermelo-refresh-button-' + imageType);
-						Ext.getCmp('button_day_refresh').setIconCls(
-								'zermelo-refresh-button-' + imageType);
-					}
-					if (window.localStorage.getItem('refresh_time_interval') != null
-							|| window.localStorage
-									.getItem('refresh_time_interval') != '') {
-						var date = new Date();
-						var currentTime = date.getTime();
-						var refreshTime = window.localStorage
-								.getItem('refresh_time_interval');
-
-						refreshMin = parseInt(((currentTime - refreshTime) / (1000 * 60 * 60)) % 24 * 60);
-						//console.log(refreshMin);
-					}
-					//on resume every 15 mintues call refresh function.
-					if (window.localStorage.getItem('startApp') == 'True'
-							&& refreshMin >= 15) {
-						refresh();
-					}
-				}
 				// Back button handle for android
 				if (Ext.os.is('Android')) {
 					document.addEventListener("backbutton", Ext.bind(

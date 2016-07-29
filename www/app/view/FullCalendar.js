@@ -27,29 +27,6 @@
 
 var width;
 var screenWidth;
-
-function doRefresh(me) {
-    var currentweekdate = new Date();
-    currentweekdate = new Date(currentweekdate.getFullYear(), currentweekdate.getMonth(), currentweekdate.getDate());
-    currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
-    var startTime = Math.round(currentweekdate.getTime());
-    var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12));
-    // call appointment api and annoucement api at start
-    var refreshMin=0;
-    if(window.localStorage.getItem('refresh_time_interval')!=null)
-    {
-        var date=new Date();
-        var currentTime=date.getTime();
-        var refreshTime=window.localStorage.getItem('refresh_time_interval');
-
-        refreshMin=parseInt(((currentTime -refreshTime)/(1000*60*60))%24*60);
-    }
-    Zermelo.AjaxManager.getAppointment(startTime, endTime);
-
-    Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'));
-
-}
-
 var weeknumbers = [];
 // This page managess the fucntionality and designing of calender.
 Ext.define('Zermelo.view.FullCalendar', {
@@ -83,11 +60,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         full_calendar_obj=this;
         var me = this;
         me.callParent(arguments);
-        me.on('activate', function(){
-        	doRefresh();
-        }, me, {
-            single: true
-        });
         // create topbar contaier with vertical box and top
         me.topBar = Ext.create('Ext.Container', {
             xtype: 'container',

@@ -227,7 +227,6 @@ function authentication() {
                     number_code.setValue("");
                     text_institution.setValue("");
                     Ext.getCmp('main').setActiveItem(1);
-                    doRefresh(Ext.getCmp('fullCalendarView'));
                 },
                 //failure
                 failure: function (response) {

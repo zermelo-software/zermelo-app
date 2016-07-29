@@ -37,5 +37,9 @@ Ext.define('Zermelo.store.AnnouncementStore', {
         },
         autoLoad: true,
         autoSync: true
+    },
+
+    fetchAnnouncements: function() {
+        Zermelo.AjaxManager.getAnnouncementData();
     }
 });

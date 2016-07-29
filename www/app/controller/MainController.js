@@ -143,6 +143,17 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('addrecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('removerecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
-        this.updateNewMessagesIndicator();
+        // this.updateNewMessagesIndicator();
+        var onResume = function() {
+            if(localStorage.getItem('refreshTime') - Date.now() < 30 * 60 * 1000) {
+                Ext.getStore('Appointments').fetchWeek();
+                Ext.getStore('Announcements').fetchAnnouncements();
+                localStorage.setItem('refreshTime', Date.now());
+                console.log('onResume');
+            }
+        };
+        document.addEventListener('resume', Ext.bind(onResume, this), false);
+        onResume();
+        console.log('it\'s bound!');
     }
 });
