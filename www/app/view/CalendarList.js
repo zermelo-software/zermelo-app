@@ -47,7 +47,7 @@ Ext.define("Zermelo.view.CalendarList", {
 				itemCls: 'zermelo-calendar-list-item',
 				// css class resources/css/app.css selected items
 				selectedCls: 'zermelo-menu-list-item-select',
-				useSimpleItems: true,
+				// infinite: true,
 				itemTpl: new Ext.XTemplate(
 					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content" style="font-size:18px;">',
 						'<span class="z-calender-list-left">',
@@ -66,10 +66,10 @@ Ext.define("Zermelo.view.CalendarList", {
 						'</div>',
 						'<div>',
 							'<span class="z-calender-list-left">',
-								'{locations}',
+								'{groups}',
 							'</span>',
 							'<span class="z-calender-list-right">',
-								'{groups}',
+								'{locations}',
 							'</span>',
 						'</div>',
 						'<tpl if="values.remark != \'\'"',
