@@ -87,9 +87,9 @@ Ext.define('Zermelo.controller.MainController', {
     onItemTap: function (list, index, target, record) {
         var home = this.getHome() || Ext.create('Zermelo.view.Home');
         var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
-        var rec = list.getStore().getAt(index);
+        var record = list.getStore().getAt(index);
 
-        messageDetailsView.message = rec.data;
+        messageDetailsView.message = record.getData();
         Ext.Viewport.add(messageDetailsView);
         messageDetailsView.show();
         home.hide();
