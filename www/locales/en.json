@@ -36,7 +36,9 @@
         "startDate":"Start Date: ",
         "endDate":"End Date: ",
         "description":"Description: ",
-        "no_announcement_msg": "There are no announcements at this time."
+        "no_announcement_msg": "There are no announcements at this time.",
+        "no_permission_title":"No permission",
+        "no_permission_message":"You do not have permission to view announcements."
     },
     "back":{
         "Schedule_back":"Schedule",

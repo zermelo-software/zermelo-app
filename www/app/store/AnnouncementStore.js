@@ -41,5 +41,12 @@ Ext.define('Zermelo.store.AnnouncementStore', {
 
     fetchAnnouncements: function() {
         Zermelo.AjaxManager.getAnnouncementData();
+    },
+
+    resetFilters: function() {
+        this.clearFilter();
+        this.filterBy(function(record) {
+            return record.valid();
+        });
     }
 });
