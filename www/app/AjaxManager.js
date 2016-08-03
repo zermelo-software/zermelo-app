@@ -11,6 +11,11 @@ Ext.define('Zermelo.AjaxManager', {
 			target
 		)
 	},
+
+	refresh: function() {
+		Ext.getStore('Appointments').fetchWeek();
+		Zermelo.AjaxManager.getAnnouncementData();
+	},
 	
 	getAnnouncementData: function() {   
 		if (!Zermelo.UserManager.loggedIn())
