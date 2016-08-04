@@ -30,9 +30,10 @@ Ext.define('Zermelo.view.AppointmentDetails', {
     extend: 'Ext.Container',
     xtype: 'appointmentDetails',
     id: 'appointmentDetails_view',
-    setAndShow: function(eventDetails) {
+    setAndShow: function(eventDetails, parentView) {
+        this.parentView = parentView;
         this.eventDetails = eventDetails;
-        this.show();
+        Ext.Viewport.setActiveItem(this);
     },
     config: {
         eventDetails: null,
@@ -296,41 +297,34 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                    Ext.getCmp('details').removeAll();
                 } //end hide
         },
-        // end listeners,
-        // set vertical box layout
         layout: {
             type: 'vbox',
             align: 'stretch'
         },
-       /* */
         items: [{
-            // set title bar at top of view
             xtype: 'titlebar',
             docked: 'top',
-            // css class resouces/css/app.css
             cls: 'zermelo-toolbar-main',
             height: '47px',
-            //multiple language
             locales: {
                 title: 'appointment.title'
             },
-            // add back button in title bar left side
             items: [{
                     xtype: 'button',
                     id: 'appointmentDetails_back',
-                    // css class resouces/css/app.css
                     iconCls: 'zermelo-back-button-' + imageType,
                     align: 'left',
                     ui: 'plain',
                     style: {
                         'padding-left': '0px'
                     },
-                    //multiple language
                     locales: {
                         text: 'back.back'
+                    },
+                    handler: function() {
+                        Ext.Viewport.setActiveItem(this.parent.parent.parent.parentView);
                     }
                 }]
-                //end titelbar
         }, {
             xtype: 'container',
             id: 'details',
@@ -341,7 +335,5 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                 directionLock: false
             }
         }]
-        //main container
-        //end main container
-    } //end config
+    }
 });

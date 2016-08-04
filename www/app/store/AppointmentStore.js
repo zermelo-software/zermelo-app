@@ -117,6 +117,10 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	setWindowDay: function() {
+		// Check if store is already in day mode
+		if(this.windowEnd.getDate() - this.windowStart.getDate() == 1)
+			return;
+
 		this.windowStart.setDate(this.windowStart.getDate() + (new Date().getDay() - 1));
 		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 1);
 		this.resetFilters();

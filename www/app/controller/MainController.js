@@ -25,32 +25,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// from http://trevorbrindle.com/chrome-43-broke-sencha/
-Ext.override(Ext.util.SizeMonitor, {
-    constructor: function(config) {
-        var namespace = Ext.util.sizemonitor;
-
-        if (Ext.browser.is.Firefox) {
-            return new namespace.OverflowChange(config);
-        } else if (Ext.browser.is.WebKit) {
-            if (!Ext.browser.is.Silk && Ext.browser.engineVersion.gtEq('535') && !Ext.browser.engineVersion.ltEq('537.36')) {
-                return new namespace.OverflowChange(config);
-            } else {
-                return new namespace.Scroll(config);
-            }
-        } else if (Ext.browser.is.IE11) {
-           return new namespace.Scroll(config);
-        } else {
-           return new namespace.Scroll(config);
-        }
-    }
-});
-Ext.override(Ext.util.PaintMonitor, {
-   constructor: function(config) {
-        return new Ext.util.paintmonitor.CssAnimation(config);
-   }
-});
-
 Ext.define('Zermelo.controller.MainController', {
     extend: 'Ext.app.Controller',
     config: {
@@ -64,7 +38,8 @@ Ext.define('Zermelo.controller.MainController', {
             messageList: 'messageList',
             messageDetails: 'messageDetails',
             home: 'home',
-            appointmentDetails: 'appointmentDetails'
+            appointmentDetails: 'appointmentDetails',
+            calendarList: 'CalendarList'
         },
         control: {
             announcementlist: {
@@ -72,10 +47,11 @@ Ext.define('Zermelo.controller.MainController', {
             },
             messageDetails_back: {
                 tap: 'back_messageList'
-            },
-            appointmentDetails_back: {
-                tap: 'back_schedule'
             }
+            // ,
+            // appointmentDetails_back: {
+            //     tap: 'back_schedule'
+            // }
         }
     },
     // Announcement list item tap
@@ -102,16 +78,18 @@ Ext.define('Zermelo.controller.MainController', {
         currentView="";
     },
 
-    // tap back button on appointment detail view
-    back_schedule: function () {
-        appointment_detail_open=false;
-        var home = this.getHome() || Ext.create('Zermelo.view.Home');
-        home.list.removeCls('zermelo-menu-list');
-        appointmentDetail = this.getAppointmentDetails() || Ext.create('Zermelo.view.AppointmentDetails');
-        home.show();
-        appointmentDetail.hide();
-        currentView="";
-    },
+    // // tap back button on appointment detail view
+    // back_schedule: function () {
+    //     console.log(arguments);
+    //     console.log(this);
+    //     appointment_detail_open=false;
+    //     var home = this.getHome() || Ext.create('Zermelo.view.Home');
+    //     home.list.removeCls('zermelo-menu-list');
+    //     appointmentDetail = this.getAppointmentDetails() || Ext.create('Zermelo.view.AppointmentDetails');
+    //     home.show();
+    //     appointmentDetail.hide();
+    //     currentView="";
+    // },
 
     updateNewMessagesIndicator: function() {
         var announcementStore = Ext.getStore('Announcements');
@@ -140,7 +118,7 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
         // this.updateNewMessagesIndicator();
         var onResume = function() {
-            if(localStorage.getItem('refreshTime') - Date.now() < 30 * 60 * 1000) {
+            if(Date.now() - localStorage.getItem('refreshTime') > 30 * 60 * 1000) {
                 Ext.getStore('Appointments').fetchWeek();
                 Ext.getStore('Announcements').fetchAnnouncements();
                 localStorage.setItem('refreshTime', Date.now());

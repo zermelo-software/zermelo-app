@@ -114,6 +114,7 @@ Ext.define("Zermelo.view.CalendarList", {
 				listeners: {
 					painted: {
 						fn: function() {
+							console.log('painted');
 							this.getStore().setWindowDay();
 						},
 						options: {
@@ -122,8 +123,7 @@ Ext.define("Zermelo.view.CalendarList", {
 					},
 					itemtap: function(scope, index, target, record, e, eOpts) {
 						var eventDetails = record.getData();
-						console.log(eventDetails);
-						this.appointmentDetailView.setAndShow(eventDetails);
+						this.appointmentDetailView.setAndShow(eventDetails, this.parent.parent.parent.parent);
 					},
 					initialize: function() {
 						// this.callParent(arguments);

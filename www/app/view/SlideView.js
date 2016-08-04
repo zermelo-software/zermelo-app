@@ -420,6 +420,7 @@ Ext.define('Zermelo.view.SlideView', {
      *  disabled, this method does nothing.
      */
     doMaskItem: function(item, mask) {
+        return;
         var maskConfig = this.getMask(),
             mask = Ext.isDefined(mask) ? mask : true;
 

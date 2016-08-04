@@ -45,10 +45,6 @@ Ext.define("Zermelo.view.Schedule", {
             height: '100%',
             listeners: {
                 eventclick: function(calEvent, jsEvent, view, fc) {
-                    // get selected event data
-                    if (clickButton) {
-                        clickButton = false;
-                    } else {
                         var home = Ext.getCmp('home');
                         
                         this.parent.appointmentDetailView = Ext.getCmp('appointmentDetails_view');
@@ -56,10 +52,8 @@ Ext.define("Zermelo.view.Schedule", {
                             this.parent.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
                             Ext.Viewport.add(this.parent.appointmentDetailView);
                         }
-                        home.hide();
-                        this.parent.appointmentDetailView.setAndShow(calEvent);
-                        currentView = "appointmentDetail";
-                    }
+                        // Note: this.parent.parent.parent.parent is the main view
+                        this.parent.appointmentDetailView.setAndShow(calEvent, this.parent.parent.parent.parent);
                 }
             }
         }]
