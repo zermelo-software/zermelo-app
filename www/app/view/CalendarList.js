@@ -43,11 +43,8 @@ Ext.define("Zermelo.view.CalendarList", {
 				itemId: 'calendarList',
 				store: 'Appointments',
 				cls: 'zermelo-calendar-list',
-				// css class resources/css/app.css list items
 				itemCls: 'zermelo-calendar-list-item',
-				// css class resources/css/app.css selected items
 				selectedCls: 'zermelo-menu-list-item-select',
-				// infinite: true,
 				itemTpl: new Ext.XTemplate(
 					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content" style="font-size:18px;">',
 						'<span class="z-calender-list-left">',
@@ -82,7 +79,6 @@ Ext.define("Zermelo.view.CalendarList", {
 					'</div>',
 					{
 						getClass: function(event) {
-							// console.log(event);
 							if (event.type == 'lesson')
 								return ('fc-event-skin-lesson ');
 							if (event.type == 'exam')
@@ -114,7 +110,6 @@ Ext.define("Zermelo.view.CalendarList", {
 				listeners: {
 					painted: {
 						fn: function() {
-							console.log('painted');
 							this.getStore().setWindowDay();
 						},
 						options: {
@@ -126,8 +121,6 @@ Ext.define("Zermelo.view.CalendarList", {
 						this.appointmentDetailView.setAndShow(eventDetails, this.parent.parent.parent.parent);
 					},
 					initialize: function() {
-						// this.callParent(arguments);
-						console.log(this);
 						this.appointmentDetailView = Ext.getCmp('appointmentDetails_view');
 						if (!this.appointmentDetailView) {
 							this.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');

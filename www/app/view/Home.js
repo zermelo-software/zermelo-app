@@ -208,7 +208,7 @@ Ext.define('Zermelo.view.Home', {
                 // set title in multiple language
                 id:'calendar_list_title',
                 locales: {
-                    title: 'menu.announcement_self'
+                    title: 'menu.schedule_self'
                 },
                 docked: 'top',
                 items:[{

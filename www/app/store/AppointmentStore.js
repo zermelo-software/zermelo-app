@@ -97,6 +97,13 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		});
 	},
 
+	changeUser: function() {
+		this.resetFilters();
+		if(this.getCount() == 0) {
+			this.fetchWeek();
+		}
+	},
+
 	initialize: function() {
 		this.setWindowWeek(new Date());
 	},
@@ -137,7 +144,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 		this.resetFilters();
 		if(this.getCount() == 0) {
-			console.log('fetchWeek');
 			this.fetchWeek();
 		}
 	}
