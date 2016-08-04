@@ -42,7 +42,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         listeners: {
             painted: {
                 fn: function() {
-                    console.log('show fullcalendar');
                     this.gotoWeek_Day();
                 },
                 options: {

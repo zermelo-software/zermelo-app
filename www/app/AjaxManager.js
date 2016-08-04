@@ -46,8 +46,6 @@ Ext.define('Zermelo.AjaxManager', {
 				announcementStore.suspendEvents(true);
 
 				announcementStore.each(function(record) {
-					console.log('start', new Date(record.get('start')));
-					console.log('end', new Date(record.get('end')));
 					var stillExists = 
 					decoded.some(function(entry, index) {
 						if (record.get('id') != entry.id)

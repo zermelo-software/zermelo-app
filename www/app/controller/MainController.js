@@ -144,11 +144,9 @@ Ext.define('Zermelo.controller.MainController', {
                 Ext.getStore('Appointments').fetchWeek();
                 Ext.getStore('Announcements').fetchAnnouncements();
                 localStorage.setItem('refreshTime', Date.now());
-                console.log('onResume');
             }
         };
         document.addEventListener('resume', Ext.bind(onResume, this), false);
         onResume();
-        console.log('it\'s bound!');
     }
 });

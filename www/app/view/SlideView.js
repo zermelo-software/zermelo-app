@@ -340,7 +340,6 @@ Ext.define('Zermelo.view.SlideView', {
             groups = me.config.groups;
 
         Ext.each(items, function(item, index) {
-            console.log(item);
             if (!Ext.isDefined(item.index)) {
                 item.index = me._indexCount;
                 me._indexCount++;
