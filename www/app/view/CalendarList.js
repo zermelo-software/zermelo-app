@@ -110,6 +110,7 @@ Ext.define("Zermelo.view.CalendarList", {
 				listeners: {
 					painted: {
 						fn: function() {
+							localStorage.setItem('lastView', 'calendarList');
 							this.getStore().setWindowDay();
 						},
 						options: {
@@ -118,18 +119,22 @@ Ext.define("Zermelo.view.CalendarList", {
 					},
 					itemtap: function(scope, index, target, record, e, eOpts) {
 						var eventDetails = record.getData();
-						this.appointmentDetailView.setAndShow(eventDetails, this.parent.parent.parent.parent);
-					},
-					initialize: function() {
-						this.appointmentDetailView = Ext.getCmp('appointmentDetails_view');
-						if (!this.appointmentDetailView) {
-							this.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
-							Ext.Viewport.add(this.appointmentDetailView);
-						}
+						this.parent.getAppointmentDetailView().setAndShow(eventDetails, this.parent.parent.parent.parent);
 					}
 				}
 			}
 		]
+	},
+
+	getAppointmentDetailView: function() {
+		if (!this.appointmentDetailView) {
+			this.appointmentDetailView = Ext.getCmp('appointmentDetails_view');
+			if (!this.appointmentDetailView) {
+				this.appointmentDetailView = Ext.create('Zermelo.view.AppointmentDetails');
+				Ext.Viewport.add(this.appointmentDetailView);
+			}
+		}
+		return this.appointmentDetailView;
 	},
 
 	setWindow: function(direction) {

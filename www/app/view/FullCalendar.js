@@ -42,7 +42,9 @@ Ext.define('Zermelo.view.FullCalendar', {
         listeners: {
             painted: {
                 fn: function() {
+                    localStorage.setItem('lastView', 'fullCalendarView');
                     this.gotoWeek_Day();
+                    this.refreshOrStart();
                 },
                 options: {
                     order: 'before'
@@ -108,7 +110,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                 handler: function () {
                     var date = dayData[1].split("T")[0].split("-");
                     var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    //console.log(selectedDate);
                     Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                 }
             }, {
@@ -394,6 +395,7 @@ Ext.define('Zermelo.view.FullCalendar', {
             }
         });
         // me.setDefaultview('week');
+        this.gotoWeek_Day();
         me.changeTitle();
         // refresh height of scroller, fixes it moving back up after every scroll
         me.getScrollable().getScroller().refreshMaxPosition();
@@ -403,7 +405,6 @@ Ext.define('Zermelo.view.FullCalendar', {
    },
     renderCalendar: function () {
         var me = this;
-      //  console.log("rerd");
         $('#' + me.getPlaceholderid()).fullCalendar('render');
     },
     destroyCalendar: function () {

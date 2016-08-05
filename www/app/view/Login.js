@@ -222,7 +222,6 @@ function authentication() {
                     // decode response
                     var decoded = Ext.JSON.decode(response.responseText);
                     Zermelo.UserManager.saveLogin('~me', value_institution, decoded.access_token);
-                    window.localStorage.setItem('startApp',"True");
                     number_code.setValue("");
                     text_institution.setValue("");
                     Ext.getCmp('main').setActiveItem(1);

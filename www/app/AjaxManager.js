@@ -137,8 +137,6 @@ Ext.define('Zermelo.AjaxManager', {
 			success: function (response) {
 				var decoded = Ext.JSON.decode(response.responseText).response.data;
 				var currentUser = Zermelo.UserManager.getUser();
-				window.localStorage.setItem('startApp',"True");
-				window.localStorage.setItem('refresh_time_interval',new Date().getTime());
 				window.localStorage.setItem('refreshTime', Date.now());
 
 				var appointmentStore = Ext.getStore('Appointments');
@@ -159,10 +157,13 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.detectCollisions();
 				appointmentStore.queueDelayedEvents();
 
-				Ext.Viewport.setMasked(false);
-				Ext.getCmp('fullCalendarView').refreshOrStart();
+				var fullCalendarView = Ext.getCmp('fullCalendarView');
+				if(fullCalendarView)
+					fullCalendarView.refreshOrStart();
+
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents();
+				Ext.Viewport.setMasked(false);
 			},
 			failure: function (response) {
 				var error_msg = 'network_error';

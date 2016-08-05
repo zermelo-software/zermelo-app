@@ -220,9 +220,9 @@ Ext.define('Zermelo.view.SlideView', {
 
     itemIds: {
         // enum of slideview icon ID's
-        'weekView': 0,
-        'dayView': 1,
-        'messages': 2,
+        'fullCalendarView': 0,
+        'calendarList': 1,
+        'messageList': 2,
         'userChange': 3,
         'logout': 4
     },
@@ -314,15 +314,13 @@ Ext.define('Zermelo.view.SlideView', {
         ]);
 
         this.createContainerCSS();
-
-        var selectedItemIndex = 0;
+        var selectedItemIndex = this.itemIds[localStorage.getItem('lastView')] || 0;
 
         Ext.each(this.list.getStore().getRange(), function(item, index) {
             if (item.get('selected') === true) {
                 selectedItemIndex = index;
             }
         });
-
         this.list.select(selectedItemIndex);
 
         this.__init = true;
@@ -462,7 +460,6 @@ Ext.define('Zermelo.view.SlideView', {
                     ui: 'normal',
                     handler: function() {
                         Zermelo.UserManager.logout();
-                        window.localStorage.setItem('startApp', '');
                         window.localStorage.setItem('refreshTime', '');
                         window.location.reload();
                     }
