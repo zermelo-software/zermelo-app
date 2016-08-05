@@ -124,6 +124,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.windowStart = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
 		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 5);
 		this.resetFilters();
+		this.detectCollisions();
 		return this.windowStart;
 	},
 
