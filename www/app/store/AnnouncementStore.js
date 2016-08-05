@@ -37,5 +37,12 @@ Ext.define('Zermelo.store.AnnouncementStore', {
         },
         autoLoad: true,
         autoSync: true
+    },
+
+    resetFilters: function() {
+        this.clearFilter();
+        this.filterBy(function(record) {
+            return record.valid();
+        });
     }
 });

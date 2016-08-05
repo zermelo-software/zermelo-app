@@ -7,8 +7,7 @@
 		<name>Zermelo</name>
 		<description>Toont het schoolrooster en mededelingen van de school.</description>
 		<author href="http://www.zermelo.nl" email="info@zermelo.nl">Zermelo Software B.V.</author>
-		<!-- <preference name='phonegap-version' value='cli-5.1.1' /> -->
-		<!-- <preference name="phonegap-version" value="3.7.0" /> -->
+		<preference name='phonegap-version' value='cli-6.1.0' />
 
 		<access origin="https://*.zportal.nl/*" />
         <plugin name="cordova-plugin-whitelist" version="1" />

@@ -1990,6 +1990,9 @@
 
 
     function htmlEscape(s) {
+        if (!s) {
+            return '';
+        }
         if (Array.isArray(s))
             s = s.join(', ');
         

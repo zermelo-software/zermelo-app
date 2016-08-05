@@ -41,15 +41,17 @@ Ext.define('Zermelo.AjaxManager', {
 				announcementStore.suspendEvents(true);
 
 				announcementStore.each(function(record) {
+					console.log('start', new Date(record.get('start')));
+					console.log('end', new Date(record.get('end')));
 					var stillExists = 
 					decoded.some(function(entry, index) {
-						if (record.get('announcement_id') != entry.id)
+						if (record.get('id') != entry.id)
 							return false;
 
-						record.set('start', new Date(decoded[index].start * 1000));
-						record.set('end', new Date(decoded[index].end * 1000));
-						record.set('title', decoded[index].title);
-						record.set('text', decoded[index].text);    
+						record.set('start', new Date(entry.start * 1000));
+						record.set('end', new Date(entry.end * 1000));
+						record.set('title', entry.title);
+						record.set('text', entry.text);
 						decoded.splice(index, 1);
 						return true;
 					});
@@ -60,16 +62,17 @@ Ext.define('Zermelo.AjaxManager', {
 					record.commit();
 				});
 
-				decoded.forEach(function(record) {
-					announcementStore.add({
-						announcement_id: record.id,
-						start: record.start,
-						end: record.end,
-						title: record.title,
-						text: record.text,
-						read: false
-					});
+				decoded.forEach(function(entry) {
+					var record = Ext.create('Zermelo.model.Announcement');
+					record.set('id', entry.id);
+					record.set('start', new Date(entry.start * 1000));
+					record.set('end', new Date(entry.end * 1000));
+					record.set('title', entry.title);
+					record.set('text', entry.text);
+					announcementStore.add(record);
 				});
+
+				announcementStore.resetFilters();
 
 				announcementStore.resumeEvents(false);
 
@@ -83,18 +86,19 @@ Ext.define('Zermelo.AjaxManager', {
 				if (response.status == 403) {
 					var store = Ext.getStore('Announcements');
 					if (store.find('title', Ux.locale.Manager.get('announcement.no_permission_title')) == -1) {
-						store.add({
-							start: new Date(),
-							end: new Date(2030, 1, 1),
-							title: Ux.locale.Manager.get('announcement.no_permission_title'),
-							text: Ux.locale.Manager.get('announcement.no_permission_message'),
-							read: false
-						});
+						var record = Ext.create('Zermelo.model.Announcement');
+						record.set('id', 0);
+						record.set('start', new Date());
+						record.set('end', new Date(2030, 1, 1));
+						record.set('title', Ux.locale.Manager.get('announcement.no_permission_title'));
+						record.set('text', Ux.locale.Manager.get('announcement.no_permission_message'));
+						store.add(record);
 					}
 				}
 				else {
 					Zermelo.ErrorManager.showErrorBox('network_error');
 				}
+				announcementStore.resetFilters();
 
 				Ext.Viewport.setMasked(false);
 			}
@@ -117,7 +121,6 @@ Ext.define('Zermelo.AjaxManager', {
 			indicator: true
 		});
 		
-		// send request to server using ajax
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
 			params: {
