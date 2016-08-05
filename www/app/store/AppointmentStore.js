@@ -23,8 +23,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	detectCollisions: function() {
-		if(this.getCount() <= 1)
+		if(this.getCount() <= 1) {
+			var first = this.getAt(0);
+			if(first)
+				first.set('collidingIds', '' + first.id);
 			return;
+		}
 		this.sort([
 			{
 				property: 'start',
@@ -125,8 +129,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 	setWindowDay: function() {
 		// Check if store is already in day mode
-		if(this.windowEnd.getDate() - this.windowStart.getDate() == 1)
+		if(this.windowStart.getDay() != 1 || this.windowEnd.getDay() != 6) {
 			return;
+		}
 
 		this.windowStart.setDate(this.windowStart.getDate() + (new Date().getDay() - 1));
 		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 1);
@@ -145,6 +150,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.resetFilters();
 		if(this.getCount() == 0) {
 			this.fetchWeek();
+		}
+		else {
+			this.detectCollisions();
 		}
 	}
 });
