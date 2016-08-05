@@ -116,7 +116,8 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('addrecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('removerecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
-        // this.updateNewMessagesIndicator();
+        this.updateNewMessagesIndicator();
+        
         var onResume = function() {
             if(Date.now() - localStorage.getItem('refreshTime') > 30 * 60 * 1000) {
                 Ext.getStore('Appointments').fetchWeek();
