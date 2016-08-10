@@ -73,6 +73,11 @@ Ext.define("Zermelo.view.CalendarList", {
 									
 								'</span>',
 							'</div>',
+							'<tpl if="values.changeDescription != \'\'">',
+								'<div class="z-calendar-list-center">',
+									'<i>{changeDescription}</i>',
+								'</div>',
+							'</tpl>',
 							'<tpl if="values.remark != \'\'">',
 								'<div class="z-calendar-list-center">',
 									'<i>{remark}</i>',
@@ -82,16 +87,18 @@ Ext.define("Zermelo.view.CalendarList", {
 					'</div>',
 					{
 						getClass: function(event) {
+							if (event.cancelled)
+								return 'fc-event-skin-cancelled';
 							if (event.type == 'lesson')
-								return ('fc-event-skin-lesson ');
+								return 'fc-event-skin-lesson';
 							if (event.type == 'exam')
-								return ('fc-event-skin-exam ');
+								return 'fc-event-skin-exam';
 							if (event.type == 'activity')
-								return ('fc-event-skin-activity ');
+								return 'fc-event-skin-activity';
 							if (event.type == 'choice')
-								return ('fc-event-skin-unknown ');
+								return 'fc-event-skin-unknown';
 							if (event.type == 'unknown' || event.type == 'other')
-								return ('fc-event-skin-unknown ');
+								return 'fc-event-skin-unknown';
 							return '';
 						},
 						compiled: true
@@ -102,6 +109,7 @@ Ext.define("Zermelo.view.CalendarList", {
 						fn: function() {
 							localStorage.setItem('lastView', 'calendarList');
 							this.getStore().setWindowDay();
+							this.parent.setDateButtonText();
 						},
 						options: {
 							order: 'before'
@@ -127,9 +135,12 @@ Ext.define("Zermelo.view.CalendarList", {
 		return this.appointmentDetailView;
 	},
 
+	setDateButtonText: function() {
+		this.down('#dateButton').setHtml(Ext.getStore('Appointments').windowStart.toLocaleDateString(Ux.locale.Manager.getLanguage(), {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}));
+	},
+
 	setWindow: function(direction) {
-		var store = Ext.getStore('Appointments');
-		store.setWindow(direction);
-		this.down('#dateButton').setHtml(store.windowStart.toLocaleDateString(Ux.locale.Manager.getLanguage(), {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}));
+		Ext.getStore('Appointments').setWindow(direction);
+		this.setDateButtonText();
 	}
 });
