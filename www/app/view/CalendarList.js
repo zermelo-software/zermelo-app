@@ -46,36 +46,39 @@ Ext.define("Zermelo.view.CalendarList", {
 				itemCls: 'zermelo-calendar-list-item',
 				selectedCls: 'zermelo-menu-list-item-select',
 				itemTpl: new Ext.XTemplate(
-					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content" style="font-size:18px;">',
-						'<span class="z-calender-list-left">',
-							'<b>{subjects}</b>',
-						'</span>',
-						'<span class="z-calender-list-right">',
-							'{[this.getSchoolHourBlock(values.startTimeSlot, values.endTimeSlot)]}',
-						'</span>',
-						'<div>',
+					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content z-calendar-list-parent">',
+						'<div class="z-calendar-list-number">',
+							'{startTimeSlot}',
+						'</div>',
+						'<div style="display: table-cell;">',
 							'<span class="z-calender-list-left">',
-								'{teachers}',
+								'<b>{subjects}</b>',
 							'</span>',
 							'<span class="z-calender-list-right">',
 								'{start:date("H:i")} - {end:date("H:i")}',
 							'</span>',
-						'</div>',
-						'<div>',
-							'<span class="z-calender-list-left">',
-								'{groups}',
-							'</span>',
-							'<span class="z-calender-list-right">',
-								'{locations}',
-							'</span>',
-						'</div>',
-						'<tpl if="values.remark != \'\'"',
 							'<div>',
 								'<span class="z-calender-list-left">',
-									'<i>{remark}</i>',
+									'{teachers}',
+								'</span>',
+								'<span class="z-calender-list-right">',
+									'{groups}',
 								'</span>',
 							'</div>',
-						'</tpl>',
+							'<div>',
+								'<span class="z-calender-list-left">',
+									'{locations}',
+								'</span>',
+								'<span class="z-calender-list-right">',
+									
+								'</span>',
+							'</div>',
+							'<tpl if="values.remark != \'\'">',
+								'<div class="z-calendar-list-center">',
+									'<i>{remark}</i>',
+								'</div>',
+							'</tpl>',
+						'</div>',
 					'</div>',
 					{
 						getClass: function(event) {
@@ -90,19 +93,6 @@ Ext.define("Zermelo.view.CalendarList", {
 							if (event.type == 'unknown' || event.type == 'other')
 								return ('fc-event-skin-unknown ');
 							return '';
-						},
-						compiled: true
-					},
-					{
-						getSchoolHourBlock: function(start, end) {
-							var block = '';
-							for(var i = 1; i < 9; i++) {
-								if(start <= i && end >= i)
-									block += '<span class="z-calendar-list-hour-true">&nbsp;' + i + '</span>';
-								else
-									block += '<span class="z-calendar-list-hour-false">&nbsp;' + i + '</span>';
-							}
-							return block;
 						},
 						compiled: true
 					}

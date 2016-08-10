@@ -3904,7 +3904,7 @@ body.x-desktop {
 }
 /* line 74, /Users/jamieavins/git/SDK/touch/resources/themes/stylesheets/sencha-touch/default/src/_Button.scss */
 .x-toolbar .x-button .x-button-label, .x-toolbar .x-button .x-badge, .x-toolbar .x-button .x-hasbadge .x-badge {
-  line-height: 1.2em;
+  line-height: 1.4em;
 }
 /* line 79, /Users/jamieavins/git/SDK/touch/resources/themes/stylesheets/sencha-touch/default/src/_Button.scss */
 .x-toolbar .x-button .x-button-icon:before {
@@ -8078,14 +8078,29 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	float: right;
 }
 
-.z-calendar-list-hour-true{
-	color: #2d63e2;
-	font-weight: bolder;
+.z-calendar-list-center{
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-top: 0.4em;
+	padding-bottom: 0.2em;
 }
 
-.z-calendar-list-hour-false{
-	opacity: 0.3;
-	font-weight: lighter;
+.z-calendar-list-parent{
+	font-size: 18px;
+	width: 100%;
+	display: inline-table;
+}
+
+.z-calendar-list-number{
+	font-size: 2em;
+	display: table-cell;
+	padding: 0.2em;
+	vertical-align: middle;
+	width: 11%;
+	color: #2d63e2;
+	font-weight: bolder;
+	border-right: solid;
+	border-width: 1px;
 }
 
 .circle{
