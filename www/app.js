@@ -187,6 +187,7 @@ Ext
 					Ext.Date.monthNames = [ "Januari", "Februari", "Maart",
 							"April", "Mei", "Juni", "Juli", "Augustus",
 							"September", "Oktober", "November", "December" ];
+					Ext.Date.dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
 				}
 				// Back button handle for android
 				if (Ext.os.is('Android')) {

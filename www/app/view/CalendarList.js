@@ -136,7 +136,13 @@ Ext.define("Zermelo.view.CalendarList", {
 	},
 
 	setDateButtonText: function() {
-		this.down('#dateButton').setHtml(Ext.getStore('Appointments').windowStart.toLocaleDateString(Ux.locale.Manager.getLanguage(), {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}));
+		var formatString;
+		if(Ux.locale.Manager.getLanguage() == 'nl')
+			formatString = "l d F, Y";
+		else
+			formatString = "l, F d, Y";
+
+		this.down('#dateButton').setHtml(Ext.Date.format(Ext.getStore('Appointments').windowStart, formatString));
 	},
 
 	setWindow: function(direction) {
