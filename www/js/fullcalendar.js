@@ -3672,8 +3672,7 @@ function enableTextSelection(element) {
         function get_special_event_icons_html(event, seg) {
             var extra_html = '';
             var imageType = 'svg';
-            console.log(event);
-            if (event.cancelled || event.moved || event.new) {
+            if (event.cancelled || event.moved || event['new']) {
                 
                 if (event.cancelled) {
                     extra_html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
@@ -3681,7 +3680,7 @@ function enableTextSelection(element) {
                 if (event.moved) {
                     extra_html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
                 }
-                if (event.new) {
+                if (event['new']) {
                     extra_html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
                 }
             } else if (event.modified || event.remark.length != 0) {
@@ -3689,7 +3688,7 @@ function enableTextSelection(element) {
             }
             if (event.collidingIds != event.id) {
                 var collidingIds = event.collidingIds.split(",");
-                for(i=1; i<collidingIds.length;i++)
+                for(var i=1; i<collidingIds.length; i++)
                     extra_html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
             }
 
