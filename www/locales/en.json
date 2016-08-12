@@ -24,7 +24,7 @@
         "title":"Appointment",
         "teacher":"Teachers: ",
         "subject":"Subjects: ",
-        "room":"Locations: ",
+        "room":"Classroom: ",
         "group":"Groups: ",
         "type":"Type: ",
         "startTime":"Start: ",
