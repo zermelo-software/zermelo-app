@@ -119,10 +119,8 @@ Ext.define('Zermelo.controller.MainController', {
         this.updateNewMessagesIndicator();
         
         var onResume = function() {
-            if(Date.now() - localStorage.getItem('refreshTime') > 30 * 60 * 1000) {
-                Ext.getStore('Appointments').fetchWeek();
-                Ext.getStore('Announcements').fetchAnnouncements();
-                localStorage.setItem('refreshTime', Date.now());
+            if(Date.now() - localStorage.getItem('refreshTime') > 30 * 60 * 1000 && Zermelo.UserManager.loggedIn()) {
+                Zermelo.AjaxManager.refresh();
             }
         };
         document.addEventListener('resume', Ext.bind(onResume, this), false);

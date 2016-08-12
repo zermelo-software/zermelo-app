@@ -15,6 +15,7 @@ Ext.define('Zermelo.AjaxManager', {
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
 		Zermelo.AjaxManager.getAnnouncementData();
+		localStorage.setItem('refreshTime', Date.now());
 	},
 	
 	getAnnouncementData: function() {   
@@ -91,8 +92,6 @@ Ext.define('Zermelo.AjaxManager', {
 					if (store.find('title', Ux.locale.Manager.get('announcement.no_permission_title')) == -1) {
 						var record = Ext.create('Zermelo.model.Announcement');
 						record.set('id', 0);
-						record.set('start', new Date());
-						record.set('end', new Date(2030, 1, 1));
 						record.set('title', Ux.locale.Manager.get('announcement.no_permission_title'));
 						record.set('text', Ux.locale.Manager.get('announcement.no_permission_message'));
 						store.add(record);

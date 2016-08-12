@@ -12,6 +12,6 @@ Ext.define('Zermelo.model.Announcement', {
 	},
 
 	valid: function() {
-		return this.get('start') <= Date.now() && this.get('end') >= Date.now();
+		return (this.get('start') <= Date.now() && this.get('end') >= Date.now()) || this.get('id') === 0;
 	}
 });
