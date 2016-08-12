@@ -3669,6 +3669,41 @@ function enableTextSelection(element) {
         }
 
 
+        function get_special_event_icons_html(event, seg) {
+            var extra_html = '';
+            var imageType = 'svg';
+            if (event.cancelled || event.moved || event['new']) {
+                
+                if (event.cancelled) {
+                    extra_html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
+                }
+                if (event.moved) {
+                    extra_html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
+                }
+                if (event['new']) {
+                    extra_html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
+                }
+            } else if (event.modified || event.remark.length != 0) {
+                extra_html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
+            }
+            if (event.collidingIds != event.id) {
+                var collidingIds = event.collidingIds.split(",");
+                for(var i=1; i<collidingIds.length; i++)
+                    extra_html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
+            }
+
+            extra_html += "</div>" +
+                "</div>";
+
+            extra_html += "<div class='fc-event-bg'></div>" +
+                "</div>";
+            if (seg.isEnd && isEventResizable(event)) {
+                extra_html +=
+                    "<div class='ui-resizable-handle ui-resizable-s'></div>";
+            }
+            return extra_html;
+        }
+
         /** 
          * display events with different conditions
          * modified icon
@@ -3809,36 +3844,9 @@ function enableTextSelection(element) {
                     "</div>" +
                     "<div class='fc-icon-align-bottom-right'>";
             }
-            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment) {
-                 
 
-                if (event.cancelled == 'true') {
-                    html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.moved == 'true') {
-                    html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.new_appointment) {
-                    html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
-                }
-            } else if (event.modified == 'true' || event.remark.length != 0) {
-                html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
-            }
-            // display appointment on single slot
-            if (event.collidingIds != event.id) {
-                var multiid=event.collidingIds.split(",");
-                for(i=1; i<multiid.length;i++)
-                    html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
-             }
-            html += "</div>" +
-                "</div>";
+            html += get_special_event_icons_html(event, seg);
 
-            html += "<div class='fc-event-bg'></div>" +
-                "</div>";
-            if (seg.isEnd && isEventResizable(event)) {
-                html +=
-                    "<div class='ui-resizable-handle ui-resizable-s'></div>";
-            }
             html +=
                 "</" + (url ? "a" : "div") + ">";
 
@@ -3958,36 +3966,8 @@ function enableTextSelection(element) {
                     "<div class='fc-icon-align-bottom-right'>";
             }
 
-            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment) {
-                
-                if (event.cancelled == 'true') {
-                    html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.moved == 'true') {
-                    html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.new_appointment) {
-                    html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
-                }
-            } else if (event.modified == 'true' || event.remark.length != 0) {
-                html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
-            }
-           // display appointment on single slot
-            if (event.collision) {
-                var multiid=event.multiid.split(",");
-                for(i=1; i<multiid.length;i++)
-                    html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
-            }
+            html += get_special_event_icons_html(event, seg);
 
-            html += "</div>" +
-                "</div>";
-
-            html += "<div class='fc-event-bg'></div>" +
-                "</div>";
-            if (seg.isEnd && isEventResizable(event)) {
-                html +=
-                    "<div class='ui-resizable-handle ui-resizable-s'></div>";
-            }
             child.innerHTML = html;
             return child;
         }

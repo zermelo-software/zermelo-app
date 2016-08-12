@@ -98,7 +98,7 @@ Ext.define('Zermelo.AjaxManager', {
 				else {
 					Zermelo.ErrorManager.showErrorBox('network_error');
 				}
-				announcementStore.resetFilters();
+				Ext.getStore('Announcements').resetFilters();
 
 				Ext.Viewport.setMasked(false);
 			}
