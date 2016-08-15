@@ -7832,24 +7832,24 @@ color: white;
 background: #0f1ecd;
 }
 .zermelo-toolbar-main {
-	background-image: none;
-background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b4b4b), color-stop(3%, #4b4b4b), color-stop(100%, #242424));
+	background-image: gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b4b4b), color-stop(3%, #4b4b4b), color-stop(100%, #242424));
+	background-image: linear-gradient(to top, black, gray);
 	background-image: -webkit-linear-gradient(top, #4b4b4b, #242424);
 }
 .zermelo-toolbar{
-	background-image: none;
-background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b4b4b), color-stop(3%, #4b4b4b), color-stop(100%, #242424));
+	background-image: gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b4b4b), color-stop(3%, #4b4b4b), color-stop(100%, #242424));
+	background-image: linear-gradient(to top, black, gray);
 	background-image: -webkit-linear-gradient(top, #4b4b4b, #242424);
 }
 .zermelo-toolbar .x-toolbar{
-	background-image: none;
-background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b4b4b), color-stop(3%, #4b4b4b), color-stop(100%, #242424));
+	background-image: gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b4b4b), color-stop(3%, #4b4b4b), color-stop(100%, #242424));
+	background-image: linear-gradient(to top, black, gray);
 	background-image: -webkit-linear-gradient(top, #4b4b4b, #242424);
 }
 .zermelo-toolbar-week-day{
-	background-image: none;
-background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #F7F7F7), color-stop(3%, #F7F7F7), color-stop(100%, #F7F7F7));
-	background-image: -webkit-linear-gradient(top, #F7F7F7, #F7F7F7);
+	background-image: gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #F7F7F7), color-stop(3%, #F7F7F7), color-stop(100%, #F7F7F7));
+	background-image: linear-gradient(to top, #f7f7f7, #f7f7f7);
+	background-image: -webkit-linear-gradient(top, #f7f7f7, #f7f7f7);
 	height: 40px;
 }
 .zermelo-toolbar-week-day .x-title{
