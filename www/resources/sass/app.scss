@@ -2547,7 +2547,6 @@ audio {
 /* line 8, /Users/jamieavins/git/SDK/touch/resources/themes/stylesheets/sencha-touch/base/src/dataview/_List.scss */
 .x-list .x-list-inner {
   width: 100% !important;
-  top: 50px;
 }
 /* line 12, /Users/jamieavins/git/SDK/touch/resources/themes/stylesheets/sencha-touch/base/src/dataview/_List.scss */
 .x-list.x-list-indexed .x-list-disclosure {
@@ -3905,7 +3904,7 @@ body.x-desktop {
 }
 /* line 74, /Users/jamieavins/git/SDK/touch/resources/themes/stylesheets/sencha-touch/default/src/_Button.scss */
 .x-toolbar .x-button .x-button-label, .x-toolbar .x-button .x-badge, .x-toolbar .x-button .x-hasbadge .x-badge {
-  line-height: 1.2em;
+  line-height: 1.4em;
 }
 /* line 79, /Users/jamieavins/git/SDK/touch/resources/themes/stylesheets/sencha-touch/default/src/_Button.scss */
 .x-toolbar .x-button .x-button-icon:before {
@@ -7858,7 +7857,7 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #F7F
 	font-size: 13px;
 	
 }
-.zermelo-button-weeK-day{
+.zermelo-button-week-day{
 	color:#656565;
 	font-size: 13px;
 }
@@ -7938,6 +7937,61 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	border: 0px;
 	margin-top: 18px;
 }
+
+
+
+
+
+
+.zermelo-calender-list{
+	background:#F0F0F0
+}
+.zermelo-calender-list .x-list-header {
+   height: 25px;
+	border-color: #0054ff;
+	color: #000000;
+	font-weight: bold;
+	background-image: none;
+background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E2E2), color-stop(3%, #E2E2E2), color-stop(100%, #BDBDBD));
+	background-image: -webkit-linear-gradient(top, #E2E2E2, #BDBDBD);
+	border-bottom: 1px solid#2e5fd2;
+	padding: 3px 10px;
+}
+.zermelo-calender-list.x-list-item-tpl {
+	color: #555555;
+	background:#FFF;
+	// width: 100%;
+	// background-color: fuchsia;
+	// padding: 0em 0em;
+	// border: 0em 0em;
+}
+
+.zermelo-calender-list .x-dock .x-inner .x-list-item-body {
+	// padding: 0em 0em;
+	// background-color: aqua;
+}
+
+.zermelo-calender-list.x-list-item {
+	// padding: 0em 0em;
+	// border: 0em 0em;
+	// left: 0em;
+	// top: 0em;
+	// margin-left: 0em;
+	// background-color: silver;
+	font-size: 16px;
+}
+
+.zermelo-calender-list-item{
+	// border: 0px;
+	// margin-top: 18px;
+}
+
+
+
+
+
+
+
 .zermelo-menu-list-item-pressed{
 	background: transparent;
 }
@@ -8008,8 +8062,47 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 .zermelo-messagedetail-title{
 	text-align:center;
 	font-size: 20px;
-	margin-bottom:20PX;
+	margin-bottom:20px;
 }
+.zermelo-float-right{
+	float: right;
+}
+
+.z-calender-list-left{
+	padding-left: 0.5em;
+}
+
+.z-calender-list-right{
+	padding-right: 0.5em;
+	text-align: right;
+	float: right;
+}
+
+.z-calendar-list-center{
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-top: 0.4em;
+	padding-bottom: 0.2em;
+}
+
+.z-calendar-list-parent{
+	font-size: 18px;
+	width: 100%;
+	display: inline-table;
+}
+
+.z-calendar-list-number{
+	font-size: 2em;
+	display: table-cell;
+	padding: 0.2em;
+	vertical-align: middle;
+	width: 11%;
+	color: #2d63e2;
+	font-weight: bolder;
+	border-right: solid;
+	border-width: 1px;
+}
+
 .circle{
 	width: auto;
 	border-radius: 1em;

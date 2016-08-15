@@ -35,7 +35,7 @@ Ext.define("Zermelo.view.MessageList", {
     id: 'messageList',
     config: {
         listeners: {
-            show: function () {
+            painted: function () {
                 messageShow=true;
                 Zermelo.AjaxManager.getAnnouncementData();
             }, //end show
@@ -54,7 +54,6 @@ Ext.define("Zermelo.view.MessageList", {
             // padding top left bottom right
             margin: '10 10 10 10',
             style:{
-                'top': '-50px',
                 'padding-bottom': '50px'
             },
             id: 'announcementlist',

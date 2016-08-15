@@ -1,19 +1,18 @@
 Ext.define('Zermelo.UserManager', {
-    alternateClassName: 'UserManager',
-    requires: ['Ux.locale.Manager'],
-    singleton: true,
-    code: window.localStorage.getItem('user_code') ? window.localStorage.getItem('user_code') : '~me',
-    institution: window.localStorage.getItem('institution'),
-    accessToken: window.localStorage.getItem('accessToken'),
-    userChanged: false,
+	alternateClassName: 'UserManager',
+	requires: ['Ux.locale.Manager'],
+	singleton: true,
+	code: '~me',
+	institution: window.localStorage.getItem('institution'),
+	accessToken: window.localStorage.getItem('accessToken'),
 
-    loggedIn: function() {
-    	return this.accessToken ? true : false;
-    },
+	loggedIn: function() {
+		return this.accessToken ? true : false;
+	},
 
-    userIsSelf: function() {
-        return this.getUser() == '~me';
-    },
+	userIsSelf: function() {
+		return this.getUser() == '~me';
+	},
 
 	getUser: function() {
 		return this.code;
@@ -29,7 +28,6 @@ Ext.define('Zermelo.UserManager', {
 
 	setCode: function(newCode) {
 		this.code = newCode;
-		window.localStorage.setItem('user_code', newCode);
 	},
 
 	setInstitution: function(newInstitution) {
@@ -42,48 +40,47 @@ Ext.define('Zermelo.UserManager', {
 		window.localStorage.setItem('accessToken', newAccessToken);
 	},
 
-    saveLogin: function(code, institution, accessToken) {
-        this.setCode(code);
-        this.setInstitution(institution);
-        this.setAccessToken(accessToken);
-    },
+	saveLogin: function(code, institution, accessToken) {
+		this.setCode(code);
+		this.setInstitution(institution);
+		this.setAccessToken(accessToken);
+	},
 
-    logout: function() {
-        this.setCode('');
-        this.setInstitution('');
-        this.setAccessToken('');
-        localStorage.clear();
-    },
+	logout: function() {
+		this.setCode('');
+		this.setInstitution('');
+		this.setAccessToken('');
+		localStorage.clear();
+	},
 
-    setTitles: function() {
-    	var header;
-        var key_suffix = this.userIsSelf() ? 'self' : 'other';
-        var suffix = this.userIsSelf() ? '' : this.getUser();
+	setTitles: function() {
+		// Sets the titles of the appointment views
+		var header;
+		var key_suffix = this.userIsSelf() ? 'self' : 'other';
+		var suffix = this.userIsSelf() ? '' : this.getUser();
+		var titleFields = ['toolbar_main', 'toolbar_day_back', 'calendar_list_title'];
 
-    	header = Ext.getCmp("toolbar_main");
-        if (header) {
-            header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
-        }
+		titleFields.forEach(function(field) {
+			header = Ext.getCmp(field);
+			if (header) {
+				header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
+			} 
+		});
+	},
 
-    	header = Ext.getCmp("toolbar_day_back");
-    	if (header) {
-    		header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
-        }
-    },
+	setUser: function(newCode) {
+		if(!newCode)
+			newCode = '~me';
+		if (this.code == newCode)
+			return;
 
-    setUser: function(newCode) {
-        if(!newCode)
-            newCode = '~me';
-    	if (this.code == newCode)
-    		return;
+		this.setCode(newCode);
+		this.setTitles();
+		Ext.getStore('Appointments').changeUser();
+		Ext.getCmp('fullCalendarView').refreshEvents();
+	},
 
-        this.userChanged = true;
-    	this.setCode(newCode);
-        Ext.getStore('Appointments').changeUser(newCode);
-    	this.setTitles();
-    },
-
-    getScheduleTitle: function() {
-        return Ux.locale.Manager.get('menu.schedule_self');
-    }
+	getScheduleTitle: function() {
+		return Ux.locale.Manager.get('menu.schedule_self');
+	}
 });

@@ -218,6 +218,15 @@ Ext.define('Zermelo.view.SlideView', {
         slideButtonDefaults: {}
     },
 
+    itemIds: {
+        // enum of slideview icon ID's
+        'fullCalendarView': 0,
+        'calendarList': 1,
+        'messageList': 2,
+        'userChange': 3,
+        'logout': 4
+    },
+
     initConfig: function() {
         var me = this;
 
@@ -306,15 +315,13 @@ Ext.define('Zermelo.view.SlideView', {
         ]);
 
         this.createContainerCSS();
-
-        var selectedItemIndex = 0;
+        var selectedItemIndex = this.itemIds[localStorage.getItem('lastView')] || 0;
 
         Ext.each(this.list.getStore().getRange(), function(item, index) {
             if (item.get('selected') === true) {
                 selectedItemIndex = index;
             }
         });
-
         this.list.select(selectedItemIndex);
 
         this.__init = true;
@@ -412,6 +419,7 @@ Ext.define('Zermelo.view.SlideView', {
      *  disabled, this method does nothing.
      */
     doMaskItem: function(item, mask) {
+        return;
         var maskConfig = this.getMask(),
             mask = Ext.isDefined(mask) ? mask : true;
 
@@ -434,9 +442,8 @@ Ext.define('Zermelo.view.SlideView', {
      * Always called when item in the list is tapped.
      */
     onItemTap: function(list, index, target, item, event, eOpts) {
-        //check if tap logout goto login screen and (accessToken and  institution data remove from local storage)
         var thisobj = this;
-        if (index == 3) {
+        if (index == this.itemIds.logout) {
             // display popup while pressed on logout button
             Ext.Msg.show({
                 items: [{
@@ -454,7 +461,6 @@ Ext.define('Zermelo.view.SlideView', {
                     ui: 'normal',
                     handler: function() {
                         Zermelo.UserManager.logout();
-                        window.localStorage.setItem('startApp', '');
                         window.localStorage.setItem('refreshTime', '');
                         window.location.reload();
                     }
@@ -474,7 +480,7 @@ Ext.define('Zermelo.view.SlideView', {
                 }]
             });
 
-        } else if (index == 2) {
+        } else if (index == this.itemIds.userChange) {
             // display popup while pressed on change user
             Ext.Msg.show({
                 style: {
@@ -568,8 +574,7 @@ Ext.define('Zermelo.view.SlideView', {
             index = item.raw.index,
             container = me.container,
             func = Ext.emptyFn;
-        // check item selected index = 2 not change view only popup display
-        if (index != 2 && index != 3) {
+        if (index != this.itemIds.userChange && index != this.itemIds.logout) {
             if (me._cache[index] == undefined) {
                 // If the object has a handler defined, then we don't need to
                 // create an Ext object
@@ -606,10 +611,10 @@ Ext.define('Zermelo.view.SlideView', {
             if (me.__init) {
                 me.fireAction('select', [me, me._cache[index], index], func, me);
             }
-            if (index == 0) {
+            if (index == this.itemIds.weekView) {
                 messageShow = false;
-                Ext.getStore('Appointments').refreshCurrentWeek(true);
-            } else {
+                Ext.getStore('Appointments').fetchWeek();
+            } else if (index == this.itemIds.messages) {
                 messageShow = true;
             }
         }

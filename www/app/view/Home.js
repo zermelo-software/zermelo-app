@@ -135,7 +135,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '4px'
                     },
                     handler: function () {
-                        refresh();
+                        Zermelo.AjaxManager.refresh();
                     }
                 }]
             }, {
@@ -164,7 +164,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '0px'
                     },
                     handler: function () {
-                        refresh();
+                        Zermelo.AjaxManager.refresh();
                     }
                 }, {
                     // announcement button
@@ -195,7 +195,43 @@ Ext.define('Zermelo.view.Home', {
                 // open schedule view
                 xtype: 'schedule'
             }]
-        }, {
+        },
+        {
+            slideButton: true,
+            urlLogo: 'resources/images/list.' + imageType,
+            title: 'CalendarList',
+
+            items: [{
+                xtype: 'toolbar',
+                //css class resources/images/app.css
+                cls: 'zermelo-toolbar-main',
+                height: '47px',
+                // set title in multiple language
+                id:'calendar_list_title',
+                locales: {
+                    title: 'menu.schedule_self'
+                },
+                docked: 'top',
+                items:[{
+                    // refresh button
+                    xtype: 'button',
+                    //css class resources/images/app.css
+                    iconCls: 'zermelo-refresh-button-' + imageType,
+                    docked: 'right',
+                    ui: 'plain',
+                    style: {
+                        'padding-right': '4px'
+                    },
+                    handler: function () {
+                        Ext.getStore('Appointments').fetchWeek();
+                    }
+                }]
+            }, {
+                // open message list view
+                xtype: 'CalendarList'
+            }]
+        }, 
+        {
             slideButton: true,
             urlLogo: '/www/resources/images/messages.' + imageType,
             title: 'Messages',
@@ -245,8 +281,3 @@ Ext.define('Zermelo.view.Home', {
         ]
     }
 });
-
-function refresh() {
-    Ext.getStore('Appointments').refreshCurrentWeek();
-    Zermelo.AjaxManager.getAnnouncementData();
-}
