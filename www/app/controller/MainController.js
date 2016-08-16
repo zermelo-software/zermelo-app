@@ -78,19 +78,6 @@ Ext.define('Zermelo.controller.MainController', {
         currentView="";
     },
 
-    // // tap back button on appointment detail view
-    // back_schedule: function () {
-    //     console.log(arguments);
-    //     console.log(this);
-    //     appointment_detail_open=false;
-    //     var home = this.getHome() || Ext.create('Zermelo.view.Home');
-    //     home.list.removeCls('zermelo-menu-list');
-    //     appointmentDetail = this.getAppointmentDetails() || Ext.create('Zermelo.view.AppointmentDetails');
-    //     home.show();
-    //     appointmentDetail.hide();
-    //     currentView="";
-    // },
-
     updateNewMessagesIndicator: function() {
         var announcementStore = Ext.getStore('Announcements');
         var count = 0;
@@ -124,6 +111,6 @@ Ext.define('Zermelo.controller.MainController', {
             }
         };
         document.addEventListener('resume', Ext.bind(onResume, this), false);
-        onResume();
+        Zermelo.AjaxManager.refresh();
     }
 });

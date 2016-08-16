@@ -15,7 +15,6 @@ Ext.define('Zermelo.AjaxManager', {
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
 		Zermelo.AjaxManager.getAnnouncementData();
-		localStorage.setItem('refreshTime', Date.now());
 	},
 	
 	getAnnouncementData: function() {   
@@ -164,6 +163,7 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents();
 				Ext.Viewport.setMasked(false);
+				localStorage.setItem('refreshTime', Date.now());
 			},
 			failure: function (response) {
 				var error_msg = 'network_error';
