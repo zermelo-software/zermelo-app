@@ -216,6 +216,7 @@ Ext.define('Zermelo.view.Home', {
                     // refresh button
                     xtype: 'button',
                     //css class resources/images/app.css
+                    icon: '/www/resources/images/refresh_icon.' + imageType,
                     iconCls: 'zermelo-refresh-button-' + imageType,
                     docked: 'right',
                     ui: 'plain',

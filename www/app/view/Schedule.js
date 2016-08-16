@@ -62,6 +62,6 @@ Ext.define("Zermelo.view.Schedule", {
 
 function changeRefreshIcon() {
     
-    Ext.getCmp('button_week_refresh').setIconCls('zermelo-refresh-button-' + imageType);
-    Ext.getCmp('button_day_refresh').setIconCls('zermelo-refresh-button-' + imageType);
+    Ext.getCmp('button_week_refresh').setIcon('/www/resources/images/refresh_icon.' + imageType);
+    Ext.getCmp('button_day_refresh').setIcon('/www/resources/images/refresh_icon.' + imageType);
 }
