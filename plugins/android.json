@@ -9,6 +9,9 @@
     "installed_plugins": {
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "nl.zermelo.opensource.App"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "nl.zermelo.opensource.App"
         }
     },
     "dependent_plugins": {}
