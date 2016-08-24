@@ -71,6 +71,9 @@ Ext.define('Zermelo.UserManager', {
 	setUser: function(newCode) {
 		if(!newCode)
 			newCode = '~me';
+
+		newCode = newCode.toLowerCase();
+
 		if (this.code == newCode)
 			return;
 
