@@ -1038,5 +1038,9 @@ Ext.define('Zermelo.view.SlideView', {
         if (selection) {
             return selection[0];
         }
+    },
+
+    selectItem: function(itemName) {
+        this.list.select(this.itemIds[itemName]);
     }
 });

@@ -94,9 +94,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[0].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[0].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(1 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 // Tuesday button    
@@ -108,9 +113,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[1].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[1].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(2 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Wednesday button
@@ -122,9 +132,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[2].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[2].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(3 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Thursday button
@@ -136,9 +151,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[3].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[3].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(4 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Friday button
@@ -150,9 +170,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[4].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[4].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(5 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }]
         }); // end day container
