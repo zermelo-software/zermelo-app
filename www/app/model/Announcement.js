@@ -10,8 +10,17 @@ Ext.define('Zermelo.model.Announcement', {
 			{name: 'read', 						type: 'bool'}
 		]
 	},
-
+	/**
+	 * Determines whether a given announcement should be displayed
+	 * 
+	 * @return: boolean
+	 */
 	valid: function() {
-		return (this.get('start') <= Date.now() && this.get('end') >= Date.now()) || this.get('id') === 0;
+		if(this.get('start') <= Date.now() && this.get('end') >= Date.now())
+			return true;
+		// If a user does not have permission to view announcements we create a dummy announcement with id 0 which is always valid
+		if(this.get('id') === 0)
+			return true;
+		return false;
 	}
 });

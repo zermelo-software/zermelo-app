@@ -78,6 +78,8 @@ Ext.define('Zermelo.controller.MainController', {
         currentView="";
     },
 
+    // Determines whether there are any pending announcements
+    // MessageList isn't instantiated until it is opened so putting this function there doesn't work
     updateNewMessagesIndicator: function() {
         var announcementStore = Ext.getStore('Announcements');
         var count = 0;

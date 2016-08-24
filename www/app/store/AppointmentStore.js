@@ -14,6 +14,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		}
 	},
 
+	/**
+	 * Exports the items in the current scope to an array
+	 *
+	 * @param:
+	 * @return: An array of event objects
+	 */
 	getAsArray: function() {
 		var appointmentArray = [];
 		this.each(function(record) {
@@ -22,6 +28,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		return appointmentArray;
 	},
 
+	/**
+	 * Determines which appointments in the current scope overlap
+	 *
+	 * @param:
+	 * @return:
+	 */
 	detectCollisions: function() {
 		if(this.getCount() <= 1) {
 			var first = this.getAt(0);
@@ -68,6 +80,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		}, this);
 	},
 
+	/**
+	 * Delays cleaning and syncing localStorage
+	 *
+	 * @param: optional delay in milliseconds
+	 * @return:
+	 */
 	queueDelayedEvents: function(delay) {
 		if (delay === undefined)
 			delay = 5 * 1000;
@@ -75,6 +93,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		Ext.defer(this.sync, delay, this);
 	},
 
+	/**
+	 * Deletes appointments that are more than a week outside of the current scope and the current week
+	 *
+	 * @param:
+	 * @return:
+	 */
 	pruneLocalStorage: function() {
 		var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
 		lowerBound = lowerBound.setDate(lowerBound.getDate() - 7);
@@ -92,6 +116,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.resumeEvents();
 	},
 
+	/**
+	 * Filters the items in the store by the current user and the current window
+	 *
+	 * @param:
+	 * @return:
+	 */
 	resetFilters: function() {
 		this.clearFilter();
 		this.filter('user', Zermelo.UserManager.getUser());
@@ -101,6 +131,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		});
 	},
 
+	/**
+	 * Filters items for the new user and fetches events if none are known
+	 *
+	 * @param:
+	 * @return:
+	 */
 	changeUser: function() {
 		this.resetFilters();
 		if(this.getCount() == 0) {
@@ -108,16 +144,34 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		}
 	},
 
+	/**
+	 * Sets the date to the current week during object creation
+	 *
+	 * @param:
+	 * @return:
+	 */
 	initialize: function() {
 		this.setWindowWeek(new Date());
 	},
 
+	/**
+	 * Fetches events for the week that contains the current view
+	 *
+	 * @param:
+	 * @return:
+	 */
 	fetchWeek: function() {
 		var monday = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (1 - this.windowStart.getDay()));
 		var saturday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
 		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
 	},
 
+	/**
+	 * Sets the window to an optionally specified week
+	 *
+	 * @param: The date to target the window on
+	 * @return: First monday <= the target date
+	 */
 	setWindowWeek: function(target) {
 		if(target === undefined)
 			target = this.windowStart;
@@ -128,6 +182,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		return this.windowStart;
 	},
 
+	/**
+	 * Sets the window to day mode
+	 *
+	 * @param:
+	 * @return:
+	 */
 	setWindowDay: function() {
 		// Check if store is already in day mode
 		if(this.windowStart.getDay() != 1 || this.windowEnd.getDay() != 6) {
@@ -139,6 +199,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.resetFilters();
 	},
 
+	/**
+	 * Shifts the window forward or backward
+	 *
+	 * @param: direction: the number of days (possibly negative) to shift to the future
+	 * @return:
+	 */
 	setWindow: function(direction) {
 		// Jump over weekends
 		if((this.windowStart.getDay() == 5 && direction == 1) || (this.windowStart.getDay() == 1 && direction == -1)) {
@@ -147,7 +213,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 		this.windowStart.setDate(this.windowStart.getDate() + direction);
 		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
-
 		this.resetFilters();
 		if(this.getCount() == 0) {
 			this.fetchWeek();

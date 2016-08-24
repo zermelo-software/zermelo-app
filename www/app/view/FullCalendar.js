@@ -208,7 +208,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                                         currentmonth = datePicker.getValue(true).getDate() + 2;
                                     }
                                     var day = new Date(datePicker.getValue(true).getFullYear(), datePicker.getValue(true).getMonth(), currentmonth)
-                                    gotoWeek_Day(day, me);
+                                    me.gotoWeek_Day(day);
                                     picker_open = false;
 
                                 }
@@ -482,6 +482,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', array);
     },
 
+    // Changes the currently shown week or day
     getWeekData: function(nextprev, dayview) {
         var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
         var direction = nextprev == 'left' ? -1 : 1;    // subtract days for left, add for right
@@ -492,6 +493,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         this.navigateCalendar(nextprev);
     },
 
+    // Changes the currently shown week to @param week
     gotoWeek_Day: function(week) {
         week = Ext.getStore('Appointments').setWindowWeek(week);
         this.refreshEvents();
