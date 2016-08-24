@@ -217,9 +217,9 @@ Ext.define('Zermelo.view.SlideView', {
 
         slideButtonDefaults: {}
     },
-
+    // The ids listed here are assigned by the order these items have in Home.js
+    // If you change that list this list needs to be updated as well to ensure your buttons do the right thing
     itemIds: {
-        // enum of slideview icon ID's
         'fullCalendarView': 0,
         'calendarList': 1,
         'messageList': 2,
@@ -444,7 +444,7 @@ Ext.define('Zermelo.view.SlideView', {
     onItemTap: function(list, index, target, item, event, eOpts) {
         var thisobj = this;
         if (index == this.itemIds.logout) {
-            // display popup while pressed on logout button
+            // Create 'are you sure you want to log out?' box
             Ext.Msg.show({
                 items: [{
                     xtype: 'label',
@@ -481,7 +481,7 @@ Ext.define('Zermelo.view.SlideView', {
             });
 
         } else if (index == this.itemIds.userChange) {
-            // display popup while pressed on change user
+            // Create user switch message box
             Ext.Msg.show({
                 style: {
                     'padding': '1em 1em 0.5em 1em'
@@ -1039,5 +1039,9 @@ Ext.define('Zermelo.view.SlideView', {
         if (selection) {
             return selection[0];
         }
+    },
+
+    selectItem: function(itemName) {
+        this.list.select(this.itemIds[itemName]);
     }
 });

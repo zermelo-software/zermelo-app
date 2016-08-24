@@ -45,6 +45,7 @@ Ext.define('Zermelo.AjaxManager', {
 				var announcementStore = Ext.getStore('Announcements');
 				announcementStore.suspendEvents(true);
 
+				// Update the stored announcements and remove the ones that no longer exist
 				announcementStore.each(function(record) {
 					var stillExists = 
 					decoded.some(function(entry, index) {
@@ -65,6 +66,7 @@ Ext.define('Zermelo.AjaxManager', {
 					record.commit();
 				});
 
+				// Store new announcements
 				decoded.forEach(function(entry) {
 					var record = Ext.create('Zermelo.model.Announcement');
 					record.set('id', entry.id);
@@ -87,6 +89,8 @@ Ext.define('Zermelo.AjaxManager', {
 			},
 			failure: function (response) {
 				if (response.status == 403) {
+					// If the result is 403 the user isn't allowed to view announcements.
+					// We create a dummy announcement to let them know about this
 					var store = Ext.getStore('Announcements');
 					if (store.find('title', Ux.locale.Manager.get('announcement.no_permission_title')) == -1) {
 						var record = Ext.create('Zermelo.model.Announcement');
@@ -140,6 +144,8 @@ Ext.define('Zermelo.AjaxManager', {
 
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();
+
+				// If we have a new version of the events between startTime and endTime we can forget the old ones
 				appointmentStore.each(function(record) {
 					if (record.get('start') >= startTime && record.get('end') <= endTime && record.get('user') == currentUser)
 						appointmentStore.remove(record);
@@ -156,6 +162,7 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.detectCollisions();
 				appointmentStore.queueDelayedEvents();
 
+				// Let FullCalendar know we have new events
 				var fullCalendarView = Ext.getCmp('fullCalendarView');
 				if(fullCalendarView)
 					fullCalendarView.refreshOrStart();

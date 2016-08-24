@@ -94,9 +94,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[0].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[0].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(1 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 // Tuesday button    
@@ -108,9 +113,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[1].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[1].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(2 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Wednesday button
@@ -122,9 +132,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[2].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[2].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(3 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Thursday button
@@ -136,9 +151,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[3].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[3].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(4 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Friday button
@@ -150,9 +170,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[4].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    // var date = dayData[4].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(5 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }]
         }); // end day container
@@ -203,7 +228,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                                         currentmonth = datePicker.getValue(true).getDate() + 2;
                                     }
                                     var day = new Date(datePicker.getValue(true).getFullYear(), datePicker.getValue(true).getMonth(), currentmonth)
-                                    gotoWeek_Day(day, me);
+                                    me.gotoWeek_Day(day);
                                     picker_open = false;
 
                                 }
@@ -467,6 +492,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', array);
     },
 
+    // Changes the currently shown week or day
     getWeekData: function(nextprev, dayview) {
         var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
         var direction = nextprev == 'left' ? -1 : 1;    // subtract days for left, add for right
@@ -477,6 +503,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         this.navigateCalendar(nextprev);
     },
 
+    // Changes the currently shown week to @param week
     gotoWeek_Day: function(week) {
         week = Ext.getStore('Appointments').setWindowWeek(week);
         this.refreshEvents();
