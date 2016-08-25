@@ -129,8 +129,10 @@ Ext
 			// Launch application
 
 			launch : function() {
-				// Ext.create('Zermelo.store.AppointmentStore');
-				// Ext.create('Zermelo.store.AnnouncementStore');
+				if(localStorage.getItem('appVersion') != '1.3.2') {
+					localStorage.setItem('appVersion', '1.3.2');
+					window.location.reload();
+				}
 				Ext.Msg.defaultAllowedConfig.showAnimation = false;
 				// display magnified glass press on textbox
 				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
@@ -247,17 +249,5 @@ Ext
 				Ext.fly('appLoadingIndicator').destroy();
 				// Initialize the main view
 				Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
-			},
-
-			onUpdated : function() {
-				Ext.Msg
-						.confirm(
-								"Application Update",
-								"This application has just successfully been updated to the latest version. Reload now?",
-								function(buttonId) {
-									if (buttonId === 'yes') {
-										window.location.reload();
-									}
-								});
 			}
 		});
