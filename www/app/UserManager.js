@@ -50,7 +50,9 @@ Ext.define('Zermelo.UserManager', {
 		this.setCode('');
 		this.setInstitution('');
 		this.setAccessToken('');
+		var appVersion = localStorage.getItem('appVersion');
 		localStorage.clear();
+		localStorage.setItem('appVersion', appVersion);
 	},
 
 	setTitles: function() {
