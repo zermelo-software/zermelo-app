@@ -101,9 +101,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	pruneLocalStorage: function() {
 		var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
-		lowerBound = lowerBound.setDate(lowerBound.getDate() - 7);
+		lowerBound = lowerBound.setDate(lowerBound.getDate() - 7 + (1 - lowerBound.getDay()));
 		var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
-		upperBound = upperBound.setDate(upperBound.getDate() + 7);
+		upperBound = upperBound.setDate(upperBound.getDate() + 7 + (6 - upperBound.getDay()));
 
 		this.suspendEvents();
 		this.clearFilter()
@@ -166,6 +166,14 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
 	},
 
+	prepareData: function() {
+		this.resetFilters();
+		if(this.getCount() == 0)
+			this.fetchWeek();
+		else
+			this.detectCollisions();
+	},
+
 	/**
 	 * Sets the window to an optionally specified week
 	 *
@@ -177,8 +185,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			target = this.windowStart;
 		this.windowStart = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
 		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 5);
-		this.resetFilters();
-		this.detectCollisions();
+		this.prepareData();
 		return this.windowStart;
 	},
 
@@ -196,7 +203,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 		this.windowStart.setDate(this.windowStart.getDate() + (new Date().getDay() - 1));
 		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 1);
-		this.resetFilters();
+		this.prepareData();
 	},
 
 	/**
@@ -213,12 +220,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 		this.windowStart.setDate(this.windowStart.getDate() + direction);
 		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
-		this.resetFilters();
-		if(this.getCount() == 0) {
-			this.fetchWeek();
-		}
-		else {
-			this.detectCollisions();
-		}
+		this.prepareData();
 	}
 });

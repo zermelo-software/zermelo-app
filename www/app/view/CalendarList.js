@@ -50,7 +50,7 @@ Ext.define("Zermelo.view.CalendarList", {
 				itemTpl: new Ext.XTemplate(
 					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content z-calendar-list-parent">',
 						'<div class="z-calendar-list-number">',
-							'{startTimeSlot}',
+							'{startTimeSlotName}',
 						'</div>',
 						'<div style="display: table-cell;">',
 							'<span class="z-calender-list-left">',

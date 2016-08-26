@@ -53,7 +53,7 @@
         "choice" : "Keuze",
         "other" : "Overig"
     },
-    "network_error":"Probleem met het verbinden met Zermelo Portal",
+    "network_error":"Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
     "insufficient_permissions":"Je hebt onvoldoende rechten om dit rooster te bekijken",
     "months" : {
         "1"  : "Januari",

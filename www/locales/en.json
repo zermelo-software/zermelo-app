@@ -53,7 +53,7 @@
         "choice" : "Choice",
         "other" : "Other"
     },
-    "network_error":"Error connecting to Zermelo Portal",
+    "network_error":"Error connecting to Zermelo Portal. Are you connected to the internet?",
     "insufficient_permissions":"You have insufficient permissions to view this schedule",
     "months" : {
         "1"  : "January",
