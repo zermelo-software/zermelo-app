@@ -111,6 +111,7 @@ Ext.define('Zermelo.controller.MainController', {
             if(Date.now() - localStorage.getItem('refreshTime') > 30 * 60 * 1000 && Zermelo.UserManager.loggedIn()) {
                 Zermelo.AjaxManager.refresh();
             }
+            Ext.getCmp('fullCalendarView').updateView();
         };
         document.addEventListener('resume', Ext.bind(onResume, this), false);
         Zermelo.AjaxManager.refresh();
