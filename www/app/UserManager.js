@@ -83,6 +83,7 @@ Ext.define('Zermelo.UserManager', {
 		this.setTitles();
 		Ext.getStore('Appointments').changeUser();
 		Ext.getCmp('fullCalendarView').refreshEvents();
+		Ext.getCmp('home').selectItem(localStorage.getItem('lastView'));
 	},
 
 	getScheduleTitle: function() {
