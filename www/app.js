@@ -43,10 +43,6 @@ Ext.Loader.setPath({
 	'Ext' : 'touch/src',
 	'Ux' : 'Ux'
 });
-Ext.Loader.setConfig({
-	enabled : true,
-	disableCaching : false
-});
 //</debug>
 
 // workaround for release mode
@@ -129,17 +125,10 @@ Ext
 			// Launch application
 
 			launch : function() {
-				if(localStorage.getItem('appVersion') != '1.3.2') {
-					localStorage.setItem('appVersion', '1.3.2');
-					window.location.reload();
-				}
 				Ext.Ajax.on('beforerequest', function(conn, config) {
-		            console.log(config);
 		            if(!config.headers)
 		            	config.headers = {};
 		            config.headers.Accept = 'application/json';
-
-		            // return config;
 		        });
 				Ext.Msg.defaultAllowedConfig.showAnimation = false;
 				// display magnified glass press on textbox
