@@ -3938,7 +3938,7 @@ function enableTextSelection(element) {
                     htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
-                    htmlEscape(event.subjectss) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
