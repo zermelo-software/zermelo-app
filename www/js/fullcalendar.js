@@ -3955,7 +3955,7 @@ function enableTextSelection(element) {
                     htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
                     "</div>" +
                     "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subjectss) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
