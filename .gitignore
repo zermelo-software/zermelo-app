@@ -24,4 +24,5 @@ zip.sh
 *.zip
 zip
 scripts
+!scripts/zapp
 plugins/
