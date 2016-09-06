@@ -1,0 +1,82 @@
+#!/usr/bin/python
+
+import sys
+import os
+import subprocess
+
+ROOT_DIR = '/newApp/'
+SCRIPTS_DIR = ROOT_DIR + 'scripts/'
+WWW_DIR = ROOT_DIR + 'www/'
+ZIP_DIR = os.path.expanduser('~/Downloads/')
+BUILD_DIR = WWW_DIR + 'cordova/www/'
+
+def convert_to(color):
+	os.chdir(SCRIPTS_DIR + 'conversion/')
+	script = SCRIPTS_DIR + 'conversion/convert_to_' + color + '.sh'
+	if os.path.isfile(script):
+		print subprocess.check_output([script])
+	else:
+		print 'Could not find the color conversion script. Proceeding in current color.'
+
+
+def zip():
+	zip_file = ZIP_DIR + 'Zermelo.zip'
+	if os.path.isfile(zip_file):
+		os.remove(zip_file)
+	print subprocess.check_output(['zip', '-r', zip_file, '.'], cwd = BUILD_DIR)
+
+def build():
+	os.chdir(WWW_DIR)
+	print subprocess.check_output(['sencha', 'app', 'prepare', 'native'])
+
+
+def release():
+	convert_to('red')
+	build()
+	zip()
+	convert_to('blue')
+	build()
+
+def set_locale(locale):
+	input_file = WWW_DIR + 'locales/' + locale + '.json'
+	output_file = WWW_DIR + 'locales/' + ('nl' if locale == 'en' else 'en') + '.json'
+	print subprocess.check_output(['git', 'checkout', input_file])
+	print subprocess.check_output(['cp', '-f', input_file, output_file])
+
+def reset_locale():
+	print subprocess.check_output(['git', 'checkout', WWW_DIR + 'locales/'])
+
+def main():
+	# print sys.argv
+	for cmd in sys.argv[1:]:
+		if cmd == 'red':
+			convert_to('red')
+		elif cmd == 'blue':
+			convert_to('blue')
+		elif cmd == 'zip':
+			zip()
+		elif cmd == 'build':
+			build()
+		elif cmd == 'release':
+			release()
+		elif cmd == 'en':
+			set_locale('en')
+		elif cmd == 'nl':
+			set_locale('nl')
+		elif cmd == 'loc':
+			reset_locale()
+		elif cmd == 'help':
+			print (		
+					'Zapp is een python script wat een aantal veelgebruikte command line acties bij elkaar bundelt\n'
+					'\tzapp red: Converteer het project naar de rode versie\n'
+					'\tzapp blue: Converteer het project naar de blauwe versie\n'
+					'\tzapp build: pseudoniem voor sencha app build production\n'
+					'\tzapp zip: Verpakt de production build in een zip die naar PhoneGap kan\n'
+					'\tzapp release: Alle bovenstaande zodat uiteindelijk het project weer in blauwe staat is en er een rode zip klaar staat\n'
+					'\tzapp <lang>: Overschrijft de taalbestanden van een taal met een andere. Opties zijn "en" voor alles engels, "nl" voor alles nederlands en "loc" voor herstellen naar normaal'
+				)
+		else:
+			print 'Onbekend commando, probeer zapp help voor opties'
+			break
+
+main()
