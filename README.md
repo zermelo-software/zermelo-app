@@ -44,6 +44,11 @@ zermelo-app$ cordova platform add android@4.0.0
 zermelo-app$ cordova build
 ````
 
+Building for Window Phone
+-------------------------
+
+Building for Windows Phone using PhoneGap Build has delivered mixed results. The preferred method is to create an empty Cordova project using Visual Studio and placing the contents of the `www` (or the `www/cordova/www`, see Optimizing using Sencha CMD) folder inside the new project's `www` folder. Windows Phone builds must be based on the `winphone` branch, rather than `master`.
+
 Optimizing using Sencha CMD
 ---------------------------
 
@@ -51,11 +56,11 @@ Creating a zip of the entire www/ folder creates a bloated app. The code is not 
 
 To create an optimized version of the app:
 
-''''bash
+````bash
 zermelo-app$ sencha app prepare native
-''''
+````
 
-This will place a minified and trimmed version of the app in www/cordova/www. Uploading this version to PhoneGap Build will yield a smaller, faster app.
+This will place a minified and trimmed version of the app in `www/cordova/www`. Uploading this version to PhoneGap Build will yield a smaller, faster app.
 
 Architecture
 ============
