@@ -3,11 +3,7 @@ Zermelo App - Open Source Edition
 
 The Zermelo App allows students, teachers and parents to view schedules and announcements from their Zermelo Portal.
 The goal is to make information from the Zermelo Portal/API easily accessible on mobile phones. Tablet support is not a 
-<<<<<<< HEAD
-high priority as tablets are expected access the Zermelo Portal directly.
-=======
 high priority as tablets are expected to access the Zermelo Portal directly.
->>>>>>> staging
 
 Please note that Zermelo and the Zermelo logo are trademarks of Zermelo Software B.V. You are not allowed to claim that your version of the app is in any way the official one. Note that this does not constitute an extra
 license term for the MIT license below, it's just a part of trademark law. This is also why we've made this version of the app blue.
