@@ -4,10 +4,7 @@
 
 /**
  * @class  Ext.ClassManager
- *
  * @author Jacky Nguyen <jacky@sencha.com>
- * @aside guide class_system
- * @aside video class-system
  *
  * Ext.ClassManager manages all classes and handles mapping from string class name to
  * actual class objects throughout the whole framework. It is not generally accessed directly, rather through
@@ -19,6 +16,8 @@
  * - {@link Ext#getClass Ext.getClass}
  * - {@link Ext#getClassName Ext.getClassName}
  *
+ * For more information about Sencha Touch's Class System, please check out the [class system guide](../../../core_concepts/class_system.html).
+ * 
  * ## Basic syntax:
  *
  *     Ext.define(className, properties);
@@ -772,7 +771,7 @@
             });
         },
 
-        createOverride: function(className, data) {
+        createOverride: function(className, data, createdFn) {
             var overriddenClassName = data.override,
                 requires = Ext.Array.from(data.requires);
 
@@ -790,6 +789,10 @@
                     }
                     else {
                         overridenClass.override(data);
+                    }
+
+                    if (createdFn) {
+                        createdFn.call(overridenClass, overridenClass);
                     }
 
                     // This push the overridding file itself into Ext.Loader.history
@@ -933,8 +936,8 @@
 
         /**
          * @private
-         * @param name
-         * @param args
+         * @param {String} name
+         * @param {Array} args
          */
         dynInstantiate: function(name, args) {
             args = arrayFrom(args, true);
@@ -945,7 +948,7 @@
 
         /**
          * @private
-         * @param length
+         * @param {Number} length
          */
         getInstantiator: function(length) {
             var instantiators = this.instantiators,
@@ -1137,7 +1140,37 @@
      *     Ext.define('MyApp.CoolPanel', {
      *         extend: 'Ext.panel.Panel',
      *         alias: ['widget.coolpanel'],
-     *         title: 'Yeah!'
+     *
+     *         config: {
+     *             html : 'Yeah!'
+     *         }
+     *     });
+     *
+     *     // Using Ext.create
+     *     Ext.create('widget.coolpanel');
+     *
+     *     // Using the shorthand for widgets and in xtypes
+     *     Ext.widget('panel', {
+     *         items: [
+     *             {xtype: 'coolpanel', html: 'Foo'},
+     *             {xtype: 'coolpanel', html: 'Bar'}
+     *         ]
+     *     });
+     *
+     * For {@link Ext.Component}, you can also use the {@link Ext.Component#xtype} property.
+     */
+    /**
+     * @cfg {String[]} xtype
+     * @member Ext.Component
+     * List of xtypes for {@link Ext.Component}. XTypes must not contain periods.
+     *
+     *     Ext.define('MyApp.CoolPanel', {
+     *         extend: 'Ext.panel.Panel',
+     *         xtype: 'coolpanel',
+     *
+     *         config: {
+     *             html : 'Yeah!'
+     *         }
      *     });
      *
      *     // Using Ext.create
@@ -1382,6 +1415,7 @@
          *  - `statics`
          *  - `config`
          *  - `alias`
+         *  - `xtype` (for {@link Ext.Component}s only)
          *  - `self`
          *  - `singleton`
          *  - `alternateClassName`
@@ -1477,7 +1511,7 @@
 
     /**
      * Old name for {@link Ext#widget}.
-     * @deprecated 4.0.0 Please use {@link Ext#widget} instead.
+     * @deprecated 2.0.0 Please use {@link Ext#widget} instead.
      * @method createWidget
      * @member Ext
      */

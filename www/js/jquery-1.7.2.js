@@ -17,7 +17,6 @@
 
 var textTouchend;
  if (Ext.os.is.iOS) {
- 	console.log("ios");
  	textTouchend="touchmove touchend";
  }else
  {

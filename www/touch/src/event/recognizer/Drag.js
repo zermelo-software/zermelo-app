@@ -62,6 +62,7 @@ Ext.define('Ext.event.recognizer.Drag', {
     onTouchStart: function(e) {
         if (this.callSuper(arguments) === false) {
             if (this.isStarted && this.lastMoveEvent !== null) {
+                this.lastMoveEvent.isStopped = false;
                 this.onTouchEnd(this.lastMoveEvent);
             }
             return false;

@@ -212,7 +212,7 @@ Ext.define('Ext.Button', {
 
         /**
          * @cfg {String} badgeCls
-         * The CSS class to add to the Button's badge, if it has one.
+         * The CSS class to add to the Button's badge, if it has one.  Badges appear as small numbers, letters, or icons that sit on top of your button.  For instance, a small red number indicating how many updates are available.
          * @accessor
          */
         badgeCls: Ext.baseCSSPrefix + 'badge',
@@ -245,7 +245,7 @@ Ext.define('Ext.Button', {
     config: {
         /**
          * @cfg {String} badgeText
-         * Optional badge text.
+         * Optional badge text.  Badges appear as small numbers, letters, or icons that sit on top of your button.  For instance, a small red number indicating how many updates are available.
          * @accessor
          */
         badgeText: null,
@@ -388,14 +388,16 @@ Ext.define('Ext.Button', {
      */
     updateText: function(text) {
         var textElement = this.textElement;
+        
         if (textElement) {
             if (text) {
                 textElement.show();
                 textElement.setHtml(text);
-            }
-            else {
+            } else {
                 textElement.hide();
             }
+
+            this.refreshIconAlign();
         }
     },
 

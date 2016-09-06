@@ -9,12 +9,12 @@
  *
  * - Adding child Components at instantiation and run time
  * - Removing child Components
- * - Specifying a [Layout](#!/guide/layouts)
+ * - Specifying a [Layout](../../../core_concepts/layouts.html)
  *
  * Layouts determine how the child Components should be laid out on the screen. In our mail app example we'd use an
  * HBox layout so that we can pin the email list to the left hand edge of the screen and allow the preview pane to
  * occupy the rest. There are several layouts in Sencha Touch 2, each of which help you achieve your desired
- * application structure, further explained in the [Layout guide](#!/guide/layouts).
+ * application structure, further explained in the [Layout guide](../../../core_concepts/layouts.html).
  *
  * ## Adding Components to Containers
  *
@@ -67,11 +67,8 @@
  *
  * ## Further Reading
  *
- * See the [Component & Container Guide](#!/guide/components) for more information, and check out the
+ * See the [Component & Container Guide](../../../core_concepts/components.html) for more information, and check out the
  * {@link Ext.Container} class docs also.
- *
- * @aside guide components
- * @aside guide layouts
  */
 Ext.define('Ext.Container', {
     extend: 'Ext.Component',
@@ -163,6 +160,7 @@ Ext.define('Ext.Container', {
          *     }
          *
          * Please look at the {@link Ext.scroll.Scroller} documentation for more example on how to use this.
+         * @return {Ext.scroll.View} The scroll view.
          * @accessor
          * @evented
          */
@@ -198,7 +196,7 @@ Ext.define('Ext.Container', {
          *         ]
          *     });
          *
-         * See the [Layouts Guide](#!/guide/layouts) for more information.
+         * See the [Layouts Guide](../../../core_concepts/layouts.html) for more information.
          *
          * @accessor
          */
@@ -468,21 +466,22 @@ Ext.define('Ext.Container', {
         var me = this,
             ui = me.getUi();
 
+        if (oldBaseCls) {
+            this.element.removeCls(oldBaseCls);
+            this.innerElement.removeCls(newBaseCls, null, 'inner');
+
+            if (ui) {
+                this.element.removeCls(this.currentUi);
+            }
+        }
+
         if (newBaseCls) {
             this.element.addCls(newBaseCls);
             this.innerElement.addCls(newBaseCls, null, 'inner');
 
             if (ui) {
                 this.element.addCls(newBaseCls, null, ui);
-            }
-        }
-
-        if (oldBaseCls) {
-            this.element.removeCls(oldBaseCls);
-            this.innerElement.removeCls(newBaseCls, null, 'inner');
-
-            if (ui) {
-                this.element.removeCls(oldBaseCls, null, ui);
+                this.currentUi = newBaseCls + '-' + ui;
             }
         }
     },
@@ -698,7 +697,7 @@ Ext.define('Ext.Container', {
 
     /**
      * @private
-     * @param item
+     * @param {Ext.Component} item
      */
     doAdd: function(item) {
         var me = this,
@@ -898,8 +897,8 @@ Ext.define('Ext.Container', {
 
     /**
      * @private
-     * @param item
-     * @param index
+     * @param {Ext.Component} item
+     * @param {Number} index
      */
     insertInner: function(item, index) {
         var items = this.getItems().items,
@@ -939,7 +938,7 @@ Ext.define('Ext.Container', {
 
     /**
      * @private
-     * @param item
+     * @param {Ext.Component} item
      */
     removeInner: function(item) {
         Ext.Array.remove(this.innerItems, item);
@@ -983,8 +982,8 @@ Ext.define('Ext.Container', {
 
     /**
      * @private
-     * @param index
-     * @param item
+     * @param {Number} index
+     * @param {Ext.Component} item
      */
     doInsert: function(index, item) {
         var me = this,
@@ -1093,20 +1092,20 @@ Ext.define('Ext.Container', {
     /**
      * @private
      */
-    onItemRemove: function(item, index) {
-        this.doItemLayoutRemove(item, index);
+    onItemRemove: function(item, index, destroying) {
+        this.doItemLayoutRemove(item, index, destroying);
 
         this.fireEvent('remove', this, item, index);
     },
 
-    doItemLayoutRemove: function(item, index) {
+    doItemLayoutRemove: function(item, index, destroying) {
         var layout = this.getLayout();
 
         if (this.isRendered() && item.setRendered(false)) {
-            item.fireAction('renderedchange', [this, item, false], 'onItemRemove', layout, { args: [item, index, undefined] });
+            item.fireAction('renderedchange', [this, item, false], 'onItemRemove', layout, { args: [item, index, destroying] });
         }
         else {
-            layout.onItemRemove(item, index);
+            layout.onItemRemove(item, index, destroying);
         }
     },
 
@@ -1269,10 +1268,34 @@ Ext.define('Ext.Container', {
         }
     },
 
-    doSetHidden: function(hidden) {
+    show:function(){
+        this.callParent(arguments);
+
         var modal = this.getModal();
 
         if (modal) {
+            modal.setHidden(false);
+        }
+
+        return this;
+    },
+
+    hide:function(){
+        this.callParent(arguments);
+
+        var modal = this.getModal();
+
+        if (modal) {
+            modal.setHidden(true);
+        }
+
+        return this;
+    },
+
+    doSetHidden: function(hidden) {
+        var modal = this.getModal();
+
+        if (modal && (modal.getHidden() !== hidden)) {
             modal.setHidden(hidden);
         }
 

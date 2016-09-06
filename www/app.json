@@ -1,8 +1,27 @@
 {
+    "builds": {
+        "web": {"default": true},
+        "native": {
+            "packager": "cordova",
+            "cordova" : {
+                "config": {
+                    // Uncomment the line below and add the platforms you wish to build for
+                    "platforms": "android",
+
+                    "id": "nl.Zermelo.App",
+                    "name": "Zermelo"
+                }
+            }
+        }
+    },
+
+                
     /**
      * The application's namespace, used by Sencha Command to generate classes
      */
     "name": "Zermelo",
+
+    "framework": "touch",
 
     /**
      * The file path to this application's front HTML document, relative to this app.json file
@@ -47,6 +66,16 @@
             "path": "app.js",
             "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when build */
             "update": "full"
+        },
+        {
+            "path": "js/jquery-1.7.2.js",
+            "update": "full",
+            "includeInBundle": true
+        },
+        {
+            "path": "js/fullcalendar.js",
+            "update": "full",
+            "includeInBundle": true
         }
     ],
 
@@ -101,7 +130,7 @@
     "resources": [
         "resources/images",
         "resources/icons",
-        "resources/startup"
+        "locales/"
     ],
 
     /**

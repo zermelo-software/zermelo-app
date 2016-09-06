@@ -42,20 +42,20 @@
     .x-list-item {
         color: $list-color;
 
-        &.x-item-pressed {
-            &.x-list-item-tpl,
-            .x-dock-horizontal {
-                background: $list-pressed-color none;
-            }
-        }
-
         &.x-item-selected .x-dock-horizontal,
         &.x-item-selected.x-list-item-tpl {
             @include background-gradient($list-active-color, $list-active-gradient);
             @include color-by-background($list-active-color);
         }
 
-        .x-list-item-body,
+				&.x-item-pressed {
+					&.x-list-item-tpl,
+					.x-dock-horizontal {
+						background: $list-pressed-color none;
+					}
+				}
+
+			.x-list-item-body,
         &.x-list-item-tpl .x-innerhtml {
             padding: 12px 15px;
         }
@@ -202,6 +202,13 @@
                     }
                 }
             }
+
+					&.x-item-pressed {
+						> .x-innerhtml,
+						> .x-dock-body {
+							background: $list-pressed-color none;
+						}
+					}
 
             &.x-item-selected {
                 > .x-innerhtml,

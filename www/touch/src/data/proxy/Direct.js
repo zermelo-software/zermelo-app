@@ -1,6 +1,4 @@
 /**
- * @aside guide proxies
- *
  * This class is used to send requests to the server using {@link Ext.direct.Manager Ext.Direct}. When a
  * request is made, the transport mechanism is handed off to the appropriate
  * {@link Ext.direct.RemotingProvider Provider} to complete the call.
@@ -33,6 +31,12 @@
  *         }
  *     });
  *     User.load(1);
+ *
+ * ###Further Reading
+ * [Sencha Touch Data Overview](../../../core_concepts/data/data_package_overview.html)
+ * [Sencha Touch Store Guide](../../../core_concepts/data/stores.html)
+ * [Sencha Touch Models Guide](../../../core_concepts/data/models.html)
+ * [Sencha Touch Proxy Guide](../../../core_concepts/data/proxies.html)
  */
 Ext.define('Ext.data.proxy.Direct', {
     extend: 'Ext.data.proxy.Server',
@@ -101,33 +105,50 @@ Ext.define('Ext.data.proxy.Direct', {
         return paramOrder;
     },
 
-    applyDirectFn: function(directFn) {
-        return Ext.direct.Manager.parseMethod(directFn);
-    },
+    resolveMethods : function() {
+        var me = this,
+            fn = me.getDirectFn(),
+            api = me.getApi(),
+            Manager = Ext.direct.Manager,
+            method;
 
-    applyApi: function(api) {
-        var fn;
+        if (fn) {
+            me.setDirectFn(method = Manager.parseMethod(fn));
 
-        if (api && Ext.isObject(api)) {
+            if (!Ext.isFunction(method)) {
+                Ext.Error.raise('Cannot resolve directFn ' + fn);
+            }
+        }
+        else if (api) {
             for (fn in api) {
                 if (api.hasOwnProperty(fn)) {
-                    api[fn] = Ext.direct.Manager.parseMethod(api[fn]);
+                    method = api[fn];
+                    api[fn] = Manager.parseMethod(method);
+
+                    if (!Ext.isFunction(api[fn])) {
+                        Ext.Error.raise('Cannot resolve Direct api ' + fn + ' method ' + method);
+                    }
                 }
             }
         }
 
-        return api;
+        me.methodsResolved = true;
     },
 
     doRequest: function(operation, callback, scope) {
         var me = this,
             writer = me.getWriter(),
             request = me.buildRequest(operation, callback, scope),
-            api = me.getApi(),
-            fn = api && api[request.getAction()] || me.getDirectFn(),
+            api = me.getApi() || {},
             params = request.getParams(),
             args = [],
-            method;
+            fn, method;
+
+        if (!me.methodsResolved) {
+            me.resolveMethods();
+        }
+
+        fn = api[request.getAction()] || me.getDirectFn();
 
         //<debug>
         if (!fn) {

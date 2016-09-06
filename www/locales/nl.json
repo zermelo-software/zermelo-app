@@ -9,12 +9,11 @@
         "code_error_msg":" Vul alstublieft een geldige code in ",
     },
     "menu":{
-        "myschedule":"Rooster",
-        "myschedule_change":"Rooster van ", // Note: this is actually hardcoded in MessageList.js and Schedule.js
-        "announcement":"Mededelingen",
-        "announcement_change":"Mededelingen voor ", // Note: this is actually hardcoded in MessageList.js and Schedule.js
+        "schedule_self": "Rooster", 
+        "schedule_other": "Rooster van ",
+        "announcement_self": "Mededelingen", 
+        "announcement_other": "Mededelingen voor ",
         "Logout":"Uitloggen",
-        "daily_schedule":"Rooster",
         "logout_message":"Weet u zeker dat u de app wilt ontkoppelen? Voordat u hier uw rooster weer kunt zien dient u de app opnieuw te koppelen via Zermelo Portal."
     },
     "ok":"OK",
@@ -25,7 +24,7 @@
         "title":"Details",
         "teacher":"Docenten: ",
         "subject":"Vakken: ",
-        "room":"Locatie: ",
+        "room":"Lokaal: ",
         "group":"Groepen: ",
         "type":"Type: ",
         "startTime":"Begin: ",
@@ -37,7 +36,9 @@
         "startDate":"Startdatum: ",
         "endDate":"Einddatum: ",
         "description":"Omschrijving: ",
-         "no_announcement_msg":"Er zijn op dit moment geen mededelingen."
+        "no_announcement_msg":"Er zijn op dit moment geen mededelingen.",
+        "no_permission_title":"Onvoldoende rechten",
+        "no_permission_message":"U heeft onvoldoende rechten om mededelingen te bekijken."
     },
     "back":{
         "Schedule_back":"Rooster",
@@ -52,7 +53,8 @@
         "choice" : "Keuze",
         "other" : "Overig"
     },
-    "network_error":"Probleem met het verbinden met Zermelo Portal",
+    "network_error":"Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
+    "insufficient_permissions":"Je hebt onvoldoende rechten om dit rooster te bekijken",
     "months" : {
         "1"  : "Januari",
         "2"  : "Februari",
@@ -69,6 +71,6 @@
     },
     "exit_msg":"Wilt u de app verlaten?",
     "own_schedule":"Eigen rooster",
-    "enter_user_code":"Leerlingnummer/afkorting",
+    "enter_user_code":"Gebruikerscode",
     
 }

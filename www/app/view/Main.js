@@ -32,11 +32,9 @@ Ext.define('Zermelo.view.Main', {
     config: {
         listeners: {
             show: function () {
-                if (window.localStorage.getItem('accessToken')!=null )
-                    if( window.localStorage.getItem('accessToken').length != 0) {
+                if (Zermelo.UserManager.loggedIn()) {
                     //set home view
                     this.setActiveItem(1)
-                    
                 } else {
                     // set login view
                     this.setActiveItem(0)

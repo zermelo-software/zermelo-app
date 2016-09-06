@@ -43,10 +43,6 @@ Ext.Loader.setPath({
 	'Ext' : 'touch/src',
 	'Ux' : 'Ux'
 });
-Ext.Loader.setConfig({
-	enabled : true,
-	disableCaching : false
-});
 //</debug>
 
 // workaround for release mode
@@ -68,10 +64,6 @@ if (typeof Ext.Logger === 'undefined') {
 }
 
 //Global variable
-var messageDetails;
-var db;
-var eventArray = [];
-var eventDetails;
 var loc = '';
 var scrollTopHeight = 0;
 var startFlag = false;
@@ -83,14 +75,11 @@ var picker_open = false;
 var datePicker;
 var todayFlag = false;
 var appointment_detail_open = false;
-var currentDay = new Date();
 var clickButton = false;
 var picker_close = false;
-var LoadingMessage = "Loading...";
 var refreshDate;
 var messageShow = false;
 var userChange = false;
-var localStore;
 var full_calendar_obj;
 Ext
 		.application({
@@ -111,26 +100,32 @@ Ext
 					'Ux.locale.override.st.picker.Picker',
 					'Ux.locale.override.st.picker.Date',
 					'Ux.locale.override.st.Msgbox',
-					'Ux.locale.override.st.LoadMask' ],
+					'Ux.locale.override.st.LoadMask',
+					'Zermelo.UserManager',
+					'Zermelo.ErrorManager',
+					'Zermelo.AjaxManager'
+					],
 
 			// views load
 			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
 					'MessageDetails', 'Schedule', 'FullCalendar',
-					'AppointmentDetails',
-
+					'AppointmentDetails', 'CalendarList'
 			],
 
+			models : ['Appointment', 'Announcement'],
+
 			// controller load
-			controllers : [ 'MainController' ],
+			controllers : ['MainController'],
 
 			// store load
-			stores : [ 'AnnouncementStore', 'ReadmessageStore' ],
+			stores : [ 'AnnouncementStore', 'AppointmentStore'],
 
 			isIconPrecomposed : true,
 
 			// Launch application
 
 			launch : function() {
+				Ext.Msg.defaultAllowedConfig.showAnimation = false;
 				// display magnified glass press on textbox
 				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
 				
@@ -186,58 +181,7 @@ Ext
 					Ext.Date.monthNames = [ "Januari", "Februari", "Maart",
 							"April", "Mei", "Juni", "Juli", "Augustus",
 							"September", "Oktober", "November", "December" ];
-					LoadingMessage = "Laden...";
-				}
-				// Add resume event listener
-				document.addEventListener("resume", Ext.bind(onResume, this),
-						false);
-				// Method call on resume app
-				function onResume() {
-					//console.log("resume");
-					if (window.localStorage.getItem('refreshTime') != null
-							&& window.localStorage.getItem('refreshTime') != '') {
-						var date = new Date();
-						var currentTime = date.getTime();
-						var refreshTime = window.localStorage
-								.getItem('refreshTime');
-
-						/*console.log(new Date(currentTime) + "  "
-								+ new Date(parseInt(refreshTime)));*/
-						var mintue = parseInt(((currentTime - refreshTime) / (1000 * 60 * 60)) % 24);
-						if (mintue > 0) {
-
-							Ext.getCmp('button_week_refresh').setIconCls(
-									'zermelo-exclamation-button-' + imageType);
-							Ext.getCmp('button_day_refresh').setIconCls(
-									'zermelo-exclamation-button-' + imageType);
-						} else {
-							Ext.getCmp('button_week_refresh').setIconCls(
-									'zermelo-refresh-button-' + imageType);
-							Ext.getCmp('button_day_refresh').setIconCls(
-									'zermelo-refresh-button-' + imageType);
-						}
-					} else {
-						Ext.getCmp('button_week_refresh').setIconCls(
-								'zermelo-refresh-button-' + imageType);
-						Ext.getCmp('button_day_refresh').setIconCls(
-								'zermelo-refresh-button-' + imageType);
-					}
-					if (window.localStorage.getItem('refresh_time_interval') != null
-							|| window.localStorage
-									.getItem('refresh_time_interval') != '') {
-						var date = new Date();
-						var currentTime = date.getTime();
-						var refreshTime = window.localStorage
-								.getItem('refresh_time_interval');
-
-						refreshMin = parseInt(((currentTime - refreshTime) / (1000 * 60 * 60)) % 24 * 60);
-						//console.log(refreshMin);
-					}
-					//on resume every 15 mintues call refresh function.
-					if (window.localStorage.getItem('startApp') == 'True'
-							&& refreshMin >= 15) {
-						refresh();
-					}
+					Ext.Date.dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
 				}
 				// Back button handle for android
 				if (Ext.os.is('Android')) {
@@ -295,21 +239,7 @@ Ext
 				}
 				// Destroy the #appLoadingIndicator element
 				Ext.fly('appLoadingIndicator').destroy();
-				// create database and appointment table js/database.js
-				createDatabase();
 				// Initialize the main view
 				Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
-			},
-
-			onUpdated : function() {
-				Ext.Msg
-						.confirm(
-								"Application Update",
-								"This application has just successfully been updated to the latest version. Reload now?",
-								function(buttonId) {
-									if (buttonId === 'yes') {
-										window.location.reload();
-									}
-								});
 			}
 		});

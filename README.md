@@ -3,7 +3,7 @@ Zermelo App - Open Source Edition
 
 The Zermelo App allows students, teachers and parents to view schedules and announcements from their Zermelo Portal.
 The goal is to make information from the Zermelo Portal/API easily accessible on mobile phones. Tablet support is not a 
-high priority as tablets are expected access the Zermelo Portal directly.
+high priority as tablets are expected to access the Zermelo Portal directly.
 
 Please note that Zermelo and the Zermelo logo are trademarks of Zermelo Software B.V. You are not allowed to claim that your version of the app is in any way the official one. Note that this does not constitute an extra
 license term for the MIT license below, it's just a part of trademark law. This is also why we've made this version of the app blue.
@@ -19,8 +19,7 @@ For documentation on how to use the Zermelo API please take a look at http://dev
 Building
 ========
 
-The App currently supports Android and iOS. Windows support should not be too hard to add, the main problem is that WebSQL is not supported
-on Windows Phone.
+The App currently supports Android, iOS and Windows Phone.
 
 Running as WebApp
 -----------------
@@ -32,8 +31,7 @@ Building using Adobe PhoneGap
 -----------------------------
 
 The easiest way to build the app both for Android and iOS is using [PhoneGap Build](https://build.phonegap.com). You should create an account
-and add signing keys for the platforms you are interested in. Then you can ZIP the contents of the "www" directory (without actually having
-"www" as a subdirectory). You can then upload this ZIP file to PhoneGap build to build the app.
+and add signing keys for the platforms you are interested in. You can manually create a zip file for PhoneGap Build by zipping the contents of the www directory.
 
 Building using Apache Cordova
 -----------------------------
@@ -46,6 +44,19 @@ zermelo-app$ cordova platform add android@4.0.0
 zermelo-app$ cordova build
 ````
 
+Optimizing using Sencha CMD
+---------------------------
+
+Creating a zip of the entire www/ folder creates a bloated app. The code is not minified, and unused parts of the Sencha Touch framework are packaged into the app. To create an optimized version we use [Sencha CMD](https://www.sencha.com/products/extjs/cmd-download/).
+
+To create an optimized version of the app:
+
+''''bash
+zermelo-app$ sencha app prepare native
+''''
+
+This will place a minified and trimmed version of the app in www/cordova/www. Uploading this version to PhoneGap Build will yield a smaller, faster app.
+
 Architecture
 ============
 
@@ -53,8 +64,7 @@ The app is based on Sencha Touch. The starting point for the app is www/index.ht
 This view checks if the app has been linked to the portal, and if not it shows the www/app/view/Login.js view. Otherwise it shows the
 www/app/view/Home.js view. The Home view is the main application, and contains the menu bar and the other views.
 
-The www/js folder contains some supporting libraries. www/js/database.js takes care of storing all appointment and announcement data.
-www/js/fullcalendar.js renders the calendar view.
+The www/js folder contains some supporting libraries. www/js/fullcalendar.js renders the calendar view.
 
 Note that the app was not in any way "cleaned up" before being made open source. You will undoubtedly find quite a bit of unused files and unused code.
 Code quality is also not guaranteed.

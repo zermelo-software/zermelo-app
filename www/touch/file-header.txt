@@ -1,20 +1,17 @@
 /*
-This file is part of Sencha Touch 2.2
+This file is part of Sencha Touch 2.4
 
-Copyright (c) 2011-2013 Sencha Inc
+Copyright (c) 2011-2015 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as
-published by the Free Software Foundation and appearing in the file LICENSE included in the
-packaging of this file.
-
-Please review the following information to ensure the GNU General Public License version 3.0
-requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial
+Software License Agreement provided with the Software or, alternatively, in accordance with the
+terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2013-05-21 08:48:57 (ed9733df54b93a8cc276c2207eacb9b215f77857)
+Build date: 2015-06-10 14:41:48 (dd5f81fb46d0676281fdd021ada1da3ef06abd27)
 */

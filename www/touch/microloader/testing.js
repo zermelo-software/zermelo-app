@@ -3,10 +3,11 @@
  * @author Jacky Nguyen <jacky@sencha.com>
  */
 (function(global) {
-    var head = global.document.head;
+    var head = global.document.head,
+        Ext = global.Ext;
 
-    if (typeof Ext === 'undefined') {
-        var Ext = global.Ext = {};
+    if (typeof Ext == 'undefined') {
+        global.Ext = Ext = {};
     }
 
     function write(content) {
@@ -44,15 +45,12 @@
         addMeta('apple-mobile-web-app-capable', 'yes');
         addMeta('apple-touch-fullscreen', 'yes');
 
-        if (!window.Ext) {
-            window.Ext = {};
-        }
         Ext.microloaded = true;
 
         var filterPlatform = window.Ext.filterPlatform = function(platform) {
             var profileMatch = false,
                 ua = navigator.userAgent,
-                j, jln;
+                j, jln, exclude;
 
             platform = [].concat(platform);
 
@@ -71,7 +69,7 @@
             }
 
             function isTablet(ua) {
-                return !isPhone(ua) && (/iPad/.test(ua) || /Android/.test(ua) || /(RIM Tablet OS)/.test(ua) ||
+                return !isPhone(ua) && (/iPad/.test(ua) || /Android|Silk/.test(ua) || /(RIM Tablet OS)/.test(ua) ||
                     (/MSIE 10/.test(ua) && /; Touch/.test(ua)));
             }
 
@@ -120,6 +118,14 @@
                     case 'ie10':
                         profileMatch = /MSIE 10/.test(ua);
                         break;
+                    case 'windows':
+                        profileMatch = /MSIE 10/.test(ua) || /Trident/.test(ua);
+                        break;
+                    case 'tizen':
+                        profileMatch = /Tizen/.test(ua);
+                        break;
+                    case 'firefox':
+                        profileMatch = /Firefox/.test(ua);
                 }
                 if (profileMatch) {
                     return true;
@@ -133,12 +139,13 @@
 
             if (typeof path != 'string') {
                 platform = path.platform;
+                exclude = path.exclude;
                 theme = path.theme;
                 path = path.path;
             }
 
             if (platform) {
-                if (!filterPlatform(platform)) {
+                if (!filterPlatform(platform) || filterPlatform(exclude)) {
                     continue;
                 }
                 Ext.theme = {
@@ -153,11 +160,12 @@
 
             if (typeof path != 'string') {
                 platform = path.platform;
+                exclude = path.exclude;
                 path = path.path;
             }
 
             if (platform) {
-                if (!filterPlatform(platform)) {
+                if (!filterPlatform(platform) || filterPlatform(exclude)) {
                     continue;
                 }
             }

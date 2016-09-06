@@ -25,37 +25,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// from http://trevorbrindle.com/chrome-43-broke-sencha/
-Ext.override(Ext.util.SizeMonitor, {
-    constructor: function(config) {
-        var namespace = Ext.util.sizemonitor;
-
-        if (Ext.browser.is.Firefox) {
-            return new namespace.OverflowChange(config);
-        } else if (Ext.browser.is.WebKit) {
-            if (!Ext.browser.is.Silk && Ext.browser.engineVersion.gtEq('535') && !Ext.browser.engineVersion.ltEq('537.36')) {
-                return new namespace.OverflowChange(config);
-            } else {
-                return new namespace.Scroll(config);
-            }
-        } else if (Ext.browser.is.IE11) {
-           return new namespace.Scroll(config);
-        } else {
-           return new namespace.Scroll(config);
-        }
-    }
-});
-Ext.override(Ext.util.PaintMonitor, {
-   constructor: function(config) {
-       if (Ext.browser.is.Firefox || (Ext.browser.is.WebKit && Ext.browser.engineVersion.gtEq('536') && !Ext.browser.engineVersion.ltEq('537.36') && !Ext.os.is.Blackberry)) {
-           return new Ext.util.paintmonitor.OverflowChange(config);
-       }
-       else {
-           return new Ext.util.paintmonitor.CssAnimation(config);
-       }
-   }
-});
-
 Ext.define('Zermelo.controller.MainController', {
     extend: 'Ext.app.Controller',
     config: {
@@ -70,6 +39,7 @@ Ext.define('Zermelo.controller.MainController', {
             messageDetails: 'messageDetails',
             home: 'home',
             appointmentDetails: 'appointmentDetails',
+            calendarList: 'CalendarList'
         },
         control: {
             announcementlist: {
@@ -77,45 +47,73 @@ Ext.define('Zermelo.controller.MainController', {
             },
             messageDetails_back: {
                 tap: 'back_messageList'
-            },
-            appointmentDetails_back: {
-                tap: 'back_schedule'
             }
-        },
+            // ,
+            // appointmentDetails_back: {
+            //     tap: 'back_schedule'
+            // }
+        }
     },
     // Announcement list item tap
     onItemTap: function (list, index, target, record) {
-        // create home view object
-        home = this.getHome() || Ext.create('Zermelo.view.Home');
-        // create messagedetail view object
-        messagedetails = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
-        //get selected index record
-        var rec = list.getStore().getAt(index);
-        messageDetails = rec.data;
-        //add messagedetail in viewport
-        Ext.Viewport.add(messagedetails);
-        messagedetails.show();
+        var home = this.getHome() || Ext.create('Zermelo.view.Home');
+        var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
+        var record = list.getStore().getAt(index);
+
+        messageDetailsView.message = record.getData();
+        Ext.Viewport.add(messageDetailsView);
+        messageDetailsView.show();
         home.hide();
         currentView="messageDetail";
     },
+    
     // tap back button on annoucement detail view
     back_messageList: function () {
-        home = this.getHome() || Ext.create('Zermelo.view.Home');
+        var home = this.getHome() || Ext.create('Zermelo.view.Home');
         home.list.removeCls('zermelo-menu-list');
-        messagedetails = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
-        messagedetails.hide();
+
+        var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
+        messageDetailsView.hide();
         home.show();
         currentView="";
     },
-    // tap back button on appointment detail view
-    back_schedule: function () {
-        console.log("back");
-        appointment_detail_open=false;
-        home = this.getHome() || Ext.create('Zermelo.view.Home');
-        home.list.removeCls('zermelo-menu-list');
-        appointmentDetail = this.getAppointmentDetails() || Ext.create('Zermelo.view.AppointmentDetails');
-        home.show();
-        appointmentDetail.hide();
-        currentView="";
+
+    // Determines whether there are any pending announcements
+    // MessageList isn't instantiated until it is opened so putting this function there doesn't work
+    updateNewMessagesIndicator: function() {
+        var announcementStore = Ext.getStore('Announcements');
+        var count = 0;
+        announcementStore.each(function(record) {
+            if(!record.get('read') && record.valid()) {
+                count++;
+            }
+        });
+
+        var home = this.getHome() || Ext.create('Zermelo.view.Home');
+        home._slideButtonConfig.setBadgeText(count);
+
+        if(count != 0) {
+            document.getElementById('messageCount').style.display="";
+            document.getElementById('messageCount').innerHTML=count;
+        }
+        else {
+            document.getElementById('messageCount').style.display="none";
+        }
+    },
+
+    launch: function() {
+        Ext.getStore('Announcements').addAfterListener('addrecords', this.updateNewMessagesIndicator, this);
+        Ext.getStore('Announcements').addAfterListener('removerecords', this.updateNewMessagesIndicator, this);
+        Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
+        this.updateNewMessagesIndicator();
+        
+        var onResume = function() {
+            if(Date.now() - localStorage.getItem('refreshTime') > 30 * 60 * 1000 && Zermelo.UserManager.loggedIn()) {
+                Zermelo.AjaxManager.refresh();
+            }
+            Ext.getCmp('fullCalendarView').updateView();
+        };
+        document.addEventListener('resume', Ext.bind(onResume, this), false);
+        Zermelo.AjaxManager.refresh();
     }
 });

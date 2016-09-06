@@ -19,11 +19,28 @@ Ext.define('Ext.fx.runner.CssTransition', {
         this.getEventDispatcher().addListener('element', '*', 'transitionend', 'onTransitionEnd', this);
     },
 
+    // onTransitionEnd: function(e) {
+    //     var target = e.target,
+    //         id = target.id;
+
+    //     if (id && this.runningAnimationsData.hasOwnProperty(id)) {
+    //         this.refreshRunningAnimationsData(Ext.get(target), [e.browserEvent.propertyName]);
+    //     }
+    // },
+
     onTransitionEnd: function(e) {
         var target = e.target,
-            id = target.id;
+            id = target.id,
+            propertyName = e.browserEvent.propertyName,
+            styleDashPrefix = Ext.browser.getStyleDashPrefix();
+
 
         if (id && this.runningAnimationsData.hasOwnProperty(id)) {
+            if (Ext.feature.has.CssTransformNoPrefix) {
+                if (propertyName.indexOf(styleDashPrefix) >= 0) {
+                    propertyName = propertyName.substring(styleDashPrefix.length);
+                }
+            }
             this.refreshRunningAnimationsData(Ext.get(target), [e.browserEvent.propertyName]);
         }
     },
@@ -397,8 +414,15 @@ Ext.define('Ext.fx.runner.CssTransition', {
             }
         };
 
-        window.addEventListener('message', doApplyTo, false);
-        window.postMessage(message, '*');
+        if(Ext.browser.is.IE) {
+            window.requestAnimationFrame(function() {
+                window.addEventListener('message', doApplyTo, false);
+                window.postMessage(message, '*');
+            });
+        }else{
+            window.addEventListener('message', doApplyTo, false);
+            window.postMessage(message, '*');
+        }
     },
 
     onAnimationStop: function(animation) {

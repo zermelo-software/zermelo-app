@@ -36,7 +36,8 @@ Ext.define('Zermelo.view.SlideView', {
         'Ext.data.Model',
         'Ext.data.ModelManager',
         'Ext.data.Store',
-        'Ext.dataview.List'
+        'Ext.dataview.List',
+        'Ext.MessageBox'
     ],
     xtype: 'slidenavigationview',
 
@@ -216,6 +217,15 @@ Ext.define('Zermelo.view.SlideView', {
 
         slideButtonDefaults: {}
     },
+    // The ids listed here are assigned by the order these items have in Home.js
+    // If you change that list this list needs to be updated as well to ensure your buttons do the right thing
+    itemIds: {
+        'fullCalendarView': 0,
+        'calendarList': 1,
+        'messageList': 2,
+        'userChange': 3,
+        'logout': 4
+    },
 
     initConfig: function() {
         var me = this;
@@ -231,14 +241,6 @@ Ext.define('Zermelo.view.SlideView', {
                 sortProperty: 'groupOrder'
             }
         });
-        
-        // make sure we have user_code set to something FIXME: is this the right place?
-        var user_code = window.localStorage.getItem('user_code');
-        if (user_code === undefined ||
-            user_code == null ||
-            user_code == '' ) {
-			window.localStorage.setItem('user_code', '~me');
-		}
 
         // Add the items into the list.
         me.addItems(me.config.items || []);
@@ -312,15 +314,13 @@ Ext.define('Zermelo.view.SlideView', {
         ]);
 
         this.createContainerCSS();
-
-        var selectedItemIndex = 0;
+        var selectedItemIndex = this.itemIds[localStorage.getItem('lastView')] || 0;
 
         Ext.each(this.list.getStore().getRange(), function(item, index) {
             if (item.get('selected') === true) {
                 selectedItemIndex = index;
             }
         });
-
         this.list.select(selectedItemIndex);
 
         this.__init = true;
@@ -388,7 +388,6 @@ Ext.define('Zermelo.view.SlideView', {
             if (layout && Ext.isFunction(layout.setPack)) {
                 layout.setPack(listPosition);
             }
-
             return parent.add(Ext.merge(me._slideButtonConfig, config));
         }
 
@@ -419,6 +418,7 @@ Ext.define('Zermelo.view.SlideView', {
      *  disabled, this method does nothing.
      */
     doMaskItem: function(item, mask) {
+        return;
         var maskConfig = this.getMask(),
             mask = Ext.isDefined(mask) ? mask : true;
 
@@ -441,10 +441,9 @@ Ext.define('Zermelo.view.SlideView', {
      * Always called when item in the list is tapped.
      */
     onItemTap: function(list, index, target, item, event, eOpts) {
-        //check if tap logout goto login screen and (accessToken and  institution data remove from local storage)
         var thisobj = this;
-        if (index == 3) {
-            // display popup while pressed on logout button
+        if (index == this.itemIds.logout) {
+            // Create 'are you sure you want to log out?' box
             Ext.Msg.show({
                 items: [{
                     xtype: 'label',
@@ -456,15 +455,12 @@ Ext.define('Zermelo.view.SlideView', {
                 buttons: [{
                     itemId: 'ok',
                     locales: {
-                        text: 'ok',
+                        text: 'ok'
                     },
                     ui: 'normal',
                     handler: function() {
-                        window.localStorage.setItem('accessToken', '');
-                        window.localStorage.setItem('institution', '');
-                        window.localStorage.setItem('startApp', '');
+                        Zermelo.UserManager.logout();
                         window.localStorage.setItem('refreshTime', '');
-                        window.localStorage.setItem('user_code', '~me');
                         window.location.reload();
                     }
                 }, {
@@ -472,7 +468,7 @@ Ext.define('Zermelo.view.SlideView', {
                 }, {
                     itemId: 'cancel',
                     locales: {
-                        text: 'cancel',
+                        text: 'cancel'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -480,16 +476,18 @@ Ext.define('Zermelo.view.SlideView', {
                         this.hide();
                     }
 
-                }],
+                }]
             });
 
-        } else if (index == 2) {
-            // display popup while pressed on change user
+        } else if (index == this.itemIds.userChange) {
+            // Create user switch message box
             Ext.Msg.show({
                 style: {
                     'padding': '1em 1em 0.5em 1em'
                 },
                 id: 'user_code_msg',
+                showAnimation: false,
+                hideAnimation: false,
                 items: [{
                     xtype: 'toolbar',
                     //   cls: 'zermelo-error-messagebox',
@@ -501,142 +499,41 @@ Ext.define('Zermelo.view.SlideView', {
                         xtype: 'button',
 
                         locales: {
-                            text: 'own_schedule',
+                            text: 'own_schedule'
                         },
                         ui: 'normal',
                         handler: function() {
-
-                            if (window.localStorage.getItem('user_code') != '~me') {
-                                deleteappointmentdatas();
-                                //  localStore = new Zermelo.store.AnnouncementStore();
-                                //localStore.removeAll();
-                                var store = Ext.getStore('AnnouncementStore');
-                                store.getProxy().clear();
-                                store.data.clear();
-                                store.sync();
-                            }
-                            window.localStorage.setItem('user_code', "~me");
-                            if (messageShow) {
-
-                                getAnnoucementsData(Ext.getCmp('messageList'))
-                                userChange = true;
-                                if (window.localStorage.getItem('user_code') == '~me') {
-                                    if (loc == 'nl') {
-                                        Ext.getCmp("message_title").setTitle("Mededelingen");
-                                    } else {
-                                        Ext.getCmp("message_title").setTitle("Announcements");
-
-                                    }
-                                } else {
-                                    if (loc == 'nl') {
-                                        Ext.getCmp("message_title").setTitle("Mededelingen voor " + window.localStorage.getItem('user_code'));
-                                    } else {
-                                        Ext.getCmp("message_title").setTitle("Announcements for " + window.localStorage.getItem('user_code'));
-                                    }
-                                }
-                            } else {
-                                getAnnoucementData(Ext.getCmp('schedule'));
-                                refresh();
-                                userChange = false;
-                            }
-                            if (loc == 'nl') {
-                                Ext.getCmp("toolbar_main").setTitle("Rooster");
-                                Ext.getCmp("toolbar_day_back").setTitle("Rooster");
-                            } else {
-                                Ext.getCmp("toolbar_main").setTitle("Schedule");
-                                Ext.getCmp("toolbar_day_back").setTitle("Schedule");
-
-                            }
-                            // 
+                            Zermelo.UserManager.setUser();
                             thisobj.closeContainer();
-                            //Ext.getCmp('user_code_msg').hide();
                             this.getParent().getParent().hide();
                         }
-                    }],
+                    }]
                 }, {
                     xtype: 'textfield',
                     label: '',
-                    name: 'user_code',
-                    id: 'user_code',
+                    name: 'new_user_code',
+                    id: 'new_user_code',
                     style: {
-                        'margin': '10px 10px 10px 10px',
+                        'margin': '10px 10px 10px 10px'
                     },
                     locales: {
                         placeHolder: 'enter_user_code'
-                    },
-
-
-
+                    }
                 }],
                 buttons: [{
                     itemId: 'ok',
                     locales: {
-                        text: 'ok',
+                        text: 'ok'
                     },
                     ui: 'normal',
                     handler: function() {
-
-                        var user_code = Ext.getCmp('user_code').getValue();
+                        var user_code = Ext.getCmp('new_user_code').getValue();
                         if (user_code.length == 0) {
-                            Ext.Msg.show({
-                                items: [{
-                                    xtype: 'label',
-                                    cls: 'zermelo-error-messagebox',
-                                    locales: {
-                                        html: 'enter_user_code'
-                                    }
-                                }],
-                                buttons: [{
-                                    itemId: 'ok',
-                                    locales: {
-                                        text: 'ok',
-                                    },
-
-                                    ui: 'normal'
-                                }],
-                            });
+                            thisobj.closeContainer();
+                            this.hide();
+                            Zermelo.ErrorManager.showErrorBox('enter_user_code');
                         } else {
-                            if (loc == 'nl') {
-                                Ext.getCmp("toolbar_main").setTitle("Rooster van " + user_code);
-                                Ext.getCmp("toolbar_day_back").setTitle("Rooster van " + user_code);
-                            } else {
-                                Ext.getCmp("toolbar_main").setTitle("Schedule of " + user_code);
-                                Ext.getCmp("toolbar_day_back").setTitle("Schedule of " + user_code);
-                            }
-                            if (window.localStorage.getItem('user_code') != user_code) {
-                                deleteappointmentdatas();
-                                // localStore = new Zermelo.store.AnnouncementStore();
-                                //localStore.removeAll();
-                                var store = Ext.getStore('AnnouncementStore');
-                                store.getProxy().clear();
-                                store.data.clear();
-                                store.sync();
-                            }
-                            window.localStorage.setItem('user_code', user_code);
-                            if (messageShow) {
-                                getAnnoucementsData(Ext.getCmp('messageList'))
-                                userChange = true;
-                                if (window.localStorage.getItem('user_code') == '~me') {
-                                    if (loc == 'nl') {
-                                        Ext.getCmp("message_title").setTitle("Mededelingen");
-                                    } else {
-                                        Ext.getCmp("message_title").setTitle("Announcements");
-
-                                    }
-                                } else {
-                                    if (loc == 'nl') {
-                                        Ext.getCmp("message_title").setTitle("Mededelingen voor " + window.localStorage.getItem('user_code'));
-                                    } else {
-                                        Ext.getCmp("message_title").setTitle("Announcements for " + window.localStorage.getItem('user_code'));
-                                    }
-                                }
-                            } else {
-                                getAnnoucementData(Ext.getCmp('schedule'));
-                                refresh();
-                                userChange = false;
-                            }
-
-                            // refresh();
+                            Zermelo.UserManager.setUser(user_code);
                             thisobj.closeContainer();
                             this.hide();
                         }
@@ -646,7 +543,7 @@ Ext.define('Zermelo.view.SlideView', {
                 }, {
                     itemId: 'cancel',
                     locales: {
-                        text: 'cancel',
+                        text: 'cancel'
                     },
                     ui: 'normal',
                     handler: function() {
@@ -654,12 +551,12 @@ Ext.define('Zermelo.view.SlideView', {
                         this.hide();
                     }
 
-                }],
+                }]
             });
 
         } else {
             if (list.isSelected(item) && this.config.closeOnSelect) {
-                this.closeContainer();
+                thisobj.closeContainer();
             }
         }
 
@@ -676,8 +573,7 @@ Ext.define('Zermelo.view.SlideView', {
             index = item.raw.index,
             container = me.container,
             func = Ext.emptyFn;
-        // check item selected index = 2 not change view only popup display
-        if (index != 2 && index != 3) {
+        if (index != this.itemIds.userChange && index != this.itemIds.logout) {
             if (me._cache[index] == undefined) {
                 // If the object has a handler defined, then we don't need to
                 // create an Ext object
@@ -694,7 +590,7 @@ Ext.define('Zermelo.view.SlideView', {
                         me._cache[index].addListener('painted', function() {
                             // The slight delay here gives the component enough time to update before
                             // the close animation starts.
-                            Ext.defer(me.closeContainer, 100, me, [me.config.selectSlideDuration]);
+                            me.closeContainer();
                         });
                     }
 
@@ -714,15 +610,12 @@ Ext.define('Zermelo.view.SlideView', {
             if (me.__init) {
                 me.fireAction('select', [me, me._cache[index], index], func, me);
             }
-            if (index == 0) {
+            if (index == this.itemIds.weekView) {
                 messageShow = false;
-                if (userChange) {
-                    refresh();
-                    userChange = false;
-                }
-
-            } else
+                Ext.getStore('Appointments').fetchWeek();
+            } else if (index == this.itemIds.messages) {
                 messageShow = true;
+            }
         }
     },
 
@@ -968,7 +861,7 @@ Ext.define('Zermelo.view.SlideView', {
             store: this.store,
             docked: listPosition,
             scrollable: false,
-            height: null,
+            height: '100%',
             cls: 'zermelo-menu-list',
             itemCls: 'zermelo-menu-list-item',
             pressedCls: 'zermelo-menu-list-item-pressed',
@@ -1096,7 +989,6 @@ Ext.define('Zermelo.view.SlideView', {
                                         scroller = scrollable.getScroller();
                                         scroller._scrollState = scroller.getDisabled();
 
-                                        console.log(scroller.getDisabled() != false);
 
                                         if (scroller._scrollState != false) {
                                             scroller.setDisabled(true);
@@ -1146,5 +1038,9 @@ Ext.define('Zermelo.view.SlideView', {
         if (selection) {
             return selection[0];
         }
+    },
+
+    selectItem: function(itemName) {
+        this.list.select(this.itemIds[itemName]);
     }
 });

@@ -1,5 +1,7 @@
 /**
- * A core util class to bring Draggable behavior to a Component
+ * A core util class to bring Draggable behavior to a Component. This class is specifically designed only for
+ * absolutely positioned elements starting from top: 0, left: 0. The initialOffset can then be set via configuration
+ * to have the elements in a different position.
  */
 Ext.define('Ext.util.Draggable', {
     isDraggable: true,
@@ -111,6 +113,8 @@ Ext.define('Ext.util.Draggable', {
             drag     : 'onDrag',
             dragend  : 'onDragEnd',
             resize   : 'onElementResize',
+            touchstart : 'onPress',
+            touchend   : 'onRelease',
             scope: this
         };
 
@@ -267,6 +271,14 @@ Ext.define('Ext.util.Draggable', {
         }
 
         return (direction === this.DIRECTION_BOTH || direction === this.DIRECTION_VERTICAL);
+    },
+
+    onPress: function(e) {
+        this.fireAction('touchstart', [this, e]);
+    },
+
+    onRelease: function(e) {
+        this.fireAction('touchend', [this, e]);
     },
 
     onDragStart: function(e) {

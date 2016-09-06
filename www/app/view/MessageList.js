@@ -31,68 +31,18 @@ var mystore;
 
 Ext.define("Zermelo.view.MessageList", {
     extend: 'Ext.Container',
-    requires: ['Ext.data.proxy.JsonP'],
     xtype: 'messageList',
     id: 'messageList',
     config: {
         listeners: {
-            show: function () {
-              //  console.log(localStore.getCount());
-                console.log("show");
+            painted: function () {
                 messageShow=true;
-                if (localStore.getCount() == 0)
-                    Ext.Msg.show({
-                        items: [{
-                            xtype: 'label',
-                            cls: 'zermelo-error-messagebox',
-                            locales: {
-                                html: 'announcement.no_announcement_msg'
-                            }
-                        }],
-                        buttons: [{
-                            itemId: 'ok',
-
-                            locales: {
-                                text: 'ok',
-                            },
-
-                            ui: 'normal'
-                        }],
-                    });
-				dataFilter(this, localStore);
-				if(loc=='nl') {
-					Ext.getCmp("message_title").setTitle("Mededelingen");
-				} else {
-					Ext.getCmp("message_title").setTitle("Announcements");
-				}
-
+                Zermelo.AjaxManager.getAnnouncementData();
             }, //end show
-             hide:function(){
+
+            hide:function(){
                 messageShow=false;
-             },
-            // record update with read and unread
-            painted_disabled: function () {
-				console.log("painted!");
-                if (localStore.getCount() == 0)
-                    Ext.Msg.show({
-                        items: [{
-                            xtype: 'label',
-                            cls: 'zermelo-error-messagebox',
-                            locales: {
-                                html: 'announcement.no_announcement_msg'
-                            }
-                        }],
-                        buttons: [{
-                            itemId: 'ok',
-                            locales: {
-                                text: 'ok',
-                            },
-                         
-                            ui: 'normal'
-                        }],
-                    });
-                dataFilter(this, localStore);
-            }, //end painted
+            }
         }, // end listeners
         layout: 'fit',
         style: {
@@ -104,7 +54,6 @@ Ext.define("Zermelo.view.MessageList", {
             // padding top left bottom right
             margin: '10 10 10 10',
             style:{
-                'top': '-50px',
                 'padding-bottom': '50px'
             },
             id: 'announcementlist',
@@ -114,143 +63,9 @@ Ext.define("Zermelo.view.MessageList", {
             itemCls: 'zermelo-message-list-item',
             // css class resources/css/app.css selected items
             selectedCls: 'zermelo-menu-list-item-select',
-            //data store
-            store: localStore,
             grouped: false,
-            itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>"),
+            store: 'Announcements',
+            itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
         }]
     }
-
 });
-//below function fetches the list of annoucement using webservice.
-function getAnnoucementData(thisObj) {   
-    // get institution and accesstoken from localstorage
-    var institution = window.localStorage.getItem('institution');
-    var accessToken = window.localStorage.getItem('accessToken');
-    
-    if (accessToken == null || accessToken == '')
-		return;
-
-    // send request to server using ajax
-    Ext.Ajax.request({
-        url: 'https://' + institution + '.zportal.nl/api/v2/announcements?user=~me&access_token=' + accessToken, // url : this.getUrl(),
-        method: "GET",
-        useDefaultXhrHeader: false,
-
-        success: function (response) {
-           // console.log(response);
-            var decoded = Ext.JSON.decode(response.responseText);
-            // create store
-            mystore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid'],
-            });
-            mystore.setData(decoded.response.data);
-            var readStroe = Ext.getStore('ReadmessageStore');
-            // all data remove from localstore
-
-            localStore = new Zermelo.store.AnnouncementStore();
-            localStore.removeAll();
-            // set data into sotre
-
-            mystore.each(function (record) {
-                var rec = {
-                    announcement_id: record.data.id,
-                    start: record.data.start,
-                    end: record.data.end,
-                    title: record.data.title,
-                    text: record.data.text, // in a real app you would not update a real field like this!
-                };
-                // add reocrd into localstore one bye one
-                localStore.add(rec);
-                localStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
-            });
-            dataFilter(thisObj, localStore);
-            //thisObj.unmask();
-        },
-        failure: function (response) {
-           localStore = new Zermelo.store.AnnouncementStore();
-           dataFilter(thisObj, localStore);
-           thisObj.unmask();
-        }
-    });
-}
-// filter data with read, unread and valid with feature date
-function dataFilter(thisObj, localStore) {
-	console.log("dataFilter");
-    var readStroe = Ext.getStore('ReadmessageStore');
-     var announcement_id=[];
-    for(i=0;i<localStore.getCount();i++)
-    {
-        announcement_id.push({id:localStore.getAt(i).get('announcement_id')});
-    }
-    // read and unread data update
-    for (i = 0; i < localStore.getCount(); i++) {
-        var flag = false;
-        var record = localStore.findRecord('announcement_id',announcement_id[i].id);
-        var id = record.get('announcement_id');
-        for (j = 0; j < readStroe.getCount(); j++) {
-            var readid = readStroe.getAt(j);
-            if (id == readid.get('readId')) {
-                flag = true;
-            }
-        }
-        if (flag) {
-            record.set('read', 1);
-        } else {
-            record.set('read', 0);
-        }
-        localStore.sync();
-    }
-   
-    //only feature date valid 
-    for (i = 0; i < announcement_id.length; i++) {
-        var record = localStore.findRecord('announcement_id',announcement_id[i].id);
-        var startDate = new Date(record.get('start') * 1000);
-        var endDate = new Date(record.get('end') * 1000);
-        var current_date = new Date();
-        var format_startDate = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate());
-        var format_endDate = new Date(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate())
-        var foramt_currentDate = new Date(current_date.getUTCFullYear(), current_date.getUTCMonth(), current_date.getUTCDate())
-        if (format_startDate.getTime() > foramt_currentDate.getTime()) {
-			// not visible yet
-			record.set('valid', 'false');
-        } else if (format_endDate.getTime() >= foramt_currentDate.getTime()) {
-			// visible
-            record.set('valid', 'true');
-        } else {
-			// no longer visible
-            record.set('valid', 'false');
-        }
-        localStore.sync();
-    }
-    localStore.filter([{
-        property: 'read',
-        value: 0
-    }, {
-        property: 'valid',
-        value: 'true'
-    }]);
-   
-    Ext.getCmp('home')._slideButtonConfig.setBadgeText(localStore.getCount());
-    // In menu announcement count display
-    if(localStore.getCount()!=0)
-    {
-        document.getElementById('messageCount').style.display="";
-        document.getElementById('messageCount').innerHTML=localStore.getCount();
-    }
-    else
-    {
-        document.getElementById('messageCount').style.display="none";
-    }
-    localStore.clearFilter();
-    localStore.filter('valid', 'true');
-    localStore.sort([{property:'start', direction:'ASC'},{property:'end', direction:'ASC'}]);
-    
-    var list = Ext.getCmp('announcementlist')
-	if (list) {
-		if (list.getStore() != null)
-			list.getStore().removeAll(); // to prevent an error inside setStore
-		list.setStore(localStore);
-		list.refresh();
-	}
-}

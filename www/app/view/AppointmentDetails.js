@@ -30,24 +30,23 @@ Ext.define('Zermelo.view.AppointmentDetails', {
     extend: 'Ext.Container',
     xtype: 'appointmentDetails',
     id: 'appointmentDetails_view',
+    setAndShow: function(eventDetails, parentView) {
+        this.parentView = parentView;
+        this.eventDetails = eventDetails;
+        Ext.Viewport.setActiveItem(this);
+    },
     config: {
+        eventDetails: null,
         listeners: {
             //show event of view
             show: function() {
                 appointment_detail_open = true;
                 thisObj = this;
-               // console.log(eventDetails);
-                var multipleids = [];
-                if (eventDetails.multiid.length != 0)
-                    multipleids = eventDetails.multiid.split(",");
-                else
-                    multipleids[0] = String(eventDetails.id);
-               // console.log(multipleids.length);
+                var collidingIds = this.eventDetails.collidingIds.split(',');
+                appointmentStore = Ext.getStore('Appointments');
 
-                for (i = 0; i < multipleids.length; i++) {
-
-                    resultObject = search(multipleids[i], eventArray);
-                   // console.log(resultObject);
+                for (i = 0; i < collidingIds.length; i++) {
+                    var appointmentData = appointmentStore.findRecord('id', collidingIds[i]).getData();
                     var container = Ext.create('Ext.Container', {
                         style: {
                             'font-size': '14px'
@@ -70,16 +69,15 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.teacher',
-                                        },
+                                            html: 'appointment.teacher'
+                                        }
                                     }, {
                                         // teacher value label
                                         xtype: 'label',
                                         flex: 1.5,
-                                        id: 'appointmentDetails_teacher_value_lbl',
                                         // css class resouces/css/app.css
-                                        html: resultObject.teacher,
-                                        cls: 'zermelo-announcement-label',
+                                        html: appointmentData.teachers,
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end teacher container   
                             }, {
@@ -97,16 +95,15 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.subject',
-                                        },
+                                            html: 'appointment.subject'
+                                        }
                                     }, {
                                         // subject value label
                                         xtype: 'label',
                                         flex: 1.5,
-                                        id: 'appointmentDetails_subject_value_lbl',
-                                        html: resultObject.subject,
+                                        html: appointmentData.subjects,
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     // end subject container
                             }, {
@@ -124,16 +121,15 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.room',
-                                        },
+                                            html: 'appointment.room'
+                                        }
                                     }, {
                                         //room value lebel
                                         xtype: 'label',
                                         flex: 1.5,
-                                        id: 'appointmentDetails_room_value_lbl',
-                                        html: resultObject.locations,
+                                        html: appointmentData.locations,
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end room container
                             }, {
@@ -151,23 +147,21 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.group',
-                                        },
+                                            html: 'appointment.group'
+                                        }
                                     }, {
                                         // group value label
                                         xtype: 'label',
-                                        id: 'appointmentDetails_group_value_lbl',
                                         flex: 1.5,
-                                        html: resultObject.groups,
+                                        html: appointmentData.groups,
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end group container
                             }, {
                                 // type container with horizontal box
                                 xtype: 'container',
                                 layout: 'hbox',
-                                id: 'container_type',
                                 style: {
                                     'margin-bottom': '10px'
                                 },
@@ -179,16 +173,15 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.type',
-                                        },
+                                            html: 'appointment.type'
+                                        }
                                     },{
                                          xtype: 'label',
-                                        id: 'appointmentDetails_type_value_lbl',
                                         flex: 1.5,
                                          // css class resouces/css/app.css
                                         cls: 'zermelo-announcement-label',
                                         locales: {
-                                             html: 'type.' + resultObject.type
+                                             html: 'type.' + appointmentData.type
                                         }
                                     }]
                                     //end type container
@@ -207,16 +200,15 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.startTime',
-                                        },
+                                            html: 'appointment.startTime'
+                                        }
                                     }, {
                                         //starttime value label
                                         xtype: 'label',
                                         flex: 1.5,
-                                        id: 'appointmentDetails_start_time_value_lbl',
                                         // css class resouces/css/app.css
-                                        html: Ext.Date.format(new Date(resultObject.start), 'd M. Y H:i'),
-                                        cls: 'zermelo-announcement-label',
+                                        html: Ext.Date.format(new Date(appointmentData.start), 'd M. Y H:i'),
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end starttime container
                             }, {
@@ -234,55 +226,57 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         cls: 'zermelo-announcement-label',
                                         //multiple language
                                         locales: {
-                                            html: 'appointment.endTime',
-                                        },
+                                            html: 'appointment.endTime'
+                                        }
                                     }, {
                                         //endtime value label
                                         xtype: 'label',
                                         flex: 1.5,
-                                        id: 'appointmentDetails_End_time_value_lbl',
-                                        html: Ext.Date.format(new Date(resultObject.end), 'd M. Y H:i'),
+                                        html: Ext.Date.format(new Date(appointmentData.end), 'd M. Y H:i'),
 
                                         // css class resouces/css/app.css
-                                        cls: 'zermelo-announcement-label',
+                                        cls: 'zermelo-announcement-label'
                                     }]
                                     //end endtime container
                             }, {
                                 // remark label
                                 xtype: 'label',
-                                id: 'appointmentDetails_remarks_lbl',
+                                // id: 'appointmentDetails_remarks_lbl',
                                 style: {
                                     'margin-bottom': '10px'
                                 },
                                 //multiple language
                                 locales: {
-                                    html: 'appointment.remark',
+                                    html: 'appointment.remark'
                                 },
+                                hidden: appointmentData.remark.length == 0
                             }, {
                                 //remark value label
                                 xtype: 'label',
-                                id: 'appointmentDetails_remarks_value_lbl',
                                 style: {
                                     'margin-bottom': '20px'
                                 },
+                                html: appointmentData.remark,
+                                hidden: appointmentData.remark.length == 0
                             }, {
                                 //description label
                                 xtype: 'label',
-                                id: 'appointmentDetails_description_lbl',
                                 style: {
                                     'margin-bottom': '10px'
                                 },
                                 //multiple language
                                 locales: {
-                                    html: 'appointment.changeDescription',
+                                    html: 'appointment.changeDescription'
                                 },
+                                hidden: appointmentData.changeDescription.length == 0
                             }, {
                                 //description value label
                                 xtype: 'label',
-                                id: 'appointmentDetails_description_value_lbl',
                                 style: {
                                     'margin-bottom': '20px'
                                 },
+                                html: appointmentData.changeDescription,
+                                hidden: appointmentData.changeDescription.length == 0
                             },
                             {
                                 xtype:'container',
@@ -295,110 +289,51 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                      
                     
                     Ext.getCmp('details').add(container);
-                    if (resultObject.remark.length == 0) {
-                         Ext.getCmp('appointmentDetails_remarks_value_lbl').setHidden(true);
-                         Ext.getCmp('appointmentDetails_remarks_lbl').setHidden(true);
-                     } else {
-                         Ext.getCmp('appointmentDetails_remarks_value_lbl').setHtml(resultObject.remark);
-                         Ext.getCmp('appointmentDetails_remarks_value_lbl').setHidden(false);
-                         Ext.getCmp('appointmentDetails_remarks_lbl').setHidden(false);
-                     }
-
-                     // if description is available then display otherwise hide
-                     if (resultObject.change_description.length == 0) {
-                         Ext.getCmp('appointmentDetails_description_value_lbl').setHidden(true);
-                         Ext.getCmp('appointmentDetails_description_lbl').setHidden(true);
-                     } else {
-                         Ext.getCmp('appointmentDetails_description_value_lbl').setHidden(false);
-                         Ext.getCmp('appointmentDetails_description_lbl').setHidden(false);
-                         Ext.getCmp('appointmentDetails_description_value_lbl').setHtml(resultObject.change_description);
-
-                     }
-                    /* // remove label from container
-                     Ext.getCmp('container_type').removeAt(1);
-                     // remove type label in container for display type of appointment in multi language
-                     Ext.getCmp('container_type').add({
-                         xtype: 'label',
-                         id: 'appointmentDetails_type_value_lbl',
-                         flex: 1.5,
-                         // css class resouces/css/app.css
-                         cls: 'zermelo-announcement-label',
-                         locales: {
-                             html: 'type.' + resultObject.type
-                         }
-                     });*/
                 }
-                /* // set values
-                 Ext.getCmp('appointmentDetails_teacher_value_lbl').setHtml(eventDetails.teacher);
-                 Ext.getCmp('appointmentDetails_subject_value_lbl').setHtml(eventDetails.subject);
-                 Ext.getCmp('appointmentDetails_room_value_lbl').setHtml(eventDetails.locations);
-                 Ext.getCmp('appointmentDetails_group_value_lbl').setHtml(eventDetails.groups);
-                 //Ext.getCmp('appointmentDetails_type_value_lbl').setHtml(eventDetails.type);
-                 */
-                /*Ext.getCmp('appointmentDetails_start_time_value_lbl').setHtml(Ext.Date.format(new Date(eventDetails.start), 'd M. Y H:i'));
-                Ext.getCmp('appointmentDetails_End_time_value_lbl').setHtml(Ext.Date.format(new Date(eventDetails.end), 'd M. Y H:i'));*/
-                // if remarks is available then display otherwise hide
-
-                  Ext.getCmp('details').getScrollable().getScroller().scrollTo(0, 0);
+                
+                Ext.getCmp('details').getScrollable().getScroller().scrollTo(0, 0);
             }, //end show
             hide: function() {
                    Ext.getCmp('details').removeAll();
                 } //end hide
         },
-        // end listeners,
-        // set vertical box layout
         layout: {
             type: 'vbox',
-            align: 'stretch',
+            align: 'stretch'
         },
-       /* */
         items: [{
-            // set title bar at top of view
             xtype: 'titlebar',
             docked: 'top',
-            // css class resouces/css/app.css
             cls: 'zermelo-toolbar-main',
             height: '47px',
-            //multiple language
             locales: {
-                title: 'appointment.title',
+                title: 'appointment.title'
             },
-            // add back button in title bar left side
             items: [{
                     xtype: 'button',
                     id: 'appointmentDetails_back',
-                    // css class resouces/css/app.css
                     iconCls: 'zermelo-back-button-' + imageType,
                     align: 'left',
                     ui: 'plain',
                     style: {
                         'padding-left': '0px'
                     },
-                    //multiple language
                     locales: {
-                        text: 'back.back',
+                        text: 'back.back'
                     },
+                    handler: function() {
+                        Ext.Viewport.setActiveItem(this.parent.parent.parent.parentView);
+                    }
                 }]
-                //end titelbar
         }, {
             xtype: 'container',
             id: 'details',
             scrollable: true,
             height: '100%',
             scrollable: {
-            direction: 'vertical',
-            directionLock: false
-        },
-        }],
-        //main container
-        //end main container
-    } //end config
-});
-
-function search(nameKey, myArray) {
-    for (var i = 0; i < myArray.length; i++) {
-        if (String(myArray[i].id) === nameKey) {
-            return myArray[i];
-        }
+                direction: 'vertical',
+                directionLock: false
+            }
+        }]
     }
-}
+});

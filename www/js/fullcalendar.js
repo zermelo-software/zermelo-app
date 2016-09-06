@@ -9,7 +9,7 @@
  * restriction, including without limitation the rights to use,
  * copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
+ * Software is furnished to do so, subjects to the following
  * conditions:
  * 
  * The above copyright notice and this permission notice shall be
@@ -37,6 +37,7 @@
     var dayName = {};
     var monthName = {};
     var monthNameShort = {};
+    var loc;
     // check device default language
     if (Ext.os.is('Android') && version == 2) { // only for android 2.3 os
 
@@ -641,7 +642,6 @@
 
         // go selected day of date 
         function gotoDate(year, month, dateOfMonth) {
-            //console.log(year);
             if (year instanceof Date) {
                 date = cloneDate(year); // provided 1 argument, a Date
             } else {
@@ -1154,7 +1154,7 @@
                     } else {
                         e.end = null;
                     }
-                    e.title = event.teacher;
+                    e.title = event.teachers;
                     e.url = event.url;
                     e.allDay = event.allDay;
                     e.className = event.className;
@@ -1990,6 +1990,12 @@
 
 
     function htmlEscape(s) {
+        if (!s) {
+            return '';
+        }
+        if (Array.isArray(s))
+            s = s.join(', ');
+        
         return s.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
@@ -2167,7 +2173,6 @@ function enableTextSelection(element) {
         var opt = t.opt;
         var renderAgenda = t.renderAgenda;
         var formatDate = calendar.formatDate;
-        //console.log(calendar);
 
 
         function render(date, delta) {
@@ -2862,7 +2867,6 @@ function enableTextSelection(element) {
             var bodyCell;
             var date;
             var today = clearTime(new Date());
-            //console.log(colCnt);
             if (colCnt != 1)
                 for (i = 0; i < colCnt; i++) {
                     date = colDate(i);
@@ -3577,11 +3581,8 @@ function enableTextSelection(element) {
                     var newChild;
                     newChild = slotSegHtml_ios(event, seg);
                     slotSegmentContainer[0].appendChild(newChild);
-                    //console.log("newchild::" + newChild);
                     newChild.addEventListener("touchend", function (events, e) {
-                        //console.log(id);
                         if (!isTouch) {
-                            //   console.log("end" + events.id + ":" + events.type);
                             trigger('eventClick', events, events, e);
                         }
                         isTouch = false;
@@ -3649,7 +3650,6 @@ function enableTextSelection(element) {
             for (i = 0; i < segCnt; i++) {
                 seg = segs[i];
                 if (eventElement = seg.element) {
-                    //console.log(Math.max(0, seg.outerWidth) + 'px');
                     eventElement[0].style.width = Math.max(0, seg.outerWidth) + 'px';
                     height = Math.max(0, seg.outerHeight - seg.vsides);
                     eventElement[0].style.height = height + 'px';
@@ -3657,7 +3657,7 @@ function enableTextSelection(element) {
                     if (seg.contentTop !== undefined && height - seg.contentTop < 10) {
                         // not enough room for title, put it in the time header
                         eventElement.find('div.fc-event-time')
-                            .text(formatDate(event.start, opt('timeFormat')) + ' - ' + event.teacher);
+                            .text(formatDate(event.start, opt('timeFormat')) + ' - ' + event.teachers);
                         eventElement.find('div.fc-event-title')
                             .remove();
                     }
@@ -3668,6 +3668,41 @@ function enableTextSelection(element) {
 
         }
 
+
+        function get_special_event_icons_html(event, seg) {
+            var extra_html = '';
+            var imageType = 'svg';
+            if (event.cancelled || event.moved || event['new']) {
+                
+                if (event.cancelled) {
+                    extra_html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
+                }
+                if (event.moved) {
+                    extra_html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
+                }
+                if (event['new']) {
+                    extra_html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
+                }
+            } else if (event.modified || event.remark.length != 0) {
+                extra_html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
+            }
+            if (event.collidingIds != event.id) {
+                var collidingIds = event.collidingIds.split(",");
+                for(var i=1; i<collidingIds.length; i++)
+                    extra_html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
+            }
+
+            extra_html += "</div>" +
+                "</div>";
+
+            extra_html += "<div class='fc-event-bg'></div>" +
+                "</div>";
+            if (seg.isEnd && isEventResizable(event)) {
+                extra_html +=
+                    "<div class='ui-resizable-handle ui-resizable-s'></div>";
+            }
+            return extra_html;
+        }
 
         /** 
          * display events with different conditions
@@ -3689,8 +3724,8 @@ function enableTextSelection(element) {
             var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
             var classes = ['fc-event', 'fc-event-vert'];
             if (week_day_view == "agendaWeek" || week_day_view == "") {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3708,8 +3743,8 @@ function enableTextSelection(element) {
                     classes.push('fc-event-skin-valid-false');
                 }
             } else {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-day-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3748,14 +3783,14 @@ function enableTextSelection(element) {
             } else {
                 html += "div";
             }
-            if (event.valid == "false")
+            if (!event.valid)
                 html +=
                     " class='" + classes.join(' ') + "'" +
                     " style='position:absolute;z-index:5;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
                     ">" +
                     "<div class='fc-event-inner'" + skinCssAttr + ">" +
                     "<div class='fc-event-content'>";
-            else if (event.cancelled == "true")
+            else if (event.cancelled)
                 html +=
                     " class='" + classes.join(' ') + "'" +
                     " style='position:absolute;z-index:6;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
@@ -3779,10 +3814,10 @@ function enableTextSelection(element) {
            
             if (week_day_view == "agendaWeek" || week_day_view == "") {
                 html += "<div class='fc-event-title'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -3793,13 +3828,13 @@ function enableTextSelection(element) {
                     "<div class='fc-icon-align-bottom-right'>";
             } else {
                 html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title' style='position: absolute;right: 0;top: 0;'>" +
                     htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
                     "</div>" +
                     "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -3809,37 +3844,9 @@ function enableTextSelection(element) {
                     "</div>" +
                     "<div class='fc-icon-align-bottom-right'>";
             }
-            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment == "true") {
-                 
 
-                if (event.cancelled == 'true') {
-                    html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.moved == 'true') {
-                    html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.new_appointment == "true") {
-                    html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
-                }
-            } else if (event.modified == 'true' || event.remark.length != 0) {
-                html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
-            }
-            // display appointment on single slot
-            if (event.collision) {
-              //  console.log(event.multiid);
-                var multiid=event.multiid.split(",");
-                for(i=1; i<multiid.length;i++)
-                    html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
-             }
-            html += "</div>" +
-                "</div>";
+            html += get_special_event_icons_html(event, seg);
 
-            html += "<div class='fc-event-bg'></div>" +
-                "</div>";
-            if (seg.isEnd && isEventResizable(event)) {
-                html +=
-                    "<div class='ui-resizable-handle ui-resizable-s'></div>";
-            }
             html +=
                 "</" + (url ? "a" : "div") + ">";
 
@@ -3858,8 +3865,8 @@ function enableTextSelection(element) {
             var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
             var classes = ['fc-event', 'fc-event-vert'];
             if (week_day_view == "agendaWeek" || week_day_view == "") {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3877,8 +3884,8 @@ function enableTextSelection(element) {
                     classes.push('fc-event-skin-valid-false');
                 }
             } else {
-                if (event.valid == "true") {
-                    if (event.cancelled == "true")
+                if (event.valid) {
+                    if (event.cancelled)
                         classes.push('fc-event-day-skin-cancelled');
                     else {
                         if (event.type == 'lesson')
@@ -3911,10 +3918,10 @@ function enableTextSelection(element) {
                 classes = classes.concat(event.source.className || []);
             }
             child.setAttribute("class", classes.join(' '));
-            if (event.valid == "false")
+            if (!event.valid)
                 child.setAttribute("style", "position:absolute;z-index:5;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss);
 
-            else if (event.cancelled == "true")
+            else if (event.cancelled)
                 child.setAttribute("style", "position:absolute;z-index:6;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss);
 
             else if (event.type == 'lesson')
@@ -3928,10 +3935,10 @@ function enableTextSelection(element) {
 
             if (week_day_view == "agendaWeek" || week_day_view == "") {
                 html += "<div class='fc-event-title'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -3942,13 +3949,13 @@ function enableTextSelection(element) {
                     "<div class='fc-icon-align-bottom-right'>";
             } else {
                 html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.teacher) +
+                    htmlEscape(event.teachers) +
                     "</div>" +
                     "<div class='fc-event-title' style='position: absolute;right: 0;top: 0;'>" +
                     htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
                     "</div>" +
                     "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subject) +
+                    htmlEscape(event.subjects) +
                     "</div>" +
                     "<div class='fc-event-title'>" +
                     htmlEscape(event.locations) +
@@ -3959,37 +3966,8 @@ function enableTextSelection(element) {
                     "<div class='fc-icon-align-bottom-right'>";
             }
 
-            if (event.cancelled == 'true' || event.moved == 'true' || event.new_appointment == "true") {
-                
-                if (event.cancelled == 'true') {
-                    html += "<img src='resources/images/cancel." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.moved == 'true') {
-                    html += "<img src='resources/images/move." + imageType + "' style='margin-right: 3px;'/>";
-                }
-                if (event.new_appointment == "true") {
-                    html += "<img src='resources/images/new." + imageType + "' style='margin-right: 3px;'/>";
-                }
-            } else if (event.modified == 'true' || event.remark.length != 0) {
-                html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
-            }
-           // display appointment on single slot
-            if (event.collision) {
-              //  console.log(event.multiid);
-                var multiid=event.multiid.split(",");
-                for(i=1; i<multiid.length;i++)
-                    html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
-            }
+            html += get_special_event_icons_html(event, seg);
 
-            html += "</div>" +
-                "</div>";
-
-            html += "<div class='fc-event-bg'></div>" +
-                "</div>";
-            if (seg.isEnd && isEventResizable(event)) {
-                html +=
-                    "<div class='ui-resizable-handle ui-resizable-s'></div>";
-            }
             child.innerHTML = html;
             return child;
         }
@@ -4027,7 +4005,6 @@ function enableTextSelection(element) {
 
         function performEventClicks() {
             $(function () {
-                //console.log("perform events called");
             });
         }
 
@@ -4218,7 +4195,6 @@ function enableTextSelection(element) {
                     allDay = false;
                 }
             }
-          //  console.log("sjfslfslfsfsflskfuertioetioeurt");
         }
 
 
@@ -4432,7 +4408,6 @@ function enableTextSelection(element) {
                              }
                             else
                              clickButton=false;*/
-                           // console.log("clcik collsdfk");
 
                             return trigger('eventClick', this, event, ev);
 
@@ -4447,7 +4422,7 @@ function enableTextSelection(element) {
                         }
                 );
             }
-            // TODO: don't fire eventMouseover/eventMouseout *while* dragging is occuring (on subject element)
+            // TODO: don't fire eventMouseover/eventMouseout *while* dragging is occuring (on subjects element)
             // TODO: same for resizing
         }
 
@@ -4723,7 +4698,7 @@ function enableTextSelection(element) {
                         "</span>";
                 }
                 html +=
-                    "<span class='fc-event-title'>" + htmlEscape(event.teacher) + "</span>" +
+                    "<span class='fc-event-title'>" + htmlEscape(event.teachers) + "</span>" +
                     "</div>";
                 if (seg.isEnd && isEventResizable(event)) {
                     html +=
@@ -4840,7 +4815,6 @@ function enableTextSelection(element) {
                 seg = segs[i];
                 element = seg.element;
                 if (element) {
-                    conlse.log(element + Math.max(0, seg.outerWidth - seg.hsides) + 'px');
                     element[0].style.width = Math.max(0, seg.outerWidth - seg.hsides) + 'px';
                 }
             }

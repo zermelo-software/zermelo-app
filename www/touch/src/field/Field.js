@@ -1,6 +1,4 @@
 /**
- * @aside guide forms
- *
  * Field is the base class for all form fields used in Sencha Touch. It provides a lot of shared functionality to all
  * field subclasses (for example labels, simple validation, {@link #clearIcon clearing} and tab index management), but
  * is rarely used directly. Instead, it is much more common to use one of the field subclasses:
@@ -12,6 +10,7 @@
  *     textareafield    {@link Ext.field.TextArea}
  *     hiddenfield      {@link Ext.field.Hidden}
  *     radiofield       {@link Ext.field.Radio}
+ *     filefield        {@link Ext.field.File}
  *     checkboxfield    {@link Ext.field.Checkbox}
  *     selectfield      {@link Ext.field.Select}
  *     togglefield      {@link Ext.field.Toggle}
@@ -22,6 +21,8 @@
  * for usage of individual field types. If you wish to create your own Field subclasses you can extend this class,
  * though it is sometimes more useful to extend {@link Ext.field.Text} as this provides additional text entry
  * functionality.
+ *
+ * For more information regarding forms and fields, please review [Using Forms in Sencha Touch Guide](../../../components/forms.html)
  */
 Ext.define('Ext.field.Field', {
     extend: 'Ext.Decorator',
@@ -143,7 +144,7 @@ Ext.define('Ext.field.Field', {
     },
 
     platformConfig: [{
-        theme: ['Windows'],
+        theme: ['Windows', 'MountainView', 'Blackberry', 'Blackberry103', 'Tizen'],
         labelAlign: 'top'
     }],
 

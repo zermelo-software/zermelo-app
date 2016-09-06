@@ -242,6 +242,7 @@ Ext.define('Ext.data.proxy.Server', {
             }
 
             if (operation.process(action, resultSet, request, response) === false) {
+                me.setException(operation, response);
                 me.fireEvent('exception', me, response, operation);
             }
         } else {

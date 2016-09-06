@@ -1,6 +1,4 @@
 /**
- * @aside guide forms
- *
  * The checkbox field is an enhanced version of the native browser checkbox and is great for enabling your user to
  * choose one or more items from a set (for example choosing toppings for a pizza order). It works like any other
  * {@link Ext.field.Field field} and is usually found in the context of a form:
@@ -55,7 +53,8 @@
  *
  *     form.getValues(); //contains a key called 'tomato' if the Tomato field is still checked
  *     form.submit(); //will send 'tomato' in the form submission data
- *
+ *     
+ * For more information regarding forms and fields, please review [Using Forms in Sencha Touch Guide](../../../components/forms.html)
  */
 Ext.define('Ext.field.Checkbox', {
     extend: 'Ext.field.Field',
@@ -119,10 +118,10 @@ Ext.define('Ext.field.Checkbox', {
          * @inheritdoc
          */
         component: {
-            xtype   : 'input',
-            type    : 'checkbox',
-            useMask : true,
-            cls     : Ext.baseCSSPrefix + 'input-checkbox'
+            xtype: 'input',
+            type: 'checkbox',
+            useMask: true,
+            cls: Ext.baseCSSPrefix + 'input-checkbox'
         }
 
         /**
@@ -132,7 +131,7 @@ Ext.define('Ext.field.Checkbox', {
     },
 
     platformConfig: [{
-        theme: ['Windows'],
+        theme: ['Windows', 'Blackberry', 'Blackberry103', 'Tizen'],
         labelAlign: 'left'
     }],
 
@@ -298,10 +297,13 @@ Ext.define('Ext.field.Checkbox', {
     },
 
     getSameGroupFields: function() {
-        var component = this.up('formpanel') || this.up('fieldset'),
-            name = this.getName(),
-            replaceLeft = this.qsaLeftRe,
-            replaceRight = this.qsaRightRe,
+        var me = this,
+            component = me.up('formpanel') || me.up('fieldset'),
+            name = me.getName(),
+            replaceLeft = me.qsaLeftRe,
+            replaceRight = me.qsaRightRe,
+            //handle baseCls with multiple class values
+            baseCls = me.getBaseCls().split(' ').join('.'),
             components = [],
             elements, element, i, ln;
 
@@ -320,7 +322,7 @@ Ext.define('Ext.field.Checkbox', {
         ln = elements.length;
         for (i = 0; i < ln; i++) {
             element = elements[i];
-            element = Ext.fly(element).up('.x-field');
+            element = Ext.fly(element).up('.' + baseCls);
             if (element && element.id) {
                 components.push(Ext.getCmp(element.id));
             }

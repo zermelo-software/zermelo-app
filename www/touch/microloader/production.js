@@ -12,7 +12,7 @@
         jsonParse = JSON.parse,
         a = doc.createElement('a'),
         documentLocation = doc.location,
-        documentUri = documentLocation.origin + documentLocation.pathname + documentLocation.search,
+        documentUri = documentLocation.protocol + '//' + documentLocation.hostname + documentLocation.pathname + documentLocation.search,
         manifestFile = 'app.json',
         isRefreshing = false,
         activeManifest, appCache, storage;
@@ -89,9 +89,6 @@
         this.css = processAssets(manifest.css, 'css');
         this.js = processAssets(manifest.js, 'js');
 
-        if (!window.Ext) {
-            window.Ext = {};
-        }
         Ext.microloaded = true;
 
         var filterPlatform = window.Ext.filterPlatform = function(platform) {
@@ -116,7 +113,7 @@
             }
 
             function isTablet(ua) {
-                return !isPhone(ua) && (/iPad/.test(ua) || /Android/.test(ua) || /(RIM Tablet OS)/.test(ua) ||
+                return !isPhone(ua) && (/iPad/.test(ua) || /Android|Silk/.test(ua) || /(RIM Tablet OS)/.test(ua) ||
                     (/MSIE 10/.test(ua) && /; Touch/.test(ua)));
             }
 
@@ -165,6 +162,14 @@
                     case 'ie10':
                         profileMatch = /MSIE 10/.test(ua);
                         break;
+                    case 'windows':
+                        profileMatch = /MSIE 10/.test(ua) || /Trident/.test(ua);
+                        break;
+                    case 'tizen':
+                        profileMatch = /Tizen/.test(ua);
+                        break;
+                    case 'firefox':
+                        profileMatch = /Firefox/.test(ua);
                 }
                 if (profileMatch) {
                     return true;
@@ -174,10 +179,11 @@
         };
 
         this.css = this.css.filter(function(css) {
-            var platform = css.platform;
+            var platform = css.platform,
+                exclude = css.exclude;
 
             if (platform) {
-                if (filterPlatform(platform)) {
+                if (filterPlatform(platform) && !filterPlatform(exclude)) {
                     Ext.theme = {
                         name: css.theme || 'Default'
                     };
@@ -190,10 +196,11 @@
         });
 
         this.js = this.js.filter(function(js) {
-            var platform = js.platform;
+            var platform = js.platform,
+                exclude = js.exclude;
 
             if (platform) {
-                if (filterPlatform(platform)) {
+                if (filterPlatform(platform) && !filterPlatform(exclude)) {
                     return true;
                 }
                 else {
@@ -213,7 +220,7 @@
         };
     }
 
-    if (typeof Ext === 'undefined') {
+    if (typeof global.Ext === 'undefined') {
         var Ext = global.Ext = {};
     }
 
@@ -287,15 +294,28 @@
         if (!isShared) {
             var onRequestSuccess = onSuccess,
                 version = asset.version,
-                remoteChecksumBlock;
+                versionLn = version.length,
+                checksumFail, checksumType;
 
             onSuccess = function(content) {
-                remoteChecksumBlock = content.substring(0, version.length + 4);
-
-                if (remoteChecksumBlock !== '/*' + version + '*/') {
-                    if (confirm("Requested: '" + asset.uri + "' with checksum: " + version +
-                        " but received: " + remoteChecksumBlock.substring(2, version.length) +
-                        "instead. Attempt to refresh the application?")) {
+                checksumType = content.substring(0, 1);
+                if (checksumType == '/') {
+                    if (content.substring(2, versionLn + 2) !== version) {
+                        checksumFail = true;
+                    }
+                }
+                else if (checksumType == 'f') {
+                    if (content.substring(9, versionLn + 9) !== version) {
+                        checksumFail = true;
+                    }
+                }
+                else if (checksumType == '.') {
+                    if (content.substring(1, versionLn + 1) !== version) {
+                        checksumFail = true;
+                    }
+                }
+                if (checksumFail === true) {
+                    if (confirm("Requested: '" + asset.uri + " seems to have been changed. Attempt to refresh the application?")) {
                         refresh();
                     }
                     return;
@@ -359,36 +379,37 @@
         }
         catch (e) {
             if (storage && e.code == e.QUOTA_EXCEEDED_ERR && activeManifest) {
+                log("LocalStorage Quota exceeded, cannot store " + key + " locally");
                 // Quota exceeded, clean up unused items
-                var items = activeManifest.assets.map(function(asset) {
-                        return asset.key;
-                    }),
-                    i = 0,
-                    ln = storage.length,
-                    cleaned = false,
-                    item;
-
-                items.push(activeManifest.key);
-
-                while (i <= ln - 1) {
-                    item = storage.key(i);
-
-                    if (items.indexOf(item) == -1) {
-                        storage.removeItem(item);
-                        cleaned = true;
-                        ln--;
-                    }
-                    else {
-                        i++;
-                    }
-                }
+//                var items = activeManifest.assets.map(function(asset) {
+//                        return asset.key;
+//                    }),
+//                    i = 0,
+//                    ln = storage.length,
+//                    cleaned = false,
+//                    item;
+//
+//                items.push(activeManifest.key);
+//
+//                while (i <= ln - 1) {
+//                    item = storage.key(i);
+//
+//                    if (items.indexOf(item) == -1) {
+//                        storage.removeItem(item);
+//                        cleaned = true;
+//                        ln--;
+//                    }
+//                    else {
+//                        i++;
+//                    }
+//                }
 
                 // Done cleaning up, attempt to store the value again
                 // If there's still not enough space, no other choice
                 // but to skip this item from being stored
-                if (cleaned) {
-                    store(key, value);
-                }
+//                if (cleaned) {
+//                    store(key, value);
+//                }
             }
         }
     }

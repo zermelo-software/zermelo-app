@@ -45,7 +45,7 @@ Ext.define('Zermelo.view.Login', {
         },
         layout: {
             type: 'vbox',
-            align: 'stretch',
+            align: 'stretch'
         },
         cls: 'zermelo-login-background',
         padding: '0 5% 0 5%',
@@ -61,7 +61,7 @@ Ext.define('Zermelo.view.Login', {
                 xtype: 'container',
                 padding: '10 0 10 0',
                 locales: {
-                    html: 'login.text',
+                    html: 'login.text'
                 },
                 style: {
                     'font-size': '10pt'
@@ -75,12 +75,12 @@ Ext.define('Zermelo.view.Login', {
                     xtype: 'container',
                     layout: {
                         type: 'hbox',
-                        align: 'stretch',
+                        align: 'stretch'
                     },
                     items: [{
                         //building logo
                         xtype: 'label',
-                        html: '<img height="46px" width="46px" src="resources/images/building_icon.png" style="margin-top: 1px;">',
+                        html: '<img height="46px" width="46px" src="resources/images/building_icon.png" style="margin-top: 1px;">'
                     }, {
                         // text field container
                         xtype: 'container',
@@ -94,7 +94,7 @@ Ext.define('Zermelo.view.Login', {
                                 name: 'institution',
                                 id: 'text_login_institution',
                                 locales: {
-                                    placeHolder: 'login.institution',
+                                    placeHolder: 'login.institution'
                                 },
                                 listeners: {
                                     keyup: function (thisField, e) {
@@ -104,7 +104,7 @@ Ext.define('Zermelo.view.Login', {
                                     },
                                     blur: function () {
                                         //set lowcase valule of institution
-                                        this.setValue(this.getValue().toLowerCase());
+                                        this.setValue(this.getValue().toLowerCase().trim());
                                     }
                                 }
                             }]
@@ -117,7 +117,7 @@ Ext.define('Zermelo.view.Login', {
                     items: [{
                         //set password icon
                         xtype: 'label',
-                        html: '<img height="46px" src="resources/images/password_icon.png" style="margin-top: 1px;">',
+                        html: '<img height="46px" src="resources/images/password_icon.png" style="margin-top: 1px;">'
                     }, {
                         xtype: 'fieldset',
                         flex: 1,
@@ -127,7 +127,7 @@ Ext.define('Zermelo.view.Login', {
                             name: 'cdoe',
                             id: 'number_login_code',
                             locales: {
-                                placeHolder: 'login.code',
+                                placeHolder: 'login.code'
                             },
                             listeners: {
                                 keyup: function (thisField, e) {
@@ -179,23 +179,7 @@ function authentication() {
     // check text_institution and numner_code validation
     if (text_institution.getValue().length == 0 && number_code.getValue().length == 0) {
         // both textfields are empty
-        //show error message
-        Ext.Msg.show({
-            items: [{
-                xtype: 'label',
-                cls: 'zermelo-error-messagebox',
-                locales: {
-                    html: 'login.institution_code_error_msg'
-                }
-            }],
-            buttons: [{
-                itemId: 'ok',
-                locales: {
-                    text: 'ok',
-                },
-                ui: 'action'
-            }],
-        });
+        Zermelo.ErrorManager.showErrorBox('login.institution_code_error_msg');
     } else {
         if (text_institution.getValue().length != 0 && text_institution.getValue().length <= 100 && institution_reg.exec(text_institution.getValue())) {
             // text_institution field is valid
@@ -211,117 +195,52 @@ function authentication() {
 
             // get textfields data
             var value_institution = text_institution.getValue();
-            var value_code = number_code.getValue();
+            var value_code = number_code.getValue().toString();
+            // Number field strips leading zero's so we'll fill them back in here.
+            while (value_code.length < 12) {
+                value_code = '0' + value_code;
+            }
 
             // show loading screen
             thisObj.setMasked({
                 xtype: 'loadmask',
-                        message: LoadingMessage,
+                locale: {
+                    message: 'loading'
+                },
 
                 indicator: true
             });
             //send request to authorization API
             Ext.Ajax.request({
-                url: 'https://' + value_institution + '.zportal.nl/api/v2/oauth/token?grant_type=authorization_code&code=' + value_code,
+                url: 'https://' + value_institution + '.zportal.nl/api/v3/oauth/token?grant_type=authorization_code&code=' + value_code,
                 method: "POST",
                 useDefaultXhrHeader: false,
                 //success
                 success: function (response) {
-                    console.log('login succesful');
                     // hide loading screen
                     thisObj.unmask();
                     // decode response
                     var decoded = Ext.JSON.decode(response.responseText);
-                    // save accessToken and institution in localstorage
-                    window.localStorage.setItem('accessToken', decoded.access_token);
-                    window.localStorage.setItem('institution', value_institution);
-                    window.localStorage.setItem('user_code',"~me");
-                     window.localStorage.setItem('startApp',"True");
+                    Zermelo.UserManager.saveLogin('~me', value_institution, decoded.access_token);
                     number_code.setValue("");
                     text_institution.setValue("");
                     Ext.getCmp('main').setActiveItem(1);
-                    doRefresh(Ext.getCmp('fullCalendarView'));
+                    Zermelo.AjaxManager.refresh();
                 },
                 //failure
                 failure: function (response) {
-                  //  console.log(response);
-                   // console.log("fail");
                     thisObj.unmask();
-                    Ext.Msg.show({
-                        items: [{
-                            xtype: 'label',
-                            cls: 'zermelo-error-messagebox',
-                            locales: {
-                                html: 'network_error'
-                            }
-                        }],
-                        buttons: [{
-                            itemId: 'ok',
-                            locales: {
-                                text: 'ok',
-                            },
-                            ui: 'normal'
-                        }],
-                    });
+                    Zermelo.ErrorManager.showErrorBox('network_error');
                 }
             });
         } else {
             //text field and code field both are invalid
             if (!text_flag && !number_flag) {
-                //show message
-                Ext.Msg.show({
-                    items: [{
-                        xtype: 'label',
-                        cls: 'zermelo-error-messagebox',
-                        locales: {
-                            html: 'login.institution_code_error_msg'
-                        }
-                    }],
-                    buttons: [{
-                        itemId: 'ok',
-                        locales: {
-                            text: 'ok',
-                        },
-
-                        ui: 'normal'
-                    }],
-                });
+                Zermelo.ErrorManager.showErrorBox('login.institution_code_error_msg');
             } else if (!text_flag) {
-                Ext.Msg.show({
-                    items: [{
-                        xtype: 'label',
-                        cls: 'zermelo-error-messagebox',
-                        locales: {
-                            html: 'login.institution_error_msg'
-                        }
-                    }],
-                    buttons: [{
-                        itemId: 'ok',
-                        locales: {
-                            text: 'ok',
-                        },
-
-                        ui: 'normal'
-                    }],
-                });
+                Zermelo.ErrorManager.showErrorBox('login.institution_code_error_msg');
             } else if (!number_flag) {
-                Ext.Msg.show({
-                    items: [{
-                        xtype: 'label',
-                        cls: 'zermelo-error-messagebox',
-                        locales: {
-                            html: 'login.code_error_msg'
-                        }
-                    }],
-                    buttons: [{
-                        itemId: 'ok',
-                        locales: {
-                            text: 'ok',
-                        },
-
-                        ui: 'normal'
-                    }],
-                });
+                Zermelo.ErrorManager.showErrorBox('login.code_error_msg');
             } //end else if
         } //end else
     } //end else

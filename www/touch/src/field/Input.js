@@ -241,7 +241,17 @@ Ext.define('Ext.field.Input', {
          * __This will be `undefined` until the Field has been visited.__ Compare {@link #originalValue}.
          * @accessor
          */
-        startValue: false
+        startValue: false,
+
+        /**
+         * @cfg {Boolean} fastFocus
+         *
+         * Enable Fast Input Focusing on iOS, using this workaround will stop some touchstart events in order to prevent
+         * delayed focus issues.
+         *
+         * @accessor
+         */
+        fastFocus: true
     },
 
     /**
@@ -286,6 +296,19 @@ Ext.define('Ext.field.Input', {
             tap: 'onInputTap'
         });
 
+
+        // Stock android has a delayed mousedown event that is dispatched
+        // this prevents the mousedown from focus's an input when not intended (click a message box button or picker button that lays over an input)
+        // we then force focus on touchend.
+        if(Ext.browser.is.AndroidStock) {
+            me.input.dom.addEventListener("mousedown", function(e) {
+                if(document.activeElement != e.target) {
+                    e.preventDefault();
+                }
+            } );
+            me.input.dom.addEventListener("touchend", function() { me.focus(); });
+        }
+
         me.mask.on({
             scope: me,
             tap: 'onMaskTap'
@@ -307,6 +330,23 @@ Ext.define('Ext.field.Input', {
                 keypress: 'onKeyPress'
             });
         }
+    },
+
+    updateFastFocus: function(newValue) {
+       // This is used to prevent 300ms delayed focus bug on iOS
+       if (newValue) {
+           if (this.getFastFocus() && Ext.os.is.iOS) {
+               this.input.on({
+                   scope: this,
+                   touchstart: "onTouchStart"
+               });
+           }
+       } else {
+           this.input.un({
+               scope: this,
+               touchstart: "onTouchStart"
+           });
+       }
     },
 
     /**
@@ -344,7 +384,7 @@ Ext.define('Ext.field.Input', {
     updateFieldAttribute: function(attribute, newValue) {
         var input = this.input;
 
-        if (newValue) {
+        if (!Ext.isEmpty(newValue, true)) {
             input.dom.setAttribute(attribute, newValue);
         } else {
             input.dom.removeAttribute(attribute);
@@ -581,7 +621,7 @@ Ext.define('Ext.field.Input', {
      * @private
      */
     updateReadOnly: function(readOnly) {
-        this.updateFieldAttribute('readonly', readOnly);
+        this.updateFieldAttribute('readonly', readOnly ? true : null);
     },
 
     //<debug>
@@ -602,7 +642,11 @@ Ext.define('Ext.field.Input', {
     doSetDisabled: function(disabled) {
         this.callParent(arguments);
 
-        this.input.dom.disabled = disabled;
+        if (Ext.browser.is.Safari && !Ext.os.is.BlackBerry) {
+            this.input.dom.tabIndex = (disabled) ? -1 : 0;
+        }
+
+        this.input.dom.disabled = (Ext.browser.is.Safari && !Ext.os.is.BlackBerry) ? false : disabled;
 
         if (!disabled) {
             this.blur();
@@ -640,7 +684,10 @@ Ext.define('Ext.field.Input', {
             return false;
         }
 
-        me.focus();
+        // Fast focus switching
+        if (this.getFastFocus() && Ext.os.is.iOS) {
+            me.focus();
+        }
     },
 
     // @private
@@ -729,6 +776,13 @@ Ext.define('Ext.field.Input', {
             me.setStartValue(me.getValue());
         }
         me.setIsFocused(true);
+    },
+
+    onTouchStart: function(e) {
+        // This will prevent 300ms delayed focus from occurring on iOS
+        if(document.activeElement != e.target) {
+            e.preventDefault();
+        }
     },
 
     onBlur: function(e) {

@@ -27,37 +27,6 @@
 
 var width;
 var screenWidth;
-
-function doRefresh(me) {
-    var currentweekdate = new Date();
-    currentweekdate = new Date(currentweekdate.getFullYear(), currentweekdate.getMonth(), currentweekdate.getDate());
-    currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
-    var startTime = Math.round(currentweekdate.getTime() / 1000);
-    var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12) / 1000);
-    // call appointment api and annoucement api at start
-    var refreshMin=0;
-    //  console.log(refreshMin);
-    if(window.localStorage.getItem('refresh_time_interval')!=null)
-    {
-        var date=new Date();
-        var currentTime=date.getTime();
-        var refreshTime=window.localStorage.getItem('refresh_time_interval');
-
-        refreshMin=parseInt(((currentTime -refreshTime)/(1000*60*60))%24*60);
-        // console.log(refreshMin);
-    }
-    // de "refresh later update" call werkt helemaal niet, tekent geen rooster
-    //if( window.localStorage.getItem('startApp')=='True' && refreshMin >=15){
-    //    console.log('Refresh later update');
-    //    getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, true, '', false);
-    //} else {
-        console.log('Refresh first time');
-        getAppointment(Ext.getCmp('schedule'), me, false, startTime, endTime, false, '', false);
-    //}
-
-    getAnnoucementData(Ext.getCmp('messageList'));
-}
-
 var weeknumbers = [];
 // This page managess the fucntionality and designing of calender.
 Ext.define('Zermelo.view.FullCalendar', {
@@ -68,8 +37,22 @@ Ext.define('Zermelo.view.FullCalendar', {
     config: {
         placeholderid: Ext.id() + '-fullcalendar',
         defaultview: 'agendaWeek',
-        scrollable: 'vertical'
+        scrollable: 'vertical',
+        store: 'Appointments',
+        listeners: {
+            painted: {
+                fn: function() {
+                    localStorage.setItem('lastView', 'fullCalendarView');
+                    this.gotoWeek_Day();
+                    this.refreshOrStart();
+                },
+                options: {
+                    order: 'before'
+                }
+            }
+        }
     },
+    started: false,
     initialize: function () {
         // get screen width
         screenWidth = Ext.getBody().getSize().width;
@@ -78,23 +61,11 @@ Ext.define('Zermelo.view.FullCalendar', {
         full_calendar_obj=this;
         var me = this;
         me.callParent(arguments);
-        me.on('activate', function(){
-            console.log('FullCalendar activate');
-        	doRefresh(me);
-        }, me, {
-            single: true
-        });
-        //me.on('painted', function(){
-        //    console.log('FullCalendar activate');
-        //	doRefresh(me);
-        //}, me, {
-        //    single: true
-        //});
         // create topbar contaier with vertical box and top
         me.topBar = Ext.create('Ext.Container', {
             xtype: 'container',
             docked: 'top',
-            layout: 'vbox',
+            layout: 'vbox'
         });
         // days button container with hbox
         me.day = Ext.create('Ext.Container', {
@@ -112,7 +83,7 @@ Ext.define('Zermelo.view.FullCalendar', {
             items: [{
                 //balnk label
                 xtype: 'label',
-                width: '50px',
+                width: '50px'
             }, {
                 // Monday button 
                 xtype: 'button',
@@ -123,9 +94,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[0].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    // var date = dayData[0].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(1 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 // Tuesday button    
@@ -137,10 +113,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[1].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    //console.log(selectedDate);
-                    openDayView(selectedDate, me);
+                    // var date = dayData[1].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(2 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Wednesday button
@@ -152,9 +132,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[2].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    // var date = dayData[2].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(3 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Thursday button
@@ -166,9 +151,14 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[3].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    // var date = dayData[3].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(4 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
             }, {
                 //Friday button
@@ -180,16 +170,21 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var date = dayData[4].split("T")[0].split("-");
-                    var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    openDayView(selectedDate, me);
+                    // var date = dayData[4].split("T")[0].split("-");
+                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
+                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
+                    var appointmentStore = Ext.getStore('Appointments');
+                    appointmentStore.setWindowDay();
+                    appointmentStore.setWindow(5 - (new Date()).getDay());
+
+                    me.up('home').selectItem('calendarList');
                 }
-            }, ]
+            }]
         }); // end day container
 
         // line create below days container
         me.line = Ext.create('Ext.Container', {
-            html: '<hr>',
+            html: '<hr>'
         });
 
         //create toolbar with current week or current day title, prev, next and schedule button 
@@ -238,7 +233,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                                         currentmonth = datePicker.getValue(true).getDate() + 2;
                                     }
                                     var day = new Date(datePicker.getValue(true).getFullYear(), datePicker.getValue(true).getMonth(), currentmonth)
-                                    gotoWeek_Day(day, me);
+                                    me.gotoWeek_Day(day);
                                     picker_open = false;
 
                                 }
@@ -269,7 +264,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                     } else {
                         // week picker 
                         picker_open = true;
-                        console.log("week view date picker");
                         // weeks array and 
                         var weekArray = new Array();
 
@@ -291,14 +285,13 @@ Ext.define('Zermelo.view.FullCalendar', {
                         startWeek.setDate(startWeek.getDate() - startWeek.getDay() + 1);
                         //add data for week picker view 
                         for (i = 0; i < totalNumberOfWeek; i++) {
-                            console.log("week " + i);
                             startWeek = new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate());
                             var dateString = ('0' + startWeek.getDate()).slice(-2) + "-" + ('0' + (startWeek.getMonth() + 1)).slice(-2) + "-" + startWeek.getFullYear();
 
                             var weekString = startWeek.getWeek();
                             weekArray.push({
                                 text: "<div style='padding-left: 13%;padding-right: 13%;'><font style='font-weight: bold;float:left'>Week " + weekString + "</font><div style='position: relative;float: right;'>&nbsp;&nbsp;&nbsp;&nbsp;" + dateString + "</div></div>",
-                                value: new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate()).toString(),
+                                value: new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate()).toString()
                             });
                             startWeek.setDate(startWeek.getDate() + 7);
                         }
@@ -317,11 +310,11 @@ Ext.define('Zermelo.view.FullCalendar', {
                             modal: true,
                             cls: 'zermelo-toolbar',
                             value: {
-                                'week': new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toString(),
+                                'week': new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toString()
                             },
                             slots: [{
                                 name: 'week',
-                                data: weekArray,
+                                data: weekArray
                             }],
                             doneButton: {
                                 locales: {
@@ -337,7 +330,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                                     }
                                     var week = datePicker.getValue().week;
                                     week = new Date(week);
-                                    gotoWeek_Day(week, me);
+                                    me.gotoWeek_Day(week);
                                     picker_open = false;
                                 }
                             },
@@ -354,7 +347,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                                         }
                                     }
                                 }
-                            },
+                            }
                         });
                         Ext.Viewport.add(datePicker);
                         datePicker.show();
@@ -365,7 +358,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 ui: 'plain',
                 id: 'btn_datePicker',
                 centered: true,
-                labelCls: 'zermelo-button-weeK-day',
+                labelCls: 'zermelo-button-week-day'
             }, {
                 // prev button
                 xtype: 'button',
@@ -374,7 +367,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 docked: 'left',
                 ui: 'plain',
                 handler: function () {
-                    getWeekData('right', me, dayview);
+                    me.getWeekData('left', dayview);
                 }
             }, {
                 // next button
@@ -384,7 +377,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 docked: 'right',
                 ui: 'plain',
                 handler: function () {
-                    getWeekData('left', me, dayview);
+                    me.getWeekData('right', dayview);
                 }
             }]
         });
@@ -398,7 +391,8 @@ Ext.define('Zermelo.view.FullCalendar', {
         });
 
         // add items in main container
-        this.setItems([me.topBar, me.calendarPanel])
+        this.setItems([me.topBar, me.calendarPanel]);
+        Ext.defer(this.deferUpdateView, 100000, this);
 
     }, // end initialize
 
@@ -411,7 +405,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         $('#' + me.getPlaceholderid()).fullCalendar({
             hideHeaders: true, //new property to hide full calendar header
             editable: false,
-            events: eventArray, // set Appointents
+            events: Ext.getStore('Appointments').getAsArray(), // set Appointments source
             eventClick: function (calEvent, jsEvent, view) {
                 me.fireEvent('eventclick', calEvent, jsEvent, view, this);
             },
@@ -428,6 +422,7 @@ Ext.define('Zermelo.view.FullCalendar', {
             }
         });
         // me.setDefaultview('week');
+        this.gotoWeek_Day();
         me.changeTitle();
         // refresh height of scroller, fixes it moving back up after every scroll
         me.getScrollable().getScroller().refreshMaxPosition();
@@ -437,7 +432,6 @@ Ext.define('Zermelo.view.FullCalendar', {
    },
     renderCalendar: function () {
         var me = this;
-      //  console.log("rerd");
         $('#' + me.getPlaceholderid()).fullCalendar('render');
     },
     destroyCalendar: function () {
@@ -480,7 +474,8 @@ Ext.define('Zermelo.view.FullCalendar', {
     },
     changeTitle: function () {
         var me = this;
-        Ext.getCmp("btn_datePicker").setText($('#' + me.getPlaceholderid()).fullCalendar('getView').title);
+        var text = $('#' + me.getPlaceholderid()).fullCalendar('getView').title;
+        Ext.getCmp("btn_datePicker").setText(text);
     },
 
     viewToday: function () {
@@ -490,157 +485,92 @@ Ext.define('Zermelo.view.FullCalendar', {
     // navigate calendar next prev
     navigateCalendar: function (direction) {
         var me = this;
-        if (direction == "left") {
+        if (direction == "right") {
             $('#' + me.getPlaceholderid()).fullCalendar('next');
-
-        } else if (direction == "right") {
+        } else if (direction == "left") {
             $('#' + me.getPlaceholderid()).fullCalendar('prev');
         }
         me.changeTitle();
     },
-});
 
+    refreshOrStart: function() {
+        if (this.started) {
+            this.refreshEvents();
+        }
+        else {
+            this.started = true;
+            this.renderFullCalendar();
+        }
+    },
 
-//below function fetches the list of appointments using webservice.
-function getAppointment(me, currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week) {
-    me.setMasked({
-        xtype: 'loadmask',
-    
-        message: LoadingMessage,
-    
-        indicator: true
-    });
-    var thisMe = currentobj;
-    // get institution and accesstoken from localstorage
-    var institution = window.localStorage.getItem('institution');
-    var accessToken = window.localStorage.getItem('accessToken');
-    
-    if (accessToken == null || accessToken == "")
-        return;
-    // send request to server using ajax
-    Ext.Ajax.request({
-        url: 'https://' + institution + '.zportal.nl/api/v2/appointments?user='+window.localStorage.getItem('user_code')+'&access_token=' + accessToken + '&start=' + startTime + '&end=' + endTime, // url : this.getUrl(),
-        method: "GET",
-        useDefaultXhrHeader: false,
-        success: function (response) {
-            window.localStorage.setItem('startApp',"True");
-            window.localStorage.setItem('refresh_time_interval',new Date().getTime());
-            window.localStorage.setItem('refreshTime',new Date().getTime());
-           // console.log(new Date().getTime());
-         //   changeRefreshIcon();
-            eventArray.length = 0;
-            var startweeknumber = new Date(startTime * 1000).getWeek();
-            startweeknumber = startweeknumber + "" + new Date(startTime * 1000).getFullYear();
-            var endweeknumber = new Date(endTime * 1000).getWeek();
-            endweeknumber = endweeknumber + "" + new Date(endTime * 1000).getFullYear();
-            // when refresh schedule weeknumber array empty and appoiment's refresh flag with ture
-            if (refresh && weekarrayemptyflag) {
-                var query = 'UPDATE APPOINTMENTS SET refreshFlag=?';
-                updateRefreshFlag(query);
-                weeknumbers.length = 0;
-                Ext.getCmp('button_week_refresh').setIconCls('zermelo-refresh-button-' + imageType);
-                Ext.getCmp('button_day_refresh').setIconCls('zermelo-refresh-button-' + imageType);
+    refreshEvents: function () {
+        $('#' + this.getPlaceholderid()).fullCalendar('removeEvents');
+        var array = Ext.getStore('Appointments').getAsArray();
+        $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', array);
+    },
+
+    // Calling destroyCalendar and renderFullCalendar updates the red line
+    updateView: function() {
+        this.destroyCalendar();
+        this.renderFullCalendar();
+    },
+
+    deferUpdateView: function() {
+        this.updateView();
+        Ext.defer(this.deferUpdateView, 100000, this);
+    },
+
+    // Changes the currently shown week or day
+    getWeekData: function(nextprev, dayview) {
+        var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
+        var direction = nextprev == 'left' ? -1 : 1;    // subtract days for left, add for right
+
+        Ext.getStore('Appointments').setWindow(offset * direction);
+
+        this.refreshEvents();
+        this.navigateCalendar(nextprev);
+    },
+
+    // Changes the currently shown week to @param week
+    gotoWeek_Day: function(week) {
+        week = Ext.getStore('Appointments').setWindowWeek(week);
+        this.refreshEvents();
+      
+        $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', week);
+        this.changeTitle();
+    },
+
+    //Below function opens dayview with selected date
+    openDayView: function(selectedDate) {
+        if (!Ext.os.is.iOS) {
+            if (webkitVersion < 537.36) {
+                clickButton = true;
+                var timer = $.timer(function () {
+                    clickButton = false;
+                    timer.stop();
+                });
+                if (version == 2)
+                    timer.set({
+                        time: 6000,
+                        autostart: true
+                    });
+                else
+                    timer.set({
+                        time: 4000,
+                        autostart: true
+                    });
             }
-            var weekobj = {
-                week: startweeknumber
-            };
-            // start week add in array
-            weeknumbers.push(weekobj);
-            weekobj = {
-                week: endweeknumber
-            };
-            // end week add in array
-            weeknumbers.push(weekobj);
-            //delete appointments only start week and end week
-            deleteappointmentdata(startweeknumber, endweeknumber);
-
-            var decoded = response.responseText.replace(/\["/g, '\'');
-            decoded = decoded.replace(/"\]/g, '\'');
-            decoded = decoded.replace(/\[\]/g, '""');
-            decoded = decoded.replace(/"new"/g, '"isNew"');
-
-            decoded = Ext.JSON.decode(decoded);
-           
-            // insert data in db
-            insertData(decoded.response.data, currentobj, refresh, me, nextprev, datepickerGo, week);
-        },
-        failure: function (response) {
-            getAppointments(me, currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev,datepickerGo, week);
-            me.unmask();
-
-            //display msg box with error message
-            Ext.Msg.show({
-                items: [{
-                    xtype: 'label',
-                    cls: 'zermelo-error-messagebox',
-                    locales: {
-                        html: 'network_error'
-                    }
-                }],
-                buttons: [{
-                    itemId: 'ok',
-                    locales: {
-                        text: 'ok',
-                    },
-                    ui: 'normal'
-                }],
-            });
         }
-    }); // end ajax request
-}
-
-//Below function opens dayview with selected date
-function openDayView(selectedDate, me) {
-    if (!Ext.os.is.iOS) {
-        if (webkitVersion < 537.36) {
-            clickButton = true;
-            var timer = $.timer(function () {
-                clickButton = false;
-                timer.stop();
-            });
-            if (version == 2)
-                timer.set({
-                    time: 6000,
-                    autostart: true
-                });
-            else
-                timer.set({
-                    time: 4000,
-                    autostart: true
-                });
-        }
+        week_day_view = "agendaDay";
+        this.changeCalendarView('agendaDay');
+        $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+        this.day.hide();
+        Ext.getCmp('toolbar_main').setHidden(true);
+        Ext.getCmp('toolbar_day_back').setHidden(false);
+        // currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+        dayview = "dayview";
     }
-    week_day_view = "agendaDay";
-    me.changeCalendarView('agendaDay');
-    $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-    me.day.hide();
-    Ext.getCmp('toolbar_main').setHidden(true);
-    Ext.getCmp('toolbar_day_back').setHidden(false);
-    currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-    dayview = "dayview";
-}
-// update redline every 5 mins only current day is open
-function updateView(me) {
-    var timer = $.timer(function () {
-        if (!appointment_detail_open) {
-            if ((todayFlag && Ext.getCmp('home').list.getSelection()[0].raw.index == "0")) {
-                me.destroyCalendar();
-                me.renderFullCalendar();
-                if (dayview == "dayview")
-                    me.changeCalendarView('agendaDay');
-            }
-        }
-    });
-    timer.set({
-        time: 60000,
-        autostart: true
-    });
-}
-// get current week number
-Date.prototype.getWeek = function () {
-    var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-}
+});
 
 function setClickButton() {
     var timer = $.timer(function () {
@@ -653,6 +583,11 @@ function setClickButton() {
     });
 }
 
+// Returns the ISO week of the date.
+Date.prototype.getWeek = function() {
+    return Ext.Date.getWeekOfYear(this);
+}
+
 // get no weeks of year
 function getISOWeeks(y) {
     var d,
@@ -663,131 +598,5 @@ function getISOWeeks(y) {
 
     //check for a Jan 1 that's a Thursday or a leap year that has a 
     //Wednesday jan 1. Otherwise it's 52
-    return d.getDay() === 4 || isLeap && d.getDay() === 3 ? 53 : 52
-}
-
-// 
-
-function getWeekData(nextprev, me, dayview) {
-    // set current day for get data on swipe
-    if (dayview != "dayview") {
-        currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-        currentDay.setDate(currentDay.getDate() - currentDay.getDay() + 1);
-        if (nextprev == "left")
-            currentDay.setDate(currentDay.getDate() - currentDay.getDay() + 8);
-        else
-            currentDay.setDate(currentDay.getDate() - currentDay.getDay() - 1);
-    } else {
-        currentDay = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-
-        if (nextprev == "left") {
-            if (currentDay.getDay() == 0) {
-                currentDay.setDate(currentDay.getDate() + 1)
-            } else if (currentDay.getDay() == 5) {
-                currentDay.setDate(currentDay.getDate() + 2);
-            }
-            currentDay.setDate(currentDay.getDate() + 1);
-        } else {
-            if (currentDay.getDay() == 1) {
-                currentDay.setDate(currentDay.getDate() - 2);
-            } else
-                currentDay.setDate(currentDay.getDate() - 1);
-        }
-    }
-    var weeknumber = new Date(Math.round(currentDay.getTime())).getWeek();
-    weeknumber = weeknumber + "" + new Date(Math.round(currentDay.getTime())).getFullYear();
-
-    var flag = true;
-  //  console.log(weeknumbers);
-    for (var i = 0; i < weeknumbers.length; i++) {
-        if (weeknumbers[i].week == weeknumber) {
-            flag = false;
-            break;
-        }
-    }
-    // if already get data from server ,next time does not go on server for getting data
-    if (flag) {
-        var query = 'SELECT count(*) as count FROM APPOINTMENTS WHERE weeknumber=? & refreshFlag=?';
-        getRecodrdCount(query, weeknumber, function (result) {
-            if (result == 0) {
-                var starttime = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-                var startTime = Math.round(starttime.getTime() / 1000);
-                if (nextprev == "left") {
-                    var endTime = Math.round(starttime.setDate(starttime.getDate() + 12) / 1000);
-                    getAppointment(Ext.getCmp('schedule'), me, true, startTime, endTime, false, nextprev, false);
-                } else {
-                    var endTime = Math.round(starttime.setDate(starttime.getDate() - 12) / 1000);
-                    getAppointment(Ext.getCmp('schedule'), me, true, endTime, startTime, false, nextprev, false);
-                }
-
-            } else {
-                me.navigateCalendar(nextprev);
-            }
-            if (dayview == 'dayview' && nextprev == 'right')
-                if (currentDay.getDay() == 6) {
-                    currentDay.setDate(currentDay.getDate() - 1);
-                }
-        });
-    } else {
-        me.navigateCalendar(nextprev);
-        if (dayview == 'dayview' && nextprev == 'right')
-            if (currentDay.getDay() == 6) {
-                currentDay.setDate(currentDay.getDate() - 1);
-            }
-    }
-
-}
-
-function gotoWeek_Day(week, me) {
-    currentDay = new Date(week.getFullYear(), week.getMonth(), week.getDate());
-    var currentweekdate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-    currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
-    var startTime = Math.round(currentweekdate.getTime() / 1000);
-    var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12) / 1000);
-    var weeknumber = new Date(Math.round(currentDay.getTime())).getWeek();
-    weeknumber = weeknumber + "" + new Date(Math.round(currentDay.getTime())).getFullYear();
-    var flag = true;
-    for (var i = 0; i < weeknumbers.length; i++) {
-        if (weeknumbers[i].week == weeknumber) {
-            flag = false;
-            break;
-        }
-    }
-    if (flag)
-        getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, false, '', true, week);
-    else {
-        $('#' + me.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
-        me.changeTitle();
-    }
-}
-function getAppointments(me, currentobj, refresh, startTime, endTime, weekarrayemptyflag, nextprev, datepickerGo, week)
-{
-    var query = 'select appointment_id,start_time,end_time,subjects,teacher,locations,groups,type,cancelled,modified,moved,new_appointment,remark,change_description ,valid from APPOINTMENTS ';
-            getAppointmentData(query, function () {
-                if (refresh) {
-                    //calendar view only current day calendar view refresh
-                    if (todayFlag && !datepickerGo && nextPrev == '') {
-                        currentobj.destroyCalendar();
-                        currentobj.renderFullCalendar();
-                        if (dayview == "dayview")
-                            currentobj.changeCalendarView('agendaDay');
-                        currentobj.getScrollable().getScroller().scrollTo(0, scrollTopHeight - (scrollTopHeight * 10 / 100));
-                    } else if (nextprev != '') {
-                        currentobj.navigateCalendar(nextprev);
-
-                    } else if (datepickerGo) {
-                        $('#' + currentobj.getPlaceholderid()).fullCalendar('gotoDate', week.getFullYear(), week.getMonth(), week.getDate());
-                        currentobj.changeTitle();
-                    } else {
-                        currentobj.renderCalendar();
-                    }
-                    updateView(currentobj);
-
-                }
-                // only first time render after getting  data from server
-                else {
-                    currentobj.renderFullCalendar();
-                    updateView(currentobj);
-                }
-            });
+    return d.getDay() === 4 || isLeap && d.getDay() === 3 ? 53 : 52;
 }

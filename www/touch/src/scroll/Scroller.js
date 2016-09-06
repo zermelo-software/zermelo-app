@@ -10,7 +10,7 @@
  * instantiated in your container.
  *
  * Please note that the {@link Ext.Container#getScrollable} method returns an instance of {@link Ext.scroll.View}.
- * So if you need to get access to the scroller after your container has been instantiated, you must used the
+ * So if you need to get access to the scroller after your container has been instantiated, you must use the
  * {@link Ext.scroll.View#getScroller} method.
  *
  *     // lets assume container is a container you have
@@ -22,14 +22,36 @@
  * Here is a simple example of how to adjust the scroller settings when using a {@link Ext.Container} (or anything
  * that extends it).
  *
- *     @example
- *     var container = Ext.create('Ext.Container', {
- *         fullscreen: true,
- *         html: 'This container is scrollable!',
- *         scrollable: {
- *             direction: 'vertical'
- *         }
- *     });
+ *      @example
+ *      Ext.create('Ext.Container', {
+ *           fullscreen: true,
+ *           html: "Macaroni cheese roquefort<br>" +
+ *                "port-salut. The big cheese<br>" + 
+ *                "fondue camembert de normandie<br>" + 
+ *                "cow boursin cheese swiss stinking<br>" +  
+ *                "bishop. Fromage feta edam fromage<br>" + 
+ *                "frais bavarian bergkase paneer<br>" + 
+ *                "paneer cheese and wine. Cow danish<br>" +  
+ *                "fontina roquefort bocconcini<br>" + 
+ *                "jarlsberg parmesan cheesecake<br>" + 
+ *                "danish fontina. Mascarpone<br>" +
+ *                "bishop. Fromage feta edam fromage<br>" + 
+ *                "frais bavarian bergkase paneer<br>" + 
+ *                "paneer cheese and wine. Cow danish<br>" +  
+ *                "fontina roquefort bocconcini<br>" + 
+ *                "jarlsberg parmesan cheesecake<br>" + 
+ *                "emmental fromage frais cheesy<br>" + 
+ *                "grin say cheese squirty cheese<br>" + 
+ *                "parmesan queso. Cheese triangles<br>" + 
+ *                "st. agur blue cheese chalk and cheese<br>" + 
+ *                "cream cheese lancashire manchego<br>" + 
+ *                "taleggio blue castello. Port-salut<br>" + 
+ *                "paneer monterey jack<br>" + 
+ *                "say cheese fondue.",
+ *           scrollable: {
+ *              direction: 'vertical'
+ *           }
+ *       });
  *
  * As you can see, we are passing the {@link #direction} configuration into the scroller instance in our container.
  *
@@ -442,11 +464,30 @@ Ext.define('Ext.scroll.Scroller', {
     /**
      * @private
      */
-    updateDirection: function(direction) {
-        var isAxisEnabledFlags = this.isAxisEnabledFlags;
+    updateDirection: function(direction, oldDirection) {
+        var isAxisEnabledFlags = this.isAxisEnabledFlags,
+            verticalCls = this.cls + '-vertical',
+            horizontalCls = this.cls + '-horizontal',
+            element = this.getElement();
 
-        isAxisEnabledFlags.x = (direction === 'both' || direction === 'horizontal');
-        isAxisEnabledFlags.y = (direction === 'both' || direction === 'vertical');
+        if (oldDirection === 'both' || oldDirection === 'horizontal') {
+            element.removeCls(horizontalCls);
+        }
+
+        if (oldDirection === 'both' || oldDirection === 'vertical') {
+            element.removeCls(verticalCls);
+        }
+
+        isAxisEnabledFlags.x = isAxisEnabledFlags.y = false;
+        if (direction === 'both' || direction === 'horizontal') {
+            isAxisEnabledFlags.x = true;
+            element.addCls(horizontalCls);
+        }
+
+        if (direction === 'both' || direction === 'vertical') {
+            isAxisEnabledFlags.y = true;
+            element.addCls(verticalCls);
+        }
     },
 
     /**

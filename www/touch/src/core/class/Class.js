@@ -4,10 +4,7 @@
 
 /**
  * @class Ext.Class
- *
  * @author Jacky Nguyen <jacky@sencha.com>
- * @aside guide class_system
- * @aside video class-system
  *
  * Handles class creation throughout the framework. This is a low level factory that is used by Ext.ClassManager and generally
  * should not be used directly. If you choose to use Ext.Class you will lose out on the namespace, aliasing and dependency loading
@@ -18,6 +15,8 @@
  *
  * Ext.Class is the factory and **not** the superclass of everything. For the base class that **all** Ext classes inherit
  * from, see {@link Ext.Base}.
+ *
+ * For more information about Sencha Touch's Class System, please check out the [class system guide](../../../core_concepts/class_system.html).
  */
 (function() {
     var ExtClass,
@@ -519,7 +518,7 @@
     ExtClass.registerPreprocessor('platformConfig', function(Class, data, hooks) {
         var platformConfigs = data.platformConfig,
             config = data.config || {},
-            platform, theme, platformConfig, i, ln, j , ln2;
+            platform, theme, platformConfig, i, ln, j, ln2, exclude;
 
         delete data.platformConfig;
 
@@ -595,6 +594,14 @@
                         case 'ie10':
                             profileMatch = /MSIE 10/.test(ua);
                             break;
+                        case 'windows':
+                            profileMatch = /MSIE 10/.test(ua) || /Trident/.test(ua);
+                            break;
+                        case 'tizen':
+                            profileMatch = /Tizen/.test(ua);
+                            break;
+                        case 'firefox':
+                            profileMatch = /Firefox/.test(ua);
                     }
                     if (profileMatch) {
                         return true;
@@ -608,13 +615,14 @@
             platformConfig = platformConfigs[i];
 
             platform = platformConfig.platform;
+            exclude = platformConfig.exclude || [];
             delete platformConfig.platform;
 
             theme = [].concat(platformConfig.theme);
             ln2 = theme.length;
             delete platformConfig.theme;
 
-            if (platform && Ext.filterPlatform(platform)) {
+            if (platform && Ext.filterPlatform(platform) && !Ext.filterPlatform(exclude)) {
                 Ext.merge(config, platformConfig);
             }
 

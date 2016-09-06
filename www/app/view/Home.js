@@ -89,7 +89,7 @@ Ext.define('Zermelo.view.Home', {
             maxDrag: 100,
             width: 100,
             style: {
-                'display': 'none',
+                'display': 'none'
             },
             items: []
 
@@ -109,19 +109,18 @@ Ext.define('Zermelo.view.Home', {
             slideButton: true,
             // display schedule image in slide menu list
             urlLogo: 'resources/images/myschedule.' + imageType,
-            title: 'myschedule',
             items: [{
-                // set toolbar with menu, refresh, annoucement buttons
+                // set toolbar with menu, refresh, announcement buttons
                 xtype: 'toolbar',
                 //css class resources/images/app.css
                 cls: 'zermelo-toolbar',
                 id: 'toolbar_main',
-                centered: false,
                 height: '47px',
+                width: '100%',
                 // set title in multiple language
-                /*locales: {
-                    title: 'menu.myschedule'
-                },*/
+                locales: {
+                    title: 'menu.schedule_self'
+                },
                 docked: 'top',
                 // Add two buttons refresh and new announcement
                 items: [{
@@ -136,7 +135,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '4px'
                     },
                     handler: function () {
-                        refresh();
+                        Zermelo.AjaxManager.refresh();
                     }
                 }]
             }, {
@@ -147,11 +146,10 @@ Ext.define('Zermelo.view.Home', {
 
                 id: 'toolbar_day_back',
                 hidden: true,
-                centered: false,
                 // set title in multiple language
-                /*locales: {
-                    title: 'menu.daily_schedule'
-                },*/
+                locales: {
+                    title: 'menu.schedule_self'
+                },
                 docked: 'top',
                 // Add two buttons refresh and new announcement 
                 items: [{
@@ -166,7 +164,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '0px'
                     },
                     handler: function () {
-                        refresh();
+                        Zermelo.AjaxManager.refresh();
                     }
                 }, {
                     // announcement button
@@ -194,23 +192,24 @@ Ext.define('Zermelo.view.Home', {
                 }]
             }, {
                 // open schedule view
-                xtype: 'schedule',
+                xtype: 'schedule'
             }]
-        }, {
+        },
+        {
             slideButton: true,
-            urlLogo: 'resources/images/messages.' + imageType,
-            title: 'Messages',
+            urlLogo: 'resources/images/list.' + imageType,
+            title: 'CalendarList',
+
             items: [{
-                // set toolbar with menu, refresh, annoucement buttons
                 xtype: 'toolbar',
                 //css class resources/images/app.css
                 cls: 'zermelo-toolbar-main',
                 height: '47px',
                 // set title in multiple language
-                id:'message_title',
-               /* locales: {
-                    title: 'menu.announcement'
-                },*/
+                id:'calendar_list_title',
+                locales: {
+                    title: 'menu.schedule_self'
+                },
                 docked: 'top',
                 items:[{
                     // refresh button
@@ -223,114 +222,60 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '4px'
                     },
                     handler: function () {
-                        getAnnoucementsData(Ext.getCmp('messageList'))
+                        Ext.getStore('Appointments').fetchWeek();
+                    }
+                }]
+            }, {
+                // open message list view
+                xtype: 'CalendarList'
+            }]
+        }, 
+        {
+            slideButton: true,
+            urlLogo: 'resources/images/messages.' + imageType,
+            title: 'Messages',
+            items: [{
+                // set toolbar with menu, refresh, announcement buttons
+                xtype: 'toolbar',
+                //css class resources/images/app.css
+                cls: 'zermelo-toolbar-main',
+                height: '47px',
+                // set title in multiple language
+                id:'message_title',
+                locales: {
+                    title: 'menu.announcement_self'
+                },
+                docked: 'top',
+                items:[{
+                    // refresh button
+                    xtype: 'button',
+                    //css class resources/images/app.css
+                    iconCls: 'zermelo-refresh-button-' + imageType,
+                    docked: 'right',
+                    ui: 'plain',
+                    style: {
+                        'padding-right': '4px'
+                    },
+                    handler: function () {
+                        Zermelo.AjaxManager.getAnnouncementData(Ext.getCmp('messageList'))
 
                     }
                 }]
             }, {
                 // open message list view
-                xtype: 'messageList',
-            }],
+                xtype: 'messageList'
+            }]
         },
         {
             //switch user button
             urlLogo: 'resources/images/user_switch.' + imageType,
-            title: 'swtich User',
+            title: 'swtich User'
         },
-         {
+        {
             //logout and move to login screen
             urlLogo: 'resources/images/logout.' + imageType,
-            title: 'logout',
+            title: 'logout'
         }
         ]
     }
 });
-// refresh schedule and announcement 
-function refresh() {
-    refreshDate=new Date();
-    window.localStorage.setItem('refreshTime',refreshDate.getTime());
-    window.localStorage.setItem('refresh_time_interval',refreshDate.getTime());
-    var currentweekdate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
-    currentweekdate.setDate(currentweekdate.getDate() - currentweekdate.getDay() + 1);
-    var startTime = Math.round(currentweekdate.getTime() / 1000);
-    var endTime = Math.round(currentweekdate.setDate(currentweekdate.getDate() + 12) / 1000);
-
-    // call appointment api and announcement api at start
-    getAppointment(Ext.getCmp('schedule'), Ext.getCmp('fullCalendarView'), true, startTime, endTime, true, '', false);
-    getAnnoucementData(Ext.getCmp('schedule'))
-}
-function getAnnoucementsData(thisObj) {   
-    Ext.Viewport.setMasked({
-           xtype: 'loadmask',
-           message: LoadingMessage,
-
-        indicator: true
-        });
-    
-     thisObj.hide();
-    var institution = window.localStorage.getItem('institution');
-    var accessToken = window.localStorage.getItem('accessToken');
-
-	if (accessToken == null || accessToken == '')
-		return;
-    // send request to server using ajax with http GET
-    Ext.Ajax.request({
-        url: 'https://' + institution + '.zportal.nl/api/v2/announcements?user='+window.localStorage.getItem('user_code')+'&access_token=' + accessToken, // url : this.getUrl(),
-        method: "GET",
-        useDefaultXhrHeader: false,
-
-        success: function (response) {
-           // console.log(response);
-            var decoded = Ext.JSON.decode(response.responseText);
-            // create store
-            mystore = Ext.create('Ext.data.Store', {
-                fields: ['id', 'start', 'end', 'title', 'text', 'read', 'valid'],
-            });
-            mystore.setData(decoded.response.data);
-            var readStroe = Ext.getStore('ReadmessageStore');
-            // all data remove from localstore
-
-            localStore = new Zermelo.store.AnnouncementStore();
-            localStore.removeAll();
-            // set data into store
-
-            mystore.each(function (record) {
-                var rec = {
-                    announcement_id: record.data.id,
-                    start: record.data.start,
-                    end: record.data.end,
-                    title: record.data.title,
-                    text: record.data.text, // in a real app you would not update a real field like this!
-                };
-                // add record into localstore one bye one
-                localStore.add(rec);
-                localStore.sync(); // The magic! This command persists the records in the store to the browsers localStorage
-            });
-            // loading screen disappear
-            Ext.Viewport.setMasked(false);
-            thisObj.show();
-        },
-        failure: function (response) {
-           //localStore = new Zermelo.store.AnnouncementStore();
-
-            thisObj.show();
-           Ext.Viewport.setMasked(false);
-           Ext.Msg.show({
-                items: [{
-                    xtype: 'label',
-                    cls: 'zermelo-error-messagebox',
-                    locales: {
-                        html: 'network_error'
-                    }
-                }],
-                buttons: [{
-                    itemId: 'ok',
-                    locales: {
-                        text: 'ok',
-                    },
-                    ui: 'normal'
-                }],
-            });
-        }
-    });
-}

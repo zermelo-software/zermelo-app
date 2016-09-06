@@ -1,6 +1,5 @@
 /**
  * @author Ed Spencer
- * @aside guide models
  *
  * A Model represents some object that your application manages. For example, one might define a Model for Users,
  * Products, Cars, or any other real-world object that we want to model in the system. Models are registered via the
@@ -213,6 +212,12 @@
  * A Store is just a collection of Model instances - usually loaded from a server somewhere. Store can also maintain a
  * set of added, updated and removed Model instances to be synchronized with the server via the Proxy. See the {@link
  * Ext.data.Store Store docs} for more information on Stores.
+ *
+ * ###Further Reading
+ * [Sencha Touch Data Overview](../../../core_concepts/data/data_package_overview.html)
+ * [Sencha Touch Store Guide](../../../core_concepts/data/stores.html)
+ * [Sencha Touch Models Guide](../../../core_concepts/data/models.html)
+ * [Sencha Touch Proxy Guide](../../../core_concepts/data/proxies.html)
  */
 Ext.define('Ext.data.Model', {
     alternateClassName: 'Ext.data.Record',
@@ -320,7 +325,7 @@ Ext.define('Ext.data.Model', {
          * By default this uses the simple identifier strategy that generates id's like 'ext-record-12'. If you are
          * saving these records in localstorage using a LocalStorage proxy you need to ensure that this identifier
          * strategy is set to something that always generates unique id's. We provide one strategy by default that
-         * generates these unique id's which is the uuid strategy.
+         * generates these unique id's which is the {@link Ext.data.identifier.Uuid} strategy.
          */
         identifier: {
             type: 'simple'
@@ -497,8 +502,8 @@ Ext.define('Ext.data.Model', {
      * Creates new Model instance.
      * @param {Object} data An object containing keys corresponding to this model's fields, and their associated values.
      * @param {Number} id (optional) Unique ID to assign to this model instance.
-     * @param [raw]
-     * @param [convertedData]
+     * @param {Object} [raw]
+     * @param {Object} [convertedData]
      */
     constructor: function(data, id, raw, convertedData) {
         var me = this,
@@ -585,7 +590,7 @@ Ext.define('Ext.data.Model', {
      * Private function that is used when you create a record that already exists in the model cache.
      * In this case we loop over each field, and apply any data to the current instance that is not already
      * marked as being dirty on that instance.
-     * @param data
+     * @param {Object} data
      * @return {Ext.data.Model} This record.
      * @private
      */
@@ -594,6 +599,7 @@ Ext.define('Ext.data.Model', {
             fields = me.getFields().items,
             ln = fields.length,
             modified = me.modified,
+            modifiedFieldNames = [],
             data = me.data,
             i, field, fieldName, value, id;
 
@@ -607,6 +613,14 @@ Ext.define('Ext.data.Model', {
                     value = field._convert(value, me);
                 }
 
+                if(data[fieldName] !== value) {
+                    if(modifiedFieldNames.length === 0 && !me.editing) {
+                        this.beginEdit()
+                    }
+
+                    modifiedFieldNames.push(fieldName);
+                }
+
                 data[fieldName] = value;
             } else if (Ext.isFunction(field._convert)) {
 				value = field._convert(value, me);
@@ -618,6 +632,10 @@ Ext.define('Ext.data.Model', {
             me.handleInlineAssociationData(rawData);
         }
 
+        if(modifiedFieldNames.length > 0 && me.editing) {
+            this.endEdit(false, modifiedFieldNames);
+        }
+
         return this;
     },
 
@@ -626,7 +644,7 @@ Ext.define('Ext.data.Model', {
      * Note that the existing data is removed. If a field is not specified
      * in the passed data it will use the field's default value. If a convert
      * method is specified for the field it will be called on the value.
-     * @param rawData
+     * @param {Object} rawData
      * @return {Ext.data.Model} This record.
      */
     setData: function(rawData) {
@@ -734,7 +752,7 @@ Ext.define('Ext.data.Model', {
      * This sets the data directly without converting and applying default values.
      * This method is used when a Record gets instantiated by a Reader. Only use
      * this when you are sure you are passing correctly converted data.
-     * @param data
+     * @param {Object} data
      * @return {Ext.data.Model} This Record.
      */
     setConvertedData: function(data) {
@@ -1589,7 +1607,7 @@ Ext.define('Ext.data.Model', {
     /**
      * This method is used by the fields collection to retrieve the key for a field
      * based on it's name.
-     * @param field
+     * @param {String} field
      * @return {String}
      * @private
      */
@@ -1600,8 +1618,8 @@ Ext.define('Ext.data.Model', {
     /**
      * This method is being used to sort the fields based on their convert method. If
      * a field has a custom convert method, we ensure its more to the bottom of the collection.
-     * @param field1
-     * @param field2
+     * @param {String} field1
+     * @param {String} field2
      * @return {Number}
      * @private
      */

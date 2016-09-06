@@ -8,9 +8,9 @@
  *
  * For information on how to use routes we suggest reading the following guides:
  *
- * - [Using History Support](#!/guide/history_support)
- * - [Intro to Applications](#!/guide/apps_intro)
- * - [Using Controllers](#!/guide/controllers)
+ * - [Using History Support](../../../core_concepts/history_support.html)
+ * - [Intro to Applications](../../../core_concepts/about_applications.html)
+ * - [Using Controllers](../../../core_concepts/controllers.html)
  *
  */
 Ext.define('Ext.app.Route', {
@@ -200,7 +200,7 @@ Ext.define('Ext.app.Route', {
 
         for (i = 0; i < length; i++) {
             cond    = this.getConditions()[paramsInMatchString[i]];
-            matcher = Ext.util.Format.format("({0})", cond || "[%a-zA-Z0-9\-\\_\\s,]+");
+            matcher = Ext.util.Format.format("({0})", cond || "[%a-zA-Z0-9\\-\\_\\s,]+");
 
             url = url.replace(new RegExp(paramsInMatchString[i]), matcher);
         }

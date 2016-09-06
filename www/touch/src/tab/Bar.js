@@ -50,7 +50,7 @@ Ext.define('Ext.tab.Bar', {
      */
 
     platformConfig: [{
-        theme: ['Blackberry'],
+        theme: ['Blackberry', 'Blackberry103', 'CupertinoClassic', 'MountainView'],
         defaults: {
             flex: 1
         }

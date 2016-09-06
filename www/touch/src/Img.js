@@ -112,13 +112,13 @@ Ext.define('Ext.Img', {
     },
 
     hide: function() {
-        this.callParent();
+        this.callParent(arguments);
         this.hiddenSrc = this.hiddenSrc || this.getSrc();
         this.setSrc(null);
     },
 
     show: function() {
-        this.callParent();
+        this.callParent(arguments);
         if (this.hiddenSrc) {
             this.setSrc(this.hiddenSrc);
             delete this.hiddenSrc;

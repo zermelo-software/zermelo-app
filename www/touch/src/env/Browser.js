@@ -23,6 +23,7 @@ Ext.define('Ext.env.Browser', {
             dolfin: 'Dolfin',
             webosbrowser: 'webOSBrowser',
             chromeMobile: 'ChromeMobile',
+            chromeiOS: 'ChromeiOS',
             silk: 'Silk',
             other: 'Other'
         },
@@ -48,6 +49,7 @@ Ext.define('Ext.env.Browser', {
             dolfin: 'Dolfin/',
             webosbrowser: 'wOSBrowser/',
             chromeMobile: 'CrMo/',
+            chromeiOS: 'CriOS/',
             silk: 'Silk/'
         }
     },
@@ -206,6 +208,15 @@ Ext.define('Ext.env.Browser', {
             engineVersion = new Ext.Version(engineMatch[2]);
         }
 
+        if (engineName == 'Trident' && browserName != 'IE') {
+            browserName = 'IE';
+            var version = userAgent.match(/.*rv:(\d+.\d+)/);
+            if (version && version.length) {
+                version = version[1];
+                browserVersion = new Ext.Version(version);
+            }
+        }
+
         // Facebook changes the userAgent when you view a website within their iOS app. For some reason, the strip out information
         // about the browser, so we have to detect that and fake it...
         if (userAgent.match(/FB/) && browserName == "Other") {
@@ -221,6 +232,10 @@ Ext.define('Ext.env.Browser', {
             browserName = 'Opera';
             browserMatch = userAgent.match(/OPR\/(\d+.\d+)/);
             browserVersion = new Ext.Version(browserMatch[1]);
+        }
+
+        if(browserName === 'Safari' && userAgent.match(/BB10/)) {
+            browserName = 'BlackBerry';
         }
 
         Ext.apply(this, {
@@ -273,6 +288,10 @@ Ext.define('Ext.env.Browser', {
         else if (!!window.isNK) {
             isWebView = true;
             this.setFlag('Sencha');
+        }
+
+        if (/(Glass)/i.test(userAgent)) {
+            this.setFlag('GoogleGlass');
         }
 
         // Check if running in UIWebView
@@ -350,7 +369,7 @@ Ext.define('Ext.env.Browser', {
      *
      * For a full list of supported values, refer to {@link #is} property/method.
      *
-     * @aside guide environment_package
+     * For more information, see the [Environment Detect Guide](../../../core_concepts/environment_detection.html)
      */
     var browserEnv = Ext.browser = new this(Ext.global.navigator.userAgent);
 
