@@ -76,6 +76,7 @@ Ext.define('Zermelo.UserManager', {
 
 		newCode = newCode.toLowerCase();
 
+		Ext.getCmp('home').selectItem(localStorage.getItem('lastView'));
 		if (this.code == newCode)
 			return;
 

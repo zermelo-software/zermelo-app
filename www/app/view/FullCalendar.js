@@ -377,6 +377,8 @@ Ext.define('Zermelo.view.FullCalendar', {
 
         // add items in main container
         this.setItems([me.topBar, me.calendarPanel]);
+        Ext.defer(this.deferUpdateView, 100000, this);
+
     }, // end initialize
 
     /**
@@ -492,6 +494,17 @@ Ext.define('Zermelo.view.FullCalendar', {
         $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', array);
     },
 
+    // Calling destroyCalendar and renderFullCalendar updates the red line
+    updateView: function() {
+        this.destroyCalendar();
+        this.renderFullCalendar();
+    },
+
+    deferUpdateView: function() {
+        this.updateView();
+        Ext.defer(this.deferUpdateView, 100000, this);
+    },
+
     // Changes the currently shown week or day
     getWeekData: function(nextprev, dayview) {
         var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
@@ -531,24 +544,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         Ext.getCmp('toolbar_day_back').setHidden(false);
         // currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
         dayview = "dayview";
-    },
-
-    // update redline every 5 mins only current day is open
-    updateView: function() {
-        var timer = $.timer(function () {
-            if (!appointment_detail_open) {
-                if ((todayFlag && Ext.getCmp('home').list.getSelection()[0].raw.index == "0")) {
-                    this.destroyCalendar();
-                    this.renderFullCalendar();
-                    if (dayview == "dayview")
-                        this.changeCalendarView('agendaDay');
-                }
-            }
-        });
-        timer.set({
-            time: 60000,
-            autostart: true
-        });
     }
 });
 
