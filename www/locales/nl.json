@@ -37,7 +37,7 @@
         "startDate":"Startdatum: ",
         "endDate":"Einddatum: ",
         "description":"Omschrijving: ",
-         "no_announcement_msg":"Er zijn op dit moment geen mededelingen."
+         "no_announcement_msg":"Er zijn geen mededelingen."
     },
     "back":{
         "Schedule_back":"Rooster",

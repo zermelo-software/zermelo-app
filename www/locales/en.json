@@ -37,7 +37,7 @@
         "startDate":"Start Date: ",
         "endDate":"End Date: ",
         "description":"Description: ",
-        "no_announcement_msg": "There are no announcements at this time."
+        "no_announcement_msg": "There are no announcements."
     },
     "back":{
         "Schedule_back":"Schedule",
