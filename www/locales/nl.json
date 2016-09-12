@@ -1,6 +1,6 @@
 {
     "login":{
-        "text":"Vul de naam van uw instelling in en de toegangscode uit het Portal. U kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op  \"Koppel App\".",
+        "text":"Vul de naam van uw instelling in en de toegangscode uit het Portal. Je kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op  \"Koppel App\".",
         "institution":"Instituut",
         "code":"Code",
         "login":"Login",
@@ -15,7 +15,7 @@
         "announcement_change":"Mededelingen voor ", // Note: this is actually hardcoded in MessageList.js and Schedule.js
         "Logout":"Uitloggen",
         "daily_schedule":"Rooster",
-        "logout_message":"Weet u zeker dat u de app wilt ontkoppelen? Voordat u hier uw rooster weer kunt zien dient u de app opnieuw te koppelen via Zermelo Portal."
+        "logout_message":"Weet je zeker dat je de app wilt ontkoppelen? Je dient de app daarna opnieuw te koppelen via Zermelo Portal."
     },
     "ok":"OK",
     "done":"OK",
@@ -52,7 +52,7 @@
         "choice" : "Keuze",
         "other" : "Overig"
     },
-    "network_error":"Probleem met het verbinden met Zermelo Portal",
+    "network_error":"Kan geen verbinding maken met Zermelo",
     "months" : {
         "1"  : "Januari",
         "2"  : "Februari",
@@ -67,7 +67,7 @@
         "11" : "November",
         "12" : "December"
     },
-    "exit_msg":"Wilt u de app verlaten?",
+    "exit_msg":"Wil je de app verlaten?",
     "own_schedule":"Eigen rooster",
     "enter_user_code":"Leerlingnummer/afkorting",
     
