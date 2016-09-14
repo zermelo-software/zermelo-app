@@ -691,7 +691,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "Zermelo.model.Appointment": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
-  "Zermelo.store.ReadmessageStore": [],
   "Zermelo.view.AppointmentDetails": [],
   "Zermelo.view.CalendarList": [],
   "Zermelo.view.FullCalendar": [],
@@ -1445,7 +1444,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Zermelo.model.Appointment": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
-  "Zermelo.store.ReadmessageStore": [],
   "Zermelo.view.AppointmentDetails": [
     "widget.appointmentDetails"
   ],
