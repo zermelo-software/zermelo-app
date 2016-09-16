@@ -161,9 +161,34 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 * @return:
 	 */
 	fetchWeek: function() {
-		var monday = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (1 - this.windowStart.getDay()));
-		var saturday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
+		var monday = this.getMonday();
+		var saturday = this.getSaturday();
 		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
+	},
+
+	clearWeek: function() {
+		var monday = this.getMonday();
+		var saturday = this.getSaturday();
+		var currentUser = Zermelo.UserManager.getUser();
+		this.clearFilter();
+		this.filterBy(function(record) {
+			if(record.get('start') < monday)
+				return false;
+			if(record.get('start') > saturday)
+				return false;
+			if(record.get('user') != currentUser)
+				return false;
+			return true;
+		});
+		this.removeAll();
+	},
+
+	getMonday: function() {
+		return new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (1 - this.windowStart.getDay()));
+	},
+
+	getSaturday: function(monday) {
+		return new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (6 - this.windowStart.getDay()));
 	},
 
 	prepareData: function() {

@@ -2,6 +2,7 @@ Ext.define('Zermelo.AjaxManager', {
 	alternateClassName: 'AjaxManager',
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
+	refreshInterval: 1000 * 60 * 30,	// 1000 milliseconds * 60 seconds * 30 minutes
 
 	getUrl: function(target) {
 		return (
@@ -16,19 +17,16 @@ Ext.define('Zermelo.AjaxManager', {
 		Ext.getStore('Appointments').fetchWeek();
 		Zermelo.AjaxManager.getAnnouncementData();
 	},
+
+	periodicRefresh: function() {
+		clearTimeout(this.queuedRefresh);
+		this.refresh();
+		this.queuedRefresh = Ext.defer(this.periodicRefresh, this.refreshInterval, this);
+	},
 	
 	getAnnouncementData: function() {   
 		if (!Zermelo.UserManager.loggedIn())
 			return;
-
-		Ext.Viewport.setMasked({
-			xtype: 'loadmask',
-			locale: {
-				message: 'loading'
-			},
-
-			indicator: true
-		});
 		
 		Ext.Ajax.request({
 			url: this.getUrl('announcements'),
@@ -81,8 +79,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 				announcementStore.resumeEvents(false);
 
-				Ext.Viewport.setMasked(false);
-
 				if(announcementStore.getCount() == 0 && messageShow) {
 					Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
 				}
@@ -104,8 +100,6 @@ Ext.define('Zermelo.AjaxManager', {
 					Zermelo.ErrorManager.showErrorBox('network_error');
 				}
 				Ext.getStore('Announcements').resetFilters();
-
-				Ext.Viewport.setMasked(false);
 			}
 		});
 	},
@@ -117,14 +111,6 @@ Ext.define('Zermelo.AjaxManager', {
 		// Real unix timestamps use seconds, javascript uses milliseconds
 		startTime = Math.floor(startTime / 1000);
 		endTime = Math.floor(endTime / 1000);
-
-		Ext.Viewport.setMasked({
-			xtype: 'loadmask',
-			locale: {
-				message: 'loading'
-			},
-			indicator: true
-		});
 		
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
@@ -145,11 +131,7 @@ Ext.define('Zermelo.AjaxManager', {
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();
 
-				// If we have a new version of the events between startTime and endTime we can forget the old ones
-				appointmentStore.each(function(record) {
-					if (record.get('start') >= startTime && record.get('end') <= endTime && record.get('user') == currentUser)
-						appointmentStore.remove(record);
-				});
+				appointmentStore.clearWeek();
 
 				decoded.forEach(function(record) {
 					record.start = new Date(record.start * 1000);
@@ -172,7 +154,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents();
-				Ext.Viewport.setMasked(false);
 				localStorage.setItem('refreshTime', Date.now());
 			},
 			failure: function (response) {
@@ -181,9 +162,8 @@ Ext.define('Zermelo.AjaxManager', {
 					error_msg = 'insufficient_permissions';
 					Zermelo.UserManager.setUser();
 				}
-				Zermelo.ErrorManager.showErrorBox(error_msg);
 
-				Ext.Viewport.setMasked(false);
+				Zermelo.ErrorManager.showErrorBox(error_msg);
 			}
 		});
 	}

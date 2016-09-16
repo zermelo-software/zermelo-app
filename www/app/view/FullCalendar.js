@@ -393,7 +393,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         // add items in main container
         this.setItems([me.topBar, me.calendarPanel]);
         Ext.defer(this.deferUpdateView, 100000, this);
-
     }, // end initialize
 
     /**
