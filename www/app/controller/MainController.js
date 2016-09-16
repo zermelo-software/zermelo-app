@@ -107,13 +107,6 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
         this.updateNewMessagesIndicator();
         
-        var onResume = function() {
-            if(Date.now() - localStorage.getItem('refreshTime') > Zermelo.AjaxManager.refreshInterval && Zermelo.UserManager.loggedIn()) {
-                Zermelo.AjaxManager.refresh();
-            }
-            Ext.getCmp('fullCalendarView').updateView();
-        };
-        document.addEventListener('resume', Ext.bind(onResume, this), false);
         Zermelo.AjaxManager.periodicRefresh();
     }
 });

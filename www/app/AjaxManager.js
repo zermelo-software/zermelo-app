@@ -2,7 +2,7 @@ Ext.define('Zermelo.AjaxManager', {
 	alternateClassName: 'AjaxManager',
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
-	refreshInterval: 1000 * 60 * 30,	// 1000 milliseconds * 60 seconds * 30 minutes
+	refreshInterval: 1000 * 60 * 20,	// 1000 milliseconds * 60 seconds * 20 minutes
 
 	getUrl: function(target) {
 		return (
@@ -126,7 +126,6 @@ Ext.define('Zermelo.AjaxManager', {
 			success: function (response) {
 				var decoded = Ext.JSON.decode(response.responseText).response.data;
 				var currentUser = Zermelo.UserManager.getUser();
-				window.localStorage.setItem('refreshTime', Date.now());
 
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();

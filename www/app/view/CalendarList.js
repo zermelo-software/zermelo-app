@@ -2,6 +2,7 @@ Ext.define("Zermelo.view.CalendarList", {
 	xtype: 'CalendarList',
 	extend: 'Ext.Container',
 	config: {
+		// height: '1000px',
 		layout: 'fit',
 		fullscreen: true,
 		items:[

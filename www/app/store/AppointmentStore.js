@@ -6,7 +6,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		model: 'Zermelo.model.Appointment',
 		storeId: 'Appointments',
 		autoLoad: true,
-		autoSync: false,
+		autoSync: true,
 		autoSort: false,
 		proxy: {
 			type: 'localstorage',
@@ -90,7 +90,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		if (delay === undefined)
 			delay = 5 * 1000;
 		Ext.defer(this.pruneLocalStorage, delay, this);
-		Ext.defer(this.sync, delay, this);
 	},
 
 	/**
@@ -166,6 +165,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
 	},
 
+	/**
+	 * Clears events for the week that contains the current view
+	 *
+	 * @param:
+	 * @return:
+	 */
 	clearWeek: function() {
 		var monday = this.getMonday();
 		var saturday = this.getSaturday();
@@ -180,17 +185,35 @@ Ext.define('Zermelo.store.AppointmentStore', {
 				return false;
 			return true;
 		});
-		this.removeAll();
+		this.remove(this.getRange());
 	},
 
+	/**
+	 * Calculates the start of the week that contains the current view
+	 *
+	 * @param:
+	 * @return: A Date object containing monday 00:00:00
+	 */
 	getMonday: function() {
 		return new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (1 - this.windowStart.getDay()));
 	},
 
+	/**
+	 * Calculates the end of the week that contains the current view
+	 *
+	 * @param:
+	 * @return: A Date object containing saturday 00:00:00
+	 */
 	getSaturday: function(monday) {
 		return new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (6 - this.windowStart.getDay()));
 	},
 
+	/**
+	 * Ensures that we have data for the current view and that it is correctly sorted and filtered
+	 *
+	 * @param:
+	 * @return:
+	 */
 	prepareData: function() {
 		this.resetFilters();
 		if(this.getCount() == 0)
