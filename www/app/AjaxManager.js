@@ -137,6 +137,9 @@ Ext.define('Zermelo.AjaxManager', {
 					record.end = new Date(record.end * 1000);
 					record.user = currentUser;
 					record.id = record.id + currentUser;
+					record.groups.sort();
+					record.locations.sort();
+					record.teachers.sort();
 					if(record.startTimeSlotName === undefined || record.startTimeSlotName === null)
 						record.startTimeSlotName = record.startTimeSlot;
 
