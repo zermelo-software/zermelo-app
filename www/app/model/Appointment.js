@@ -12,6 +12,7 @@ Ext.define('Zermelo.model.Appointment', {
 			{name: 'endTimeSlot', 				type: 'int'},
 			{name: 'endTimeSlotName', 			type: 'string'},
 			{name: 'groups', 					type: 'string'},
+			{name: 'id',						type: 'auto',		isUnique: true},
 			{name: 'lastModified', 				type: 'int'},
 			{name: 'locations', 				type: 'string'},
 			{name: 'modified', 					type: 'bool'},

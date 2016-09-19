@@ -2,7 +2,6 @@ Ext.define('Zermelo.AjaxManager', {
 	alternateClassName: 'AjaxManager',
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
-	refreshInterval: 1000 * 60 * 20,	// 1000 milliseconds * 60 seconds * 20 minutes
 
 	getUrl: function(target) {
 		return (
@@ -19,9 +18,10 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	periodicRefresh: function() {
-		clearTimeout(this.queuedRefresh);
+		if(this.queuedRefresh)
+			clearInterval(this.queuedRefresh);
 		this.refresh();
-		this.queuedRefresh = Ext.defer(this.periodicRefresh, this.refreshInterval, this);
+		this.queuedRefresh = setInterval(Ext.bind(this.refresh, this), 1000 * 60 * 20);
 	},
 	
 	getAnnouncementData: function() {
@@ -73,12 +73,13 @@ Ext.define('Zermelo.AjaxManager', {
 
 				// Store new announcements
 				decoded.forEach(function(entry) {
-					var record = Ext.create('Zermelo.model.Announcement');
-					record.set('id', entry.id);
-					record.set('start', new Date(entry.start * 1000));
-					record.set('end', new Date(entry.end * 1000));
-					record.set('title', entry.title);
-					record.set('text', entry.text);
+					var record = {
+						id: entry.id.toString(),
+						start: new Date(entry.start * 1000),
+						end: new Date(entry.end * 1000),
+						title: entry.title,
+						text: entry.text
+					};
 					announcementStore.add(record);
 				});
 
@@ -86,23 +87,25 @@ Ext.define('Zermelo.AjaxManager', {
 
 				announcementStore.resumeEvents(false);
 
-				if(announcementStore.getCount() == 0 && messageShow) {
-					Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
-				}
 				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
 				if (response.status == 403) {
 					// If the result is 403 the user isn't allowed to view announcements.
 					// We create a dummy announcement to let them know about this
-					var store = Ext.getStore('Announcements');
-					store.removeAll();
-					if (store.find('title', Ux.locale.Manager.get('announcement.no_permission_title')) == -1) {
-						var record = Ext.create('Zermelo.model.Announcement');
-						record.set('id', 0);
-						record.set('title', Ux.locale.Manager.get('announcement.no_permission_title'));
-						record.set('text', Ux.locale.Manager.get('announcement.no_permission_message'));
-						store.add(record);
+					var announcementStore = Ext.getStore('Announcements');
+					announcementStore.each(function(record) {
+						if(record.get('id') != '0')
+							announcementStore.remove(record);
+					});
+					if(!announcementStore.getById('0')) {					
+						var record = {
+							id: '0',
+							title: Ux.locale.Manager.get('announcement.no_permission_title'),
+							text: Ux.locale.Manager.get('announcement.no_permission_message')
+						};
+
+						announcementStore.add(record);
 					}
 				}
 				else {

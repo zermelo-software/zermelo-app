@@ -30,7 +30,7 @@ Ext.define('Zermelo.controller.MainController', {
     config: {
         refs: {
             // ids
-            announcementlist: '#announcementlist',
+            announcementlist: '#messageList',
             messageDetails_back: '#messageDetails_back',
             appointmentDetails_back: '#appointmentDetails_back',
 

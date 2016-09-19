@@ -36,9 +36,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	detectCollisions: function() {
 		if(this.getCount() <= 1) {
-			var first = this.getAt(0);
+			var first = this.first();
 			if(first)
-				first.set('collidingIds', '' + first.id);
+				first.set('collidingIds', first.get('id'));
 			return;
 		}
 		this.sort([
