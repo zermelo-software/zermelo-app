@@ -57,12 +57,12 @@
 			<preference name="android-minSdkVersion" value="10" />
 			<preference name="android-targetSdkVersion" value="19" />
 			<splash src="resources/screens/screen-iphone-portrait-2x.png" platform="android" density="ldpi"/>
-			<icon src="res/36.png" density="ldpi" />
-	        <icon src="res/48.png" density="mdpi" />
-	        <icon src="res/72.png" density="hdpi" />
-	        <icon src="res/96.png" density="xhdpi" />
-	        <icon src="res/144.png" density="xxhdpi" />
-	        <icon src="res/192.png" density="xxxhdpi" />
+			<icon src="resources/icons/36.png" density="ldpi" />
+	        <icon src="resources/icons/48.png" density="mdpi" />
+	        <icon src="resources/icons/72.png" density="hdpi" />
+	        <icon src="resources/icons/96.png" density="xhdpi" />
+	        <icon src="resources/icons/144.png" density="xxhdpi" />
+	        <icon src="resources/icons/192.png" density="xxxhdpi" />
 		</platform>
 		
 		<platform name="ios">
