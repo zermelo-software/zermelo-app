@@ -24,10 +24,19 @@ Ext.define('Zermelo.AjaxManager', {
 		this.queuedRefresh = Ext.defer(this.periodicRefresh, this.refreshInterval, this);
 	},
 	
-	getAnnouncementData: function() {   
+	getAnnouncementData: function() {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 		
+		Ext.Viewport.setMasked({
+			xtype: 'loadmask',
+			locale: {
+				message: 'loading'
+			},
+
+			indicator: true
+		});
+
 		Ext.Ajax.request({
 			url: this.getUrl('announcements'),
 			params: {
@@ -80,6 +89,7 @@ Ext.define('Zermelo.AjaxManager', {
 				if(announcementStore.getCount() == 0 && messageShow) {
 					Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
 				}
+				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
 				if (response.status == 403) {
@@ -99,6 +109,7 @@ Ext.define('Zermelo.AjaxManager', {
 					Zermelo.ErrorManager.showErrorBox('network_error');
 				}
 				Ext.getStore('Announcements').resetFilters();
+				Ext.Viewport.unmask();
 			}
 		});
 	},
@@ -106,6 +117,15 @@ Ext.define('Zermelo.AjaxManager', {
 	getAppointment: function(startTime, endTime) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
+
+		Ext.Viewport.setMasked({
+			xtype: 'loadmask',
+			locale: {
+				message: 'loading'
+			},
+
+			indicator: true
+		});
 		
 		// Real unix timestamps use seconds, javascript uses milliseconds
 		startTime = Math.floor(startTime / 1000);
@@ -156,6 +176,7 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents();
 				localStorage.setItem('refreshTime', Date.now());
+				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
 				var error_msg = 'network_error';
@@ -165,6 +186,7 @@ Ext.define('Zermelo.AjaxManager', {
 				}
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
+				Ext.Viewport.unmask();
 			}
 		});
 	}
