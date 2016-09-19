@@ -60,8 +60,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 					if (!stillExists)
 						announcementStore.remove(record);
-					
-					record.commit();
 				});
 
 				// Store new announcements
@@ -88,6 +86,7 @@ Ext.define('Zermelo.AjaxManager', {
 					// If the result is 403 the user isn't allowed to view announcements.
 					// We create a dummy announcement to let them know about this
 					var store = Ext.getStore('Announcements');
+					store.removeAll();
 					if (store.find('title', Ux.locale.Manager.get('announcement.no_permission_title')) == -1) {
 						var record = Ext.create('Zermelo.model.Announcement');
 						record.set('id', 0);
