@@ -395,7 +395,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         // add items in main container
         this.setItems([me.topBar, me.calendarPanel]);
         this.startPeriodicUpdateView();
-        document.addEventListener('pause', Ext.bind(this.stopPeriodicUpdateView, this), false);
+        // document.addEventListener('pause', Ext.bind(this.stopPeriodicUpdateView, this), false);
         Ext.getCmp('home').onAfter('select', this.setPeriodicUpdateView, this);
     }, // end initialize
 
@@ -520,7 +520,7 @@ Ext.define('Zermelo.view.FullCalendar', {
 
     startPeriodicUpdateView: function() {
         if(!this.intervalTimer)
-            this.intervalTimer = setInterval(Ext.bind(this.updateView, this), 1000 * 60 * 3);
+            this.intervalTimer = setInterval(Ext.bind(this.updateView, this), 1000 * 60 * 5);
     },
 
     stopPeriodicUpdateView: function() {
