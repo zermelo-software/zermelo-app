@@ -112,7 +112,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			}
 		}, this);
 		this.resetFilters();
-		this.resumeEvents();
+		this.resumeEvents(true);
 	},
 
 	/**
@@ -268,6 +268,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 		this.windowStart.setDate(this.windowStart.getDate() + direction);
 		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
+
+		this.suspendEvents();
 		this.prepareData();
+		this.resumeEvents();
 	}
 });
