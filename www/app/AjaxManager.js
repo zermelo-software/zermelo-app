@@ -16,11 +16,18 @@ Ext.define('Zermelo.AjaxManager', {
 		Ext.getStore('Appointments').fetchWeek();
 		Zermelo.AjaxManager.getAnnouncementData();
 	},
+
+	periodicRefresh: function() {
+		if(this.queuedRefresh)
+			clearInterval(this.queuedRefresh);
+		this.refresh();
+		this.queuedRefresh = setInterval(Ext.bind(this.refresh, this), 1000 * 60 * 20);
+	},
 	
-	getAnnouncementData: function() {   
+	getAnnouncementData: function() {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
-
+		
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -29,7 +36,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-		
+
 		Ext.Ajax.request({
 			url: this.getUrl('announcements'),
 			params: {
@@ -62,18 +69,17 @@ Ext.define('Zermelo.AjaxManager', {
 
 					if (!stillExists)
 						announcementStore.remove(record);
-					
-					record.commit();
 				});
 
 				// Store new announcements
 				decoded.forEach(function(entry) {
-					var record = Ext.create('Zermelo.model.Announcement');
-					record.set('id', entry.id);
-					record.set('start', new Date(entry.start * 1000));
-					record.set('end', new Date(entry.end * 1000));
-					record.set('title', entry.title);
-					record.set('text', entry.text);
+					var record = {
+						id: entry.id.toString(),
+						start: new Date(entry.start * 1000),
+						end: new Date(entry.end * 1000),
+						title: entry.title,
+						text: entry.text
+					};
 					announcementStore.add(record);
 				});
 
@@ -81,31 +87,32 @@ Ext.define('Zermelo.AjaxManager', {
 
 				announcementStore.resumeEvents(false);
 
-				Ext.Viewport.setMasked(false);
-
-				if(announcementStore.getCount() == 0 && messageShow) {
-					Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
-				}
+				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
 				if (response.status == 403) {
 					// If the result is 403 the user isn't allowed to view announcements.
 					// We create a dummy announcement to let them know about this
-					var store = Ext.getStore('Announcements');
-					if (store.find('title', Ux.locale.Manager.get('announcement.no_permission_title')) == -1) {
-						var record = Ext.create('Zermelo.model.Announcement');
-						record.set('id', 0);
-						record.set('title', Ux.locale.Manager.get('announcement.no_permission_title'));
-						record.set('text', Ux.locale.Manager.get('announcement.no_permission_message'));
-						store.add(record);
+					var announcementStore = Ext.getStore('Announcements');
+					announcementStore.each(function(record) {
+						if(record.get('id') != '0')
+							announcementStore.remove(record);
+					});
+					if(!announcementStore.getById('0')) {					
+						var record = {
+							id: '0',
+							title: Ux.locale.Manager.get('announcement.no_permission_title'),
+							text: Ux.locale.Manager.get('announcement.no_permission_message')
+						};
+
+						announcementStore.add(record);
 					}
 				}
 				else {
 					Zermelo.ErrorManager.showErrorBox('network_error');
 				}
 				Ext.getStore('Announcements').resetFilters();
-
-				Ext.Viewport.setMasked(false);
+				Ext.Viewport.unmask();
 			}
 		});
 	},
@@ -113,18 +120,19 @@ Ext.define('Zermelo.AjaxManager', {
 	getAppointment: function(startTime, endTime) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
-		
-		// Real unix timestamps use seconds, javascript uses milliseconds
-		startTime = Math.floor(startTime / 1000);
-		endTime = Math.floor(endTime / 1000);
 
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
 				message: 'loading'
 			},
+
 			indicator: true
 		});
+		
+		// Real unix timestamps use seconds, javascript uses milliseconds
+		startTime = Math.floor(startTime / 1000);
+		endTime = Math.floor(endTime / 1000);
 		
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
@@ -140,21 +148,20 @@ Ext.define('Zermelo.AjaxManager', {
 			success: function (response) {
 				var decoded = Ext.JSON.decode(response.responseText).response.data;
 				var currentUser = Zermelo.UserManager.getUser();
-				window.localStorage.setItem('refreshTime', Date.now());
 
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();
 
-				// If we have a new version of the events between startTime and endTime we can forget the old ones
-				appointmentStore.each(function(record) {
-					if (record.get('start') >= startTime && record.get('end') <= endTime && record.get('user') == currentUser)
-						appointmentStore.remove(record);
-				});
+				appointmentStore.clearWeek();
 
 				decoded.forEach(function(record) {
 					record.start = new Date(record.start * 1000);
 					record.end = new Date(record.end * 1000);
 					record.user = currentUser;
+					record.id = record.id + currentUser;
+					record.groups.sort();
+					record.locations.sort();
+					record.teachers.sort();
 					if(record.startTimeSlotName === undefined || record.startTimeSlotName === null)
 						record.startTimeSlotName = record.startTimeSlot;
 
@@ -171,8 +178,8 @@ Ext.define('Zermelo.AjaxManager', {
 
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents();
-				Ext.Viewport.setMasked(false);
 				localStorage.setItem('refreshTime', Date.now());
+				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
 				var error_msg = 'network_error';
@@ -180,9 +187,9 @@ Ext.define('Zermelo.AjaxManager', {
 					error_msg = 'insufficient_permissions';
 					Zermelo.UserManager.setUser();
 				}
-				Zermelo.ErrorManager.showErrorBox(error_msg);
 
-				Ext.Viewport.setMasked(false);
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				Ext.Viewport.unmask();
 			}
 		});
 	}

@@ -45,6 +45,8 @@ Ext.define('Zermelo.view.FullCalendar', {
                     localStorage.setItem('lastView', 'fullCalendarView');
                     this.gotoWeek_Day();
                     this.refreshOrStart();
+                    this.updateView();
+                    this.startPeriodicUpdateView();
                 },
                 options: {
                     order: 'before'
@@ -377,8 +379,9 @@ Ext.define('Zermelo.view.FullCalendar', {
 
         // add items in main container
         this.setItems([me.topBar, me.calendarPanel]);
-        Ext.defer(this.deferUpdateView, 100000, this);
-
+        this.startPeriodicUpdateView();
+        // document.addEventListener('pause', Ext.bind(this.stopPeriodicUpdateView, this), false);
+        Ext.getCmp('home').onAfter('select', this.setPeriodicUpdateView, this);
     }, // end initialize
 
     /**
@@ -500,9 +503,21 @@ Ext.define('Zermelo.view.FullCalendar', {
         this.renderFullCalendar();
     },
 
-    deferUpdateView: function() {
-        this.updateView();
-        Ext.defer(this.deferUpdateView, 100000, this);
+    startPeriodicUpdateView: function() {
+        if(!this.intervalTimer)
+            this.intervalTimer = setInterval(Ext.bind(this.updateView, this), 1000 * 60 * 5);
+    },
+
+    stopPeriodicUpdateView: function() {
+        if(this.intervalTimer)
+            this.intervalTimer = clearInterval(this.intervalTimer);
+    },
+
+    setPeriodicUpdateView: function(container, value) {
+        if(value.down('schedule'))
+            this.startPeriodicUpdateView();
+        else
+            this.stopPeriodicUpdateView();
     },
 
     // Changes the currently shown week or day

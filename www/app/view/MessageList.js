@@ -25,19 +25,16 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var mystore;
-
-// This page shows  the listing of announcements which comes from webservice.
-
 Ext.define("Zermelo.view.MessageList", {
-    extend: 'Ext.Container',
+    extend: 'Ext.dataview.List',
     xtype: 'messageList',
     id: 'messageList',
     config: {
         listeners: {
-            painted: function () {
+            painted: function() {
                 messageShow=true;
-                Zermelo.AjaxManager.getAnnouncementData();
+                if(this.getStore().getCount() == 0)
+                    Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
             }, //end show
 
             hide:function(){
@@ -48,24 +45,15 @@ Ext.define("Zermelo.view.MessageList", {
         style: {
             'background': '#F0F0F0'
         },
-        items: [{
-            // list view
-            xtype: 'list',
-            // padding top left bottom right
-            margin: '10 10 10 10',
-            style:{
-                'padding-bottom': '50px'
-            },
-            id: 'announcementlist',
-            // css class resources/css/app.css
-            cls: 'zermelo-message-list',
-            // css class resources/css/app.css list items
-            itemCls: 'zermelo-message-list-item',
-            // css class resources/css/app.css selected items
-            selectedCls: 'zermelo-menu-list-item-select',
-            grouped: false,
-            store: 'Announcements',
-            itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
-        }]
+        margin: '10 10 10 10',
+        style:{
+            'padding-bottom': '50px'
+        },
+        cls: 'zermelo-message-list',
+        itemCls: 'zermelo-message-list-item',
+        selectedCls: 'zermelo-menu-list-item-select',
+        grouped: false,
+        store: 'Announcements',
+        itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
     }
 });

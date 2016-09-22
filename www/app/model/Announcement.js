@@ -2,7 +2,7 @@ Ext.define('Zermelo.model.Announcement', {
 	extend: 'Ext.data.Model',
 	config: {
 		fields: [
-			{name: 'id',						type: 'int',		isUnique: 'true'},
+			{name: 'id',						type: 'auto',		isUnique: true},
 			{name: 'start', 					type: 'date',		dateFormat: "l, F d, Y g:i:s A"},
 			{name: 'end', 						type: 'date',		dateFormat: "l, F d, Y g:i:s A"},
 			{name: 'title', 					type: 'string'},

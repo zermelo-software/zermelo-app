@@ -30,7 +30,7 @@ Ext.define('Zermelo.controller.MainController', {
     config: {
         refs: {
             // ids
-            announcementlist: '#announcementlist',
+            announcementlist: '#messageList',
             messageDetails_back: '#messageDetails_back',
             appointmentDetails_back: '#appointmentDetails_back',
 
@@ -107,13 +107,6 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
         this.updateNewMessagesIndicator();
         
-        var onResume = function() {
-            if(Date.now() - localStorage.getItem('refreshTime') > 30 * 60 * 1000 && Zermelo.UserManager.loggedIn()) {
-                Zermelo.AjaxManager.refresh();
-            }
-            Ext.getCmp('fullCalendarView').updateView();
-        };
-        document.addEventListener('resume', Ext.bind(onResume, this), false);
-        Zermelo.AjaxManager.refresh();
+        Zermelo.AjaxManager.periodicRefresh();
     }
 });
