@@ -15,6 +15,7 @@ Ext.define("Zermelo.view.CalendarList", {
 						// prev button
 						xtype: 'button',
 						icon: '/www/resources/images/leftarrow.' + imageType,
+						padding: '0px 5px',
 						iconCls: 'zermelo-prev-button-' + imageType,
 						docked: 'left',
 						ui: 'plain',
@@ -32,6 +33,7 @@ Ext.define("Zermelo.view.CalendarList", {
 						// next button
 						xtype: 'button',
 						icon: '/www/resources/images/rightarrow.' + imageType,
+						padding: '0px 5px',
 						iconCls: 'zermelo-next-button-' + imageType,
 						docked: 'right',
 						ui: 'plain',

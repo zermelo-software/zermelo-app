@@ -349,6 +349,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 xtype: 'button',
                 //css class resouces/css/app.css
                 icon: '/www/resources/images/leftarrow.' + imageType,
+                padding: '0px 5px',
                 iconCls: 'zermelo-prev-button-' + imageType,
                 docked: 'left',
                 ui: 'plain',
@@ -360,6 +361,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 xtype: 'button',
                 //css class resouces/css/app.css
                 icon: '/www/resources/images/rightarrow.' + imageType,
+                padding: '0px 5px',
                 iconCls: 'zermelo-next-button-' + imageType,
                 docked: 'right',
                 ui: 'plain',

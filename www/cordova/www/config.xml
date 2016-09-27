@@ -51,6 +51,8 @@
 			<!-- <preference name="windows-appx-target" value="uap" /> -->
 			<preference name="windows-appx-target" value="wp8" />
 			<preference name="windows-identity-name" value="6D7654C9.ZermeloRooster" />
+
+			<splash src="resources/screens/screen-winphone-1152x1920.png" width="1152" height="1920"/>
 		</gap:platform>
 
 		<platform name="android">
