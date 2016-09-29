@@ -140,8 +140,7 @@ Ext.define('Zermelo.AjaxManager', {
 				user: Zermelo.UserManager.getUser(),
 				access_token: Zermelo.UserManager.getAccessToken(),
 				start: startTime,
-				end: endTime,
-				valid: true
+				end: endTime
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
