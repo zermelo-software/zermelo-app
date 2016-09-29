@@ -226,6 +226,7 @@ function authentication() {
                     text_institution.setValue("");
                     Ext.getCmp('main').setActiveItem(1);
                     Zermelo.AjaxManager.refresh();
+                    Zermelo.AjaxManager.getSelf();
                 },
                 //failure
                 failure: function (response) {

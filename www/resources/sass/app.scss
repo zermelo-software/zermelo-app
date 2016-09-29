@@ -8116,3 +8116,16 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	position: absolute;
 	padding: 0.5em 0.7em;
 }
+
+.z-msgbox-list{
+	border: 2px solid #2d63e2;
+	background-color: #DDD;
+	padding: 2px;
+	color: black;
+}
+
+.z-msgbox-list-item{
+	text-align: center;
+	border-top: 1px solid black;
+	padding: 5px;
+}

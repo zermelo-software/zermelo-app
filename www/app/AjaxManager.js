@@ -14,7 +14,8 @@ Ext.define('Zermelo.AjaxManager', {
 
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
-		Zermelo.AjaxManager.getAnnouncementData();
+		this.getAnnouncementData();
+		this.getSelf();
 	},
 
 	periodicRefresh: function() {
@@ -190,6 +191,67 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
+			}
+		});
+	},
+
+	getUsers: function() {
+		if (!Zermelo.UserManager.loggedIn())
+			return;
+
+		Ext.Viewport.setMasked({
+			xtype: 'loadmask',
+			locale: {
+				message: 'loading'
+			},
+
+			indicator: true
+		});
+
+		Ext.Ajax.request({
+			url: this.getUrl('users'),
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken()
+				,familyMember: Zermelo.UserManager.getOwnCode()
+				// ,mentor: Zermelo.UserManager.getOwnCode()
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+			success: function (response) {
+				var userStore = Ext.getStore('Users');
+				userStore.removeAll();
+				userStore.setData(Ext.JSON.decode(response.responseText).response.data);
+				console.log(userStore.getData());
+				Ext.Viewport.unmask();
+			},
+			failure: function (response) {
+				Ext.Viewport.unmask();
+				var error_msg = 'network_error';
+				if (response.status == 403) {
+					error_msg = 'insufficient_permissions';
+				}
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				
+			}
+		});
+	},
+
+	getSelf: function() {
+		Ext.Ajax.request({
+			url: this.getUrl('tokens/~current'),
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken(),
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+
+			success: function (response) {
+				Zermelo.UserManager.setOwnCode(Ext.JSON.decode(response.responseText).response.data[0].user);
+			},
+
+			failure: function (response) {
+				console.log('lol');
 			}
 		});
 	}

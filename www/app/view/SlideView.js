@@ -479,85 +479,8 @@ Ext.define('Zermelo.view.SlideView', {
                 }]
             });
 
-        } else if (index == this.itemIds.userChange) {
-            // Create user switch message box
-            Ext.Msg.show({
-                style: {
-                    'padding': '1em 1em 0.5em 1em'
-                },
-                id: 'user_code_msg',
-                showAnimation: false,
-                hideAnimation: false,
-                items: [{
-                    xtype: 'toolbar',
-                    //   cls: 'zermelo-error-messagebox',
-                    layout: {
-
-                        pack: 'center'
-                    },
-                    items: [{
-                        xtype: 'button',
-
-                        locales: {
-                            text: 'own_schedule'
-                        },
-                        ui: 'normal',
-                        handler: function() {
-                            Zermelo.UserManager.setUser();
-                            thisobj.closeContainer();
-                            this.getParent().getParent().hide();
-                        }
-                    }]
-                }, {
-                    xtype: 'textfield',
-                    label: '',
-                    name: 'new_user_code',
-                    id: 'new_user_code',
-                    style: {
-                        'margin': '10px 10px 10px 10px'
-                    },
-                    locales: {
-                        placeHolder: 'enter_user_code'
-                    }
-                }],
-                buttons: [{
-                    itemId: 'ok',
-                    locales: {
-                        text: 'ok'
-                    },
-                    ui: 'normal',
-                    handler: function() {
-                        var user_code = Ext.getCmp('new_user_code').getValue();
-                        if (user_code.length == 0) {
-                            thisobj.closeContainer();
-                            this.hide();
-                            Zermelo.ErrorManager.showErrorBox('enter_user_code');
-                        } else {
-                            Zermelo.UserManager.setUser(user_code);
-                            thisobj.closeContainer();
-                            this.hide();
-                        }
-                    }
-                }, {
-                    xtype: 'spacer'
-                }, {
-                    itemId: 'cancel',
-                    locales: {
-                        text: 'cancel'
-                    },
-                    ui: 'normal',
-                    handler: function() {
-                        thisobj.closeContainer();
-                        this.hide();
-                    }
-
-                }]
-            });
-
-        } else {
-            if (list.isSelected(item) && this.config.closeOnSelect) {
-                thisobj.closeContainer();
-            }
+        } else if (list.isSelected(item) && this.config.closeOnSelect) {
+            thisobj.closeContainer();
         }
 
     },
@@ -573,7 +496,7 @@ Ext.define('Zermelo.view.SlideView', {
             index = item.raw.index,
             container = me.container,
             func = Ext.emptyFn;
-        if (index != this.itemIds.userChange && index != this.itemIds.logout) {
+        if (index != this.itemIds.logout) {
             if (me._cache[index] == undefined) {
                 // If the object has a handler defined, then we don't need to
                 // create an Ext object
@@ -611,10 +534,9 @@ Ext.define('Zermelo.view.SlideView', {
                 me.fireAction('select', [me, me._cache[index], index], func, me);
             }
             if (index == this.itemIds.weekView) {
-                messageShow = false;
                 Ext.getStore('Appointments').fetchWeek();
-            } else if (index == this.itemIds.messages) {
-                messageShow = true;
+            } else if(index == this.itemIds.userChange) {
+                Ext.getStore('Users').loadOrFetch();
             }
         }
     },

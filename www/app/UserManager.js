@@ -5,6 +5,7 @@ Ext.define('Zermelo.UserManager', {
 	code: '~me',
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
+	ownCode: window.localStorage.getItem('ownCode'),
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -28,6 +29,17 @@ Ext.define('Zermelo.UserManager', {
 
 	setCode: function(newCode) {
 		this.code = newCode;
+	},
+
+	setOwnCode: function(code) {
+		if(!code)
+			return;
+		this.ownCode = code;
+		localStorage.setItem('ownCode', code);
+	},
+
+	getOwnCode: function() {
+		return this.ownCode;
 	},
 
 	setInstitution: function(newInstitution) {

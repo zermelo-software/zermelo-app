@@ -13,6 +13,7 @@
         "schedule_other": "Rooster van ",
         "announcement_self": "Mededelingen", 
         "announcement_other": "Mededelingen voor ",
+        "user_select": "Kies gebruiker",
         "Logout":"Uitloggen",
         "logout_message":"Weet u zeker dat u de app wilt ontkoppelen? Voordat u hier uw rooster weer kunt zien dient u de app opnieuw te koppelen via Zermelo Portal."
     },

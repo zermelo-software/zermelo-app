@@ -109,7 +109,7 @@ Ext
 			// views load
 			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
 					'MessageDetails', 'Schedule', 'FullCalendar',
-					'AppointmentDetails', 'CalendarList'
+					'AppointmentDetails', 'CalendarList', 'UserSelect'
 			],
 
 			models : ['Appointment', 'Announcement'],
@@ -118,7 +118,7 @@ Ext
 			controllers : ['MainController'],
 
 			// store load
-			stores : [ 'AnnouncementStore', 'AppointmentStore'],
+			stores : [ 'AnnouncementStore', 'AppointmentStore', 'UserStore'],
 
 			isIconPrecomposed : true,
 

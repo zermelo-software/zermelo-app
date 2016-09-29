@@ -2535,8 +2535,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "Zermelo.controller.MainController": [],
   "Zermelo.model.Announcement": [],
   "Zermelo.model.Appointment": [],
+  "Zermelo.model.User": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
+  "Zermelo.store.UserStore": [],
   "Zermelo.view.AppointmentDetails": [],
   "Zermelo.view.CalendarList": [],
   "Zermelo.view.FullCalendar": [],
@@ -2546,7 +2548,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "Zermelo.view.MessageDetails": [],
   "Zermelo.view.MessageList": [],
   "Zermelo.view.Schedule": [],
-  "Zermelo.view.SlideView": []
+  "Zermelo.view.SlideView": [],
+  "Zermelo.view.UserCodeInput": [],
+  "Zermelo.view.UserSelect": []
 });
 
 Ext.ClassManager.addNameAliasMappings({
@@ -3288,8 +3292,10 @@ Ext.ClassManager.addNameAliasMappings({
   "Zermelo.controller.MainController": [],
   "Zermelo.model.Announcement": [],
   "Zermelo.model.Appointment": [],
+  "Zermelo.model.User": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
+  "Zermelo.store.UserStore": [],
   "Zermelo.view.AppointmentDetails": [
     "widget.appointmentDetails"
   ],
@@ -3319,6 +3325,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Zermelo.view.SlideView": [
     "widget.slidenavigationview"
+  ],
+  "Zermelo.view.UserCodeInput": [
+    "widget.userCodeInput"
+  ],
+  "Zermelo.view.UserSelect": [
+    "widget.UserSelect"
   ]
 });
 
