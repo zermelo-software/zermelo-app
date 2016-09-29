@@ -93,4 +93,5 @@
 		</platform>
 
 		<splash src="splash.png" />
+		<icon src="icon.png" />
 	</widget>
