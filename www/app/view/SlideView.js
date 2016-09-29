@@ -535,8 +535,6 @@ Ext.define('Zermelo.view.SlideView', {
             }
             if (index == this.itemIds.weekView) {
                 Ext.getStore('Appointments').fetchWeek();
-            } else if(index == this.itemIds.userChange) {
-                Ext.getStore('Users').loadOrFetch();
             }
         }
     },

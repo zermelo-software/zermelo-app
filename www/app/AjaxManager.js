@@ -195,7 +195,7 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
-	getUsers: function() {
+	getUsers: function(addCallback) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
@@ -207,21 +207,20 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-
+		console.log(addCallback);
 		Ext.Ajax.request({
 			url: this.getUrl('users'),
 			params: {
 				access_token: Zermelo.UserManager.getAccessToken()
-				,familyMember: Zermelo.UserManager.getOwnCode()
+				,fields: 'code'
+				// ,familyMember: Zermelo.UserManager.getOwnCode()
 				// ,mentor: Zermelo.UserManager.getOwnCode()
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
 			success: function (response) {
-				var userStore = Ext.getStore('Users');
-				userStore.removeAll();
-				userStore.setData(Ext.JSON.decode(response.responseText).response.data);
-				console.log(userStore.getData());
+				console.log(Ext.JSON.decode(response.responseText).response.data);
+				addCallback.setData(Ext.JSON.decode(response.responseText).response.data);
 				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
@@ -247,6 +246,7 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response) {
+				console.log(Ext.JSON.decode(response.responseText));
 				Zermelo.UserManager.setOwnCode(Ext.JSON.decode(response.responseText).response.data[0].user);
 			},
 

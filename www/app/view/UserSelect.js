@@ -5,13 +5,6 @@ Ext.define("Zermelo.view.UserSelect", {
 		layout: 'fit',
 		items: [
 			{
-				xtype: 'label',
-				cls: 'zermelo-error-messagebox',
-				locales: {
-					html: 'menu.user_select_message'
-				}
-			},
-			{
 				xtype: 'spacer',
 				height: '15px'
 			},
@@ -19,45 +12,28 @@ Ext.define("Zermelo.view.UserSelect", {
 				xtype: 'list',
 				config: {
 					itemTpl: '{firstName} {lastName}<br>{code}',
-					itemCls: 'z-msgbox-list-item',
-					baseCls: 'z-msgbox-list',
-					store: 'Users',
+					cls: 'zermelo-calendar-list',
+					itemCls: 'zermelo-calendar-list-item fc-event fc-event-vert fc-event-content z-calendar-list-parent',
+					selectedCls: 'zermelo-menu-list-item-select',
+					data: [
+						{
+							firstName: Ux.locale.Manager.get('own_schedule'),
+							lastName: '',
+							code: Zermelo.UserManager.getOwnCode()
+						}
+					]
 				},
 				listeners: {
 					itemtap: function(dataview, ix, target, record, event, options) {
 						Zermelo.UserManager.setUser(record.get('code'), record.get('firstName'));
 						this.parent.destroy();
+					},
+					initialize: {
+						fn: function() {
+							Zermelo.AjaxManager.getUsers(this)
+						},
+						order: 'before'
 					}
-				}
-			},
-			{
-				xtype: 'spacer',
-				height: '10px'
-			}
-		],
-		buttons: [
-			{
-				itemId: 'freeInput',
-				locales: {
-					text: 'ok'
-				},
-				ui: 'normal',
-				handler: function() {
-					Ext.Viewport.add(Ext.create('Zermelo.view.UserCodeInput'));
-					this.parent.parent.destroy();
-				}
-			},
-			{
-				xtype: 'spacer'
-			},
-			{
-				itemId: 'cancel',
-				locales: {
-					text: 'cancel'
-				},
-				ui: 'normal',
-				handler: function() {
-					this.parent.parent.destroy();
 				}
 			}
 		]

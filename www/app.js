@@ -118,7 +118,7 @@ Ext
 			controllers : ['MainController'],
 
 			// store load
-			stores : [ 'AnnouncementStore', 'AppointmentStore', 'UserStore'],
+			stores : [ 'AnnouncementStore', 'AppointmentStore'],
 
 			isIconPrecomposed : true,
 
