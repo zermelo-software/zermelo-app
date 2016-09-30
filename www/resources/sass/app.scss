@@ -7319,7 +7319,6 @@ a.fc-event {
 	color: #ffffff;   
 	/*padding: 2px 2px 0;*/  /* default TEXT color */
 	border-style: dashed;
-	display: none;
 }
 .fc-event-skin-exam {
 	border-color: #278f7b;     /* default BORDER color */
@@ -7361,7 +7360,6 @@ border-top: 1px dashed #808080;
 border-right: 1px dashed #808080;
 border-bottom: 1px dashed #808080;
 border-left: 12px solid #808080;
-display: none;
 }
 .fc-event-day-skin-exam {
 	border-color: #278f7b;     /* default BORDER color */
@@ -8068,6 +8066,9 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	float: right;
 }
 
+
+$z-calendar-list-line-height: 18px;
+
 .z-calender-list-left{
 	padding-left: 0.5em;
 }
@@ -8086,7 +8087,7 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 }
 
 .z-calendar-list-parent{
-	font-size: 18px;
+	font-size: $z-calendar-list-line-height;
 	width: 100%;
 	display: inline-table;
 }
@@ -8097,10 +8098,26 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	padding: 0.2em;
 	vertical-align: middle;
 	width: 11%;
-	color: #2d63e2;
+	
 	font-weight: bolder;
 	border-right: solid;
 	border-width: 1px;
+}
+
+.z-calendar-list-number-valid{
+	@extend .z-calendar-list-number;
+	color: #2d63e2;
+}
+
+.z-calendar-list-number-invalid{
+	@extend .z-calendar-list-number;
+	color: #999999;
+}
+
+.z-calendar-list-icon{
+	 height: $z-calendar-list-line-height;
+	 width: $z-calendar-list-line-height;
+	 margin-right: $z-calendar-list-line-height / 2;
 }
 
 .circle{
