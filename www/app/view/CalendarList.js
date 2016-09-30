@@ -92,6 +92,8 @@ Ext.define("Zermelo.view.CalendarList", {
 					'</div>',
 					{
 						getClass: function(event) {
+							if(!event.valid)
+								return 'fc-event-skin-valid-false';
 							if (event.cancelled)
 								return 'fc-event-skin-cancelled';
 							if (event.type == 'lesson')
