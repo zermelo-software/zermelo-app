@@ -314,7 +314,7 @@ Ext.define('Zermelo.view.SlideView', {
         ]);
 
         this.createContainerCSS();
-        var selectedItemIndex = this.itemIds[localStorage.getItem('lastView')] || 0;
+        var selectedItemIndex = this.itemIds.userChange;//this.itemIds[localStorage.getItem('lastView')] || 0;
 
         Ext.each(this.list.getStore().getRange(), function(item, index) {
             if (item.get('selected') === true) {

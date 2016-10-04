@@ -2,12 +2,11 @@ Ext.define('Zermelo.AjaxManager', {
 	alternateClassName: 'AjaxManager',
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
+	appointmentsInTransit: false,
 
 	getUrl: function(target) {
 		return (
-			'https://' + 
-			Zermelo.UserManager.getInstitution() + 
-			'.zportal.nl/api/v3/' +
+			'http://ulbe.test/api/v3/' +
 			target
 		)
 	},
@@ -28,7 +27,7 @@ Ext.define('Zermelo.AjaxManager', {
 	getAnnouncementData: function() {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
-		
+
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -121,7 +120,6 @@ Ext.define('Zermelo.AjaxManager', {
 	getAppointment: function(startTime, endTime) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
-
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -194,7 +192,7 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
-	getUsers: function(addCallback) {
+	getUsers: function(userList) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
@@ -206,20 +204,40 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-		console.log(addCallback);
+		console.log(userList);
 		Ext.Ajax.request({
 			url: this.getUrl('users'),
+			disableCaching: false,
 			params: {
 				access_token: Zermelo.UserManager.getAccessToken()
-				,fields: 'code'
+				,fields: 'firstName,prefix,lastName,code'
+				,archived: false
 				// ,familyMember: Zermelo.UserManager.getOwnCode()
 				// ,mentor: Zermelo.UserManager.getOwnCode()
+
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
 			success: function (response) {
-				console.log(Ext.JSON.decode(response.responseText).response.data);
-				addCallback.setData(Ext.JSON.decode(response.responseText).response.data);
+				var timer = Date.now();
+				userList.getStore().addData(Ext.JSON.decode(response.responseText).response.data);
+				console.log('time spent: ', Date.now() - timer);
+				userList.getStore().sort(
+					[
+						{
+							property: 'firstName',
+							direction: 'ASC'
+						},
+						{
+							property: 'lastName',
+							direction: 'ASC'
+						},
+						{
+							property: 'code',
+							direction: 'ASC'
+						}
+					]);
+				console.log('time spent: ', Date.now() - timer);
 				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
@@ -239,7 +257,7 @@ Ext.define('Zermelo.AjaxManager', {
 		Ext.Ajax.request({
 			url: this.getUrl('tokens/~current'),
 			params: {
-				access_token: Zermelo.UserManager.getAccessToken(),
+				access_token: Zermelo.UserManager.getAccessToken()
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
