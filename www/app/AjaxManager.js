@@ -6,7 +6,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 	getUrl: function(target) {
 		return (
-			'http://ulbe.test/api/v3/' +
+			'http://ulbeportal/api/v3/' +
 			target
 		)
 	},
