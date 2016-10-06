@@ -3686,11 +3686,8 @@ function enableTextSelection(element) {
             } else if (event.modified || event.remark.length != 0) {
                 extra_html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
             }
-            if (event.collidingIds != event.id) {
-                var collidingIds = event.collidingIds.split(",");
-                for(var i=1; i<collidingIds.length; i++)
-                    extra_html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
-            }
+            for(var i = 1; i < event.validCollisionCount; i++)
+                extra_html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
 
             extra_html += "</div>" +
                 "</div>";

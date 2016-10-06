@@ -53,14 +53,17 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		]);
 
 		var currentCollision;
+		var validCollisionCount
 		var collisionEnd = 0;
 		this.getData().each(function(record, index, length) {
 			if (record.get('start') < collisionEnd) {
 				record.set('collidingIds', currentCollision);
+				record.set('validCollisionCount', validCollisionCount);
 				return true;
 			}
 
 			// NB: The loop below works because the store is already sorted by 'start'
+			validCollisionCount = record.get('valid') ? 1 : 0;
 			currentCollision = [record.get('id')];
 			collisionEnd = record.get('end');
 			var overlap = true;
@@ -69,13 +72,16 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 				if(next && next.get('start') < record.get('end')) {
 					currentCollision.push(next.get('id'));
+					if(next.get('valid'))
+						validCollisionCount++;
 				}
 				else {
 					overlap = false;
 				}
 			}
 			currentCollision = currentCollision.join(',');
-			record.set('collidingIds', currentCollision);			
+			record.set('collidingIds', currentCollision);
+			record.set('validCollisionCount', validCollisionCount);
 			return true;
 		}, this);
 	},
