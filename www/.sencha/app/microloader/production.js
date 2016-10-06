@@ -68,7 +68,7 @@
         }
 
         function processAssets(assets, type) {
-            var ln = assets.length,
+            var ln = assets ? assets.length : 0,
                 i, asset;
 
             for (i = 0; i < ln; i++) {
