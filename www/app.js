@@ -109,7 +109,7 @@ Ext
 			// views load
 			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
 					'MessageDetails', 'Schedule', 'FullCalendar',
-					'AppointmentDetails', 'CalendarList', 'UserSelect'
+					'AppointmentDetails', 'CalendarList', 'UserSearch'
 			],
 
 			models : ['Appointment', 'Announcement'],

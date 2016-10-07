@@ -314,7 +314,7 @@ Ext.define('Zermelo.view.SlideView', {
         ]);
 
         this.createContainerCSS();
-        var selectedItemIndex = this.itemIds.userChange;//this.itemIds[localStorage.getItem('lastView')] || 0;
+        var selectedItemIndex = this.itemIds[localStorage.getItem('lastView')] || 0;
 
         Ext.each(this.list.getStore().getRange(), function(item, index) {
             if (item.get('selected') === true) {
@@ -460,8 +460,7 @@ Ext.define('Zermelo.view.SlideView', {
                     ui: 'normal',
                     handler: function() {
                         Zermelo.UserManager.logout();
-                        window.localStorage.setItem('refreshTime', '');
-                        window.location.reload();
+                        this.destroy();
                     }
                 }, {
                     xtype: 'spacer'
@@ -473,7 +472,7 @@ Ext.define('Zermelo.view.SlideView', {
                     ui: 'normal',
                     handler: function() {
                         thisobj.closeContainer();
-                        this.hide();
+                        this.destroy();
                     }
 
                 }]
@@ -961,6 +960,7 @@ Ext.define('Zermelo.view.SlideView', {
     },
 
     selectItem: function(itemName) {
+        itemName = itemName || localStorage.getItem('lastView');
         this.list.select(this.itemIds[itemName]);
     }
 });

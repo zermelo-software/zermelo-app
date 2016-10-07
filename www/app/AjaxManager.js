@@ -6,7 +6,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 	getUrl: function(target) {
 		return (
-			'http://ulbeportal/api/v3/' +
+			'http://ulbeportal.zermelo.local/api/v3/' +
 			target
 		)
 	},
@@ -192,7 +192,7 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
-	getUsers: function(userList) {
+	getUsers: function() {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
@@ -204,8 +204,8 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-		console.log(userList);
-		Ext.Ajax.request({
+		
+		Ext.Ajax.request({			
 			url: this.getUrl('users'),
 			disableCaching: false,
 			params: {
@@ -220,9 +220,11 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 			success: function (response) {
 				var timer = Date.now();
-				userList.getStore().addData(Ext.JSON.decode(response.responseText).response.data);
+				var UserStore = Ext.getStore('Users');
+				UserStore.addData(Ext.JSON.decode(response.responseText).response.data);
+				UserStore.add({firstName: '', prefix: 'Eigen rooster', lastName: '', code: '~me'});
 				console.log('time spent: ', Date.now() - timer);
-				userList.getStore().sort(
+				UserStore.sort(
 					[
 						{
 							property: 'firstName',
@@ -237,6 +239,7 @@ Ext.define('Zermelo.AjaxManager', {
 							direction: 'ASC'
 						}
 					]);
+				UserStore.initSearch();
 				console.log('time spent: ', Date.now() - timer);
 				Ext.Viewport.unmask();
 			},

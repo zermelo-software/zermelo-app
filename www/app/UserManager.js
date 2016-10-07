@@ -5,7 +5,6 @@ Ext.define('Zermelo.UserManager', {
 	code: '~me',
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
-	ownCode: window.localStorage.getItem('ownCode'),
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -62,9 +61,13 @@ Ext.define('Zermelo.UserManager', {
 		this.setCode('');
 		this.setInstitution('');
 		this.setAccessToken('');
-		var appVersion = localStorage.getItem('appVersion');
 		localStorage.clear();
-		localStorage.setItem('appVersion', appVersion);
+		// Ext.StoreManager.each(function(store) {
+		// 	console.log(store);
+		// 	store.clear();
+		// });
+		// Ext.getCmp('main').selectItem('login');
+		window.location.reload();
 	},
 
 	setTitles: function() {
@@ -88,7 +91,6 @@ Ext.define('Zermelo.UserManager', {
 
 		newCode = newCode.toLowerCase();
 
-		Ext.getCmp('home').selectItem(localStorage.getItem('lastView'));
 		if (this.code == newCode)
 			return;
 

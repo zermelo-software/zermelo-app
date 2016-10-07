@@ -3,27 +3,27 @@ Ext.define("Zermelo.view.UserSelect", {
 	extend: 'Ext.dataview.List',
 	config: {
 		layout: 'fit',
-		// indexBar: true,
-		cls: 'zermelo-calendar-list',
-		itemCls: 'zermelo-calendar-list-item',
-		selectedCls: 'zermelo-menu-list-item-select',
-		itemTpl: new Ext.XTemplate('<div style="display:\"\" !important color: #999999 !important">{firstName} {prefix} {lastName}<br>{code}</div>'),
-		data: [
-			{
-				firstName: Ux.locale.Manager.get('own_schedule'),
-				lastName: '',
-				code: Zermelo.UserManager.getOwnCode()
-			}
-		],
+		infinite: true,
+		striped: true,
+		minimumHeight: '57px',
+		itemMinHeight: '57px',
+		variableHeights: true,
+		selectedCls: '',
+		itemTpl: new Ext.XTemplate('<div class="z-calendar-list-parent">\
+			<span width="70%" style="display:inline-flex; overflow: hidden;" class="">{firstName} {prefix} {lastName}</span>\
+			<span width="25%" style="display:inline-flex; float: right;" class="">{code}</span>\
+		</div>'),
+		store: {
+			xtype: 'UserStore'
+		},
 		listeners: {
 			itemtap: function(dataview, ix, target, record, event, options) {
-				Zermelo.UserManager.setUser(record.get('code'), record.get('firstName'));
-				this.parent.destroy();
+				Zermelo.UserManager.setUser(record.get('code'));
+				this.up('home').selectItem();
 			},
-			initialize: {
+			refresh: {
 				fn: function() {
-					Zermelo.AjaxManager.getUsers(this);
-					window.store = this.getStore();
+					this.getScrollable().getScroller().scrollToTop();
 				},
 				order: 'before'
 			}

@@ -10,9 +10,9 @@
         <!-- <preference name='phonegap-version' value='cli-5.1.1' /> -->
         <!-- <preference name="phonegap-version" value="3.7.0" /> -->
 
-        <access origin="https://*.zportal.nl/*" />
+        <access origin="*" />
         <plugin name="cordova-plugin-whitelist" version="1" />
-        <allow-intent href="https://*.zportal.nl/*" />
+        <allow-intent href="*" />
 
         <preference name="orientation" value="portrait" />
         <preference name="autorotate" value="false" readonly="true"/> <!-- Lock screen rotation on Android -->

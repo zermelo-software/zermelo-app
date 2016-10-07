@@ -290,7 +290,7 @@ Ext.define('Zermelo.view.Home', {
                     }
                 }]
             }, {
-                xtype: 'UserSelect'
+                xtype: 'UserSearch'
             }]
         },
         {

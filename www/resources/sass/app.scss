@@ -8084,6 +8084,7 @@ $z-calendar-list-line-height: 18px;
 	padding-right: 0.5em;
 	padding-top: 0.4em;
 	padding-bottom: 0.2em;
+	text-align: center;
 }
 
 .z-calendar-list-parent{
@@ -8145,4 +8146,13 @@ $z-calendar-list-line-height: 18px;
 	text-align: center;
 	border-top: 1px solid black;
 	padding: 5px;
+}
+
+.z-user-list-item{
+	border-bottom: 1px solid black;
+	padding: 3px;
+}
+
+.z-user-list-cell{
+	display: table-cell;
 }
