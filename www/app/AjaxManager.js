@@ -5,16 +5,14 @@ Ext.define('Zermelo.AjaxManager', {
 
 	getUrl: function(target) {
 		return (
-			'https://' + 
-			Zermelo.UserManager.getInstitution() + 
-			'.zportal.nl/api/v3/' +
+			'http://ulbeportal.zermelo.local/api/v3/' +
 			target
 		)
 	},
 
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
-		Zermelo.AjaxManager.getAnnouncementData();
+		this.getAnnouncementData();
 	},
 
 	periodicRefresh: function() {
@@ -27,7 +25,7 @@ Ext.define('Zermelo.AjaxManager', {
 	getAnnouncementData: function() {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
-		
+
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -120,7 +118,6 @@ Ext.define('Zermelo.AjaxManager', {
 	getAppointment: function(startTime, endTime) {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
-
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -189,6 +186,68 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
+			}
+		});
+	},
+
+	getUsers: function() {
+		if (!Zermelo.UserManager.loggedIn())
+			return;
+
+		Ext.Viewport.setMasked({
+			xtype: 'loadmask',
+			locale: {
+				message: 'loading'
+			},
+
+			indicator: true
+		});
+		
+		Ext.Ajax.request({			
+			url: this.getUrl('users'),
+			disableCaching: false,
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken()
+				,fields: 'firstName,prefix,lastName,code'
+				,archived: false
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+			success: function (response) {
+				var timer = Date.now();
+				var UserStore = Ext.getStore('Users');
+				UserStore.addData(Ext.JSON.decode(response.responseText).response.data);
+
+				// This entry will always be first because nothing < something.
+				// Setting user to '' will set the user to '~me' in UserManager.
+				UserStore.add({firstName: '', prefix: 'Eigen rooster', lastName: '', code: ''});
+				UserStore.sort(
+					[
+						{
+							property: 'firstName',
+							direction: 'ASC'
+						},
+						{
+							property: 'lastName',
+							direction: 'ASC'
+						},
+						{
+							property: 'code',
+							direction: 'ASC'
+						}
+					]);
+				UserStore.initSearch();
+				Ext.Viewport.unmask();
+			},
+			failure: function (response) {
+				Ext.Viewport.unmask();
+				var error_msg = 'network_error';
+				if (response.status == 403) {
+					error_msg = 'insufficient_permissions';
+				}
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				
 			}
 		});
 	}

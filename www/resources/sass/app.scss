@@ -8084,6 +8084,7 @@ $z-calendar-list-line-height: 18px;
 	padding-right: 0.5em;
 	padding-top: 0.4em;
 	padding-bottom: 0.2em;
+	text-align: center;
 }
 
 .z-calendar-list-parent{
@@ -8132,4 +8133,26 @@ $z-calendar-list-line-height: 18px;
 	max-width: 95%;
 	position: absolute;
 	padding: 0.5em 0.7em;
+}
+
+.z-msgbox-list{
+	border: 2px solid #2d63e2;
+	background-color: #DDD;
+	padding: 2px;
+	color: black;
+}
+
+.z-msgbox-list-item{
+	text-align: center;
+	border-top: 1px solid black;
+	padding: 5px;
+}
+
+.z-user-list-item{
+	border-bottom: 1px solid black;
+	padding: 3px;
+}
+
+.z-user-list-cell{
+	display: table-cell;
 }

@@ -65,7 +65,7 @@ if (typeof Ext.Logger === 'undefined') {
 
 //Global variable
 var loc = '';
-var scrollTopHeight = 0;
+// var scrollTopHeight = 0;
 var startFlag = false;
 var currentView;
 var dayData = [];
@@ -80,7 +80,6 @@ var picker_close = false;
 var refreshDate;
 var messageShow = false;
 var userChange = false;
-var full_calendar_obj;
 Ext
 		.application({
 			name : 'Zermelo',
@@ -109,7 +108,7 @@ Ext
 			// views load
 			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
 					'MessageDetails', 'Schedule', 'FullCalendar',
-					'AppointmentDetails', 'CalendarList'
+					'AppointmentDetails', 'CalendarList', 'UserSearch'
 			],
 
 			models : ['Appointment', 'Announcement'],
@@ -185,58 +184,11 @@ Ext
 				}
 				// Back button handle for android
 				if (Ext.os.is('Android')) {
-					document.addEventListener("backbutton", Ext.bind(
-							onBackKeyDown, this), false);
-
-					function onBackKeyDown(eve) {
-						if (currentView == "messageDetail") {
-							Ext.getCmp('messageDetails').hide();
-							Ext.getCmp('home').list
-									.removeCls('zermelo-menu-list');
-							Ext.getCmp('home').show();
-							currentView = "";
-						} else if (currentView == "appointmentDetail") {
-							appointment_detail_open = false;
-							Ext.getCmp('appointmentDetails_view').hide();
-							Ext.getCmp('home').list
-									.removeCls('zermelo-menu-list');
-							Ext.getCmp('home').show();
-							currentView = "";
-						} else if (Ext.getCmp('home').list.getSelection()[0].raw.index == "1") {
-							var me = Ext.getCmp('home');
-							me.list.select(0);
-						} else if (Ext.getCmp('home').list.getSelection()[0].raw.index == "0") {
-							// check date picker open or not
-							if (picker_open) {
-								datePicker.hide();
-								picker_open = false;
-							} else if (dayview == "dayview") {
-								week_day_view = "agendaWeek";
-								Ext.getCmp('fullCalendarView')
-										.changeCalendarView('agendaWeek');
-								Ext.getCmp('fullCalendarView').day.show();
-								dayview = "";
-								Ext.getCmp('toolbar_main').setHidden(false);
-								Ext.getCmp('toolbar_day_back').setHidden(true);
-							} else {
-								 navigator.Backbutton.goHome(function() {
-								   // console.log('success')
-								 }, function() {
-								   // console.log('fail')
-								 });
-								//window.MyCls.onPause();
-							}
-
-						} else {
-							 navigator.Backbutton.goHome(function() {
-							   // console.log('success')
-							 }, function() {
-							   // console.log('fail')
-							 });
-							//window.MyCls.onPause();
-						}
-					}
+					document.addEventListener("backbutton", function() {
+						Ext.Viewport.setActiveItem(Ext.getCmp('home'));
+					});
 				}
+
 				// Destroy the #appLoadingIndicator element
 				Ext.fly('appLoadingIndicator').destroy();
 				// Initialize the main view

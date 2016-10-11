@@ -267,9 +267,31 @@ Ext.define('Zermelo.view.Home', {
             }]
         },
         {
-            //switch user button
             urlLogo: 'resources/images/user_switch.' + imageType,
-            title: 'swtich User'
+            title: 'Swtich user',
+            items: [{
+                xtype: 'toolbar',
+                cls: 'zermelo-toolbar-main',
+                height: '47px',
+                locales: {
+                    title: 'menu.user_select'
+                },
+                docked: 'top',
+                items:[{
+                    xtype: 'button',
+                    iconCls: 'zermelo-refresh-button-' + imageType,
+                    docked: 'right',
+                    ui: 'plain',
+                    style: {
+                        'padding-right': '4px'
+                    },
+                    handler: function () {
+                        return;
+                    }
+                }]
+            }, {
+                xtype: 'UserSearch'
+            }]
         },
         {
             //logout and move to login screen

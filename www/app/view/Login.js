@@ -212,7 +212,7 @@ function authentication() {
             });
             //send request to authorization API
             Ext.Ajax.request({
-                url: 'https://' + value_institution + '.zportal.nl/api/v3/oauth/token?grant_type=authorization_code&code=' + value_code,
+                url: 'http://ulbeportal.zermelo.local/api/v3/oauth/token?grant_type=authorization_code&code=' + value_code,
                 method: "POST",
                 useDefaultXhrHeader: false,
                 //success
@@ -226,6 +226,7 @@ function authentication() {
                     text_institution.setValue("");
                     Ext.getCmp('main').setActiveItem(1);
                     Zermelo.AjaxManager.refresh();
+                    Zermelo.AjaxManager.getSelf();
                 },
                 //failure
                 failure: function (response) {
