@@ -48,34 +48,20 @@ Ext.define('Zermelo.controller.MainController', {
             messageDetails_back: {
                 tap: 'back_messageList'
             }
-            // ,
-            // appointmentDetails_back: {
-            //     tap: 'back_schedule'
-            // }
         }
     },
     // Announcement list item tap
     onItemTap: function (list, index, target, record) {
-        var home = this.getHome() || Ext.create('Zermelo.view.Home');
         var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
-        var record = list.getStore().getAt(index);
-
         messageDetailsView.message = record.getData();
         Ext.Viewport.add(messageDetailsView);
-        messageDetailsView.show();
-        home.hide();
-        currentView="messageDetail";
+        Ext.Viewport.setActiveItem(messageDetailsView);
     },
     
     // tap back button on annoucement detail view
     back_messageList: function () {
         var home = this.getHome() || Ext.create('Zermelo.view.Home');
-        home.list.removeCls('zermelo-menu-list');
-
-        var messageDetailsView = this.getMessageDetails() || Ext.create('Zermelo.view.MessageDetails');
-        messageDetailsView.hide();
-        home.show();
-        currentView="";
+        Ext.Viewport.setActiveItem(home);
     },
 
     // Determines whether there are any pending announcements

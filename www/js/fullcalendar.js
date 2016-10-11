@@ -2567,19 +2567,13 @@ function enableTextSelection(element) {
                     if (date.getMinutes() < (0 + 5) / 2 && todayFlag) {
                         currentline = currentTimeLine.eq(i - 1);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 5-10
                     else if (date.getMinutes() < (5 + 10) / 2 && todayFlag) {
                         currentline = currentTimeLine.eq(i - 1);
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i);
-                        currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-                    }
+                        currentline.addClass('fc-show-currentTimeLine');                    }
                     //check today and current time slot 10-15
                     else if (date.getMinutes() < (10 + 15) / 2 && todayFlag) {
                         currentline = currentTimeLine.eq(i - 1);
@@ -2588,9 +2582,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 1);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 15-20
                     else if (date.getMinutes() < (15 + 20) / 2 && todayFlag) {
@@ -2602,9 +2593,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 2);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 20-25
                     else if (date.getMinutes() < (20 + 25) / 2 && todayFlag) {
@@ -2618,9 +2606,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 3);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 25-30
                     else if (date.getMinutes() < (25 + 30) / 2 && todayFlag) {
@@ -2636,9 +2621,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 4);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 30-35
                     else if (date.getMinutes() < (30 + 35) / 2 && todayFlag) {
@@ -2656,9 +2638,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 5);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 35-40
                     else if (date.getMinutes() < (35 + 40) / 2 && todayFlag) {
@@ -2678,9 +2657,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 6);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 40-45
                     else if (date.getMinutes() < (40 + 45) / 2 && todayFlag) {
@@ -2702,9 +2678,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 7);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 45-50
                     else if (date.getMinutes() < (45 + 50) / 2 && todayFlag) {
@@ -2728,9 +2701,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 8);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 50-55
                     else if (date.getMinutes() < (50 + 55) / 2 && todayFlag) {
@@ -2756,9 +2726,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 9);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 55-60
                     else if (date.getMinutes() < (55 + 60) / 2 && todayFlag) {
@@ -2786,9 +2753,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 10);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 60
                     else if (date.getMinutes() < 60 && todayFlag) {
@@ -2818,9 +2782,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 11);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     } else {
                         currentline = currentTimeLine.eq(i - 1);
                         currentline.removeClass('fc-show-currentTimeLine');
@@ -2847,10 +2808,7 @@ function enableTextSelection(element) {
                         currentline = currentTimeLine.eq(i + 10);
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 11);
-                        currentline.removeClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-                    }
+                        currentline.removeClass('fc-show-currentTimeLine');                    }
 
                 } //end if
                 else {

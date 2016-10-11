@@ -44,7 +44,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                 fn: function() {
                     localStorage.setItem('lastView', 'fullCalendarView');
                     this.gotoWeek_Day();
-                    this.refreshOrStart();
                     this.updateView();
                     this.startPeriodicUpdateView();
                 },
@@ -60,7 +59,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         screenWidth = Ext.getBody().getSize().width;
         // set days button width
         width = (screenWidth - 49) / 5.2;
-        full_calendar_obj=this;
         var me = this;
         me.callParent(arguments);
         // create topbar contaier with vertical box and top
@@ -397,6 +395,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         this.startPeriodicUpdateView();
         // document.addEventListener('pause', Ext.bind(this.stopPeriodicUpdateView, this), false);
         Ext.getCmp('home').onAfter('select', this.setPeriodicUpdateView, this);
+        this.initScroller();
     }, // end initialize
 
     /**
@@ -427,11 +426,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         // me.setDefaultview('week');
         this.gotoWeek_Day();
         me.changeTitle();
-        // refresh height of scroller, fixes it moving back up after every scroll
-        me.getScrollable().getScroller().refreshMaxPosition();
-        me.getScrollable().getScroller().refresh();
-        // also scroll it so it redraws!
-        me.getScrollable().getScroller().scrollTo(0, scrollTopHeight - (scrollTopHeight * 10 / 100));
    },
     renderCalendar: function () {
         var me = this;
@@ -512,10 +506,23 @@ Ext.define('Zermelo.view.FullCalendar', {
         $('#' + this.getPlaceholderid()).fullCalendar('addEventSource', array);
     },
 
+    initScroller: function() {
+        // Quite magical...
+        // (new Date()).getHours() is the current hour, 
+        // -6 because the view starts at 6:00, 
+        // *60 because this neatly brings the bottom of the view to the bottom of the table at the end of the day
+        this.getScrollable().getScroller().scrollTo(0, ((new Date()).getHours() - 6) * 60);
+    },
+
     // Calling destroyCalendar and renderFullCalendar updates the red line
     updateView: function() {
+        var scroller = this.getScrollable().getScroller();
+        var currentY = scroller.position.y;
+
         this.destroyCalendar();
         this.renderFullCalendar();
+
+        scroller.scrollTo(0, currentY);
     },
 
     startPeriodicUpdateView: function() {
@@ -547,6 +554,7 @@ Ext.define('Zermelo.view.FullCalendar', {
     },
 
     // Changes the currently shown week to @param week
+    // If no argument is supplied, the currently shown week is set to the week shown in AppointmentStore
     gotoWeek_Day: function(week) {
         week = Ext.getStore('Appointments').setWindowWeek(week);
         this.refreshEvents();
