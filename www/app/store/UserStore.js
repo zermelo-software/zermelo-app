@@ -29,8 +29,9 @@ Ext.define('Zermelo.store.UserStore', {
 		if(searchString == '')
 			return;
 
-		searchString.split(' ').forEach(function(searchComponent) {
-			this.filterBy(function(record) {
+		var searchComponents = searchString.split(' ');
+		this.filterBy(function(record) {
+			return searchComponents.some(function(searchComponent) {
 				if((record.get('firstName') || '').toLowerCase().startsWith(searchComponent))
 					return true;
 				if(record.get('code').toLowerCase().startsWith(searchComponent))
@@ -40,8 +41,8 @@ Ext.define('Zermelo.store.UserStore', {
 				if((record.get('prefix') || '').toLowerCase().includes(searchComponent))
 					return true;
 				return false;
-			});
-		}, this);
+			}, this);
+		});
 		console.log('time spent', Date.now() - timer);
 		this.resumeEvents();
 	},

@@ -30,17 +30,6 @@ Ext.define('Zermelo.UserManager', {
 		this.code = newCode;
 	},
 
-	setOwnCode: function(code) {
-		if(!code)
-			return;
-		this.ownCode = code;
-		localStorage.setItem('ownCode', code);
-	},
-
-	getOwnCode: function() {
-		return this.ownCode;
-	},
-
 	setInstitution: function(newInstitution) {
 		this.institution = newInstitution;
 		window.localStorage.setItem('institution', newInstitution);
@@ -58,15 +47,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	logout: function() {
-		this.setCode('');
-		this.setInstitution('');
-		this.setAccessToken('');
 		localStorage.clear();
-		// Ext.StoreManager.each(function(store) {
-		// 	console.log(store);
-		// 	store.clear();
-		// });
-		// Ext.getCmp('main').selectItem('login');
 		window.location.reload();
 	},
 
@@ -97,7 +78,9 @@ Ext.define('Zermelo.UserManager', {
 		this.setCode(newCode);
 		this.setTitles();
 		Ext.getStore('Appointments').changeUser();
-		Ext.getCmp('fullCalendarView').refreshEvents();
+		var fullCalendarView = Ext.getCmp('fullCalendarView');
+		if(fullCalendarView)
+			fullCalendarView.refreshEvents();
 	},
 
 	getScheduleTitle: function() {

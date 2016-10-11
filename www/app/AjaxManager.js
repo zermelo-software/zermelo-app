@@ -2,7 +2,6 @@ Ext.define('Zermelo.AjaxManager', {
 	alternateClassName: 'AjaxManager',
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
-	appointmentsInTransit: false,
 
 	getUrl: function(target) {
 		return (
@@ -14,7 +13,6 @@ Ext.define('Zermelo.AjaxManager', {
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
 		this.getAnnouncementData();
-		this.getSelf();
 	},
 
 	periodicRefresh: function() {
@@ -212,9 +210,6 @@ Ext.define('Zermelo.AjaxManager', {
 				access_token: Zermelo.UserManager.getAccessToken()
 				,fields: 'firstName,prefix,lastName,code'
 				,archived: false
-				// ,familyMember: Zermelo.UserManager.getOwnCode()
-				// ,mentor: Zermelo.UserManager.getOwnCode()
-
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
@@ -222,8 +217,10 @@ Ext.define('Zermelo.AjaxManager', {
 				var timer = Date.now();
 				var UserStore = Ext.getStore('Users');
 				UserStore.addData(Ext.JSON.decode(response.responseText).response.data);
-				UserStore.add({firstName: '', prefix: 'Eigen rooster', lastName: '', code: '~me'});
-				console.log('time spent: ', Date.now() - timer);
+
+				// This entry will always be first because nothing < something.
+				// Setting user to '' will set the user to '~me' in UserManager.
+				UserStore.add({firstName: '', prefix: 'Eigen rooster', lastName: '', code: ''});
 				UserStore.sort(
 					[
 						{
@@ -240,7 +237,6 @@ Ext.define('Zermelo.AjaxManager', {
 						}
 					]);
 				UserStore.initSearch();
-				console.log('time spent: ', Date.now() - timer);
 				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
@@ -252,26 +248,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				
-			}
-		});
-	},
-
-	getSelf: function() {
-		Ext.Ajax.request({
-			url: this.getUrl('tokens/~current'),
-			params: {
-				access_token: Zermelo.UserManager.getAccessToken()
-			},
-			method: "GET",
-			useDefaultXhrHeader: false,
-
-			success: function (response) {
-				console.log(Ext.JSON.decode(response.responseText));
-				Zermelo.UserManager.setOwnCode(Ext.JSON.decode(response.responseText).response.data[0].user);
-			},
-
-			failure: function (response) {
-				console.log('lol');
 			}
 		});
 	}
