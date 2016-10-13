@@ -134,14 +134,10 @@ Ext.define('Zermelo.AjaxManager', {
 		
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
-			params: {
-				user: Zermelo.UserManager.getUser(),
-				// teachers: ['rko'],
-				// locations: ['152'],
-				access_token: Zermelo.UserManager.getAccessToken(),
+			params: Zermelo.UserManager.addVieweeParamsToObject({
 				start: startTime,
 				end: endTime
-			},
+			}),
 			method: "GET",
 			useDefaultXhrHeader: false,
 			success: function (response) {
@@ -181,6 +177,7 @@ Ext.define('Zermelo.AjaxManager', {
 				Ext.Viewport.unmask();
 			},
 			failure: function (response) {
+				console.log(response);
 				var error_msg = 'network_error';
 				if (response.status == 403) {
 					error_msg = 'insufficient_permissions';
@@ -216,19 +213,19 @@ Ext.define('Zermelo.AjaxManager', {
 			Ext.Ajax.request({			
 				// url: this.getUrl('users'),
 				url: this.getUrl(type),
-				type: type,
-				typesReturn: Ext.bind(this.typesReturn, this),
 				disableCaching: false,
 				params: {
 					access_token: Zermelo.UserManager.getAccessToken()
-					// ,fields: 'firstName,prefix,lastName,code'
+					,fields: 'firstName,prefix,lastName,code'
 					// ,archived: false
 				},
 				method: "GET",
 				useDefaultXhrHeader: false,
 				success: function (response) {
+					console.log(response.request.options.type);
 					var timer = Date.now();
 					var UserStore = Ext.getStore('Users');
+					console.log(Ext.JSON.decode(response.responseText).response.data);
 					UserStore.addData(Ext.JSON.decode(response.responseText).response.data);
 				},
 				failure: function (response) {

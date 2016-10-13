@@ -2,7 +2,8 @@ Ext.define('Zermelo.UserManager', {
 	alternateClassName: 'UserManager',
 	requires: ['Ux.locale.Manager'],
 	singleton: true,
-	code: '~me',
+	code: window.localStorage.getItem('code') || '~me',
+	type: window.localStorage.getItem('type') || 'user',
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
 
@@ -18,6 +19,10 @@ Ext.define('Zermelo.UserManager', {
 		return this.code;
 	},
 
+	getType: function() {
+		return this.type;
+	},
+
 	getInstitution: function() {
 		return this.institution;
 	},
@@ -26,9 +31,27 @@ Ext.define('Zermelo.UserManager', {
 		return this.accessToken;
 	},
 
+	addVieweeParamsToObject: function(vieweeParamsObject) {
+		vieweeParamsObject.access_token = this.getAccessToken();
+		if(this.getType() == 'user')
+			vieweeParamsObject.user = this.getUser();
+		else if(this.getType() == 'group')
+			vieweeParamsObject.group = this.getUser();
+		else if(this.getType() == 'location')
+			vieweeParamsObject.location = this.getUser();
+		console.log('vieweeParamsObject', vieweeParamsObject);
+		return vieweeParamsObject;
+	},
+
 	setCode: function(newCode) {
+		localStorage.setItem('code', newCode);
 		this.code = newCode;
 	},
+
+	setType: function(type) {
+		localStorage.setItem('type', type);
+		this.type = type;
+	},	
 
 	setInstitution: function(newInstitution) {
 		this.institution = newInstitution;
@@ -42,6 +65,7 @@ Ext.define('Zermelo.UserManager', {
 
 	saveLogin: function(code, institution, accessToken) {
 		this.setCode(code);
+		this.setType('user');
 		this.setInstitution(institution);
 		this.setAccessToken(accessToken);
 	},
@@ -66,16 +90,22 @@ Ext.define('Zermelo.UserManager', {
 		});
 	},
 
-	setUser: function(newCode) {
-		if(!newCode)
+	setUser: function(newUser) {
+		var newCode, newType;
+		if(newUser) {
+			newCode = newUser.get('code') || '~me';
+			newType = newUser.getType();
+		}
+		else {
 			newCode = '~me';
-
-		newCode = newCode.toLowerCase();
+			newType = 'user';
+		}
 
 		if (this.code == newCode)
 			return;
 
 		this.setCode(newCode);
+		this.setType(newType);
 		this.setTitles();
 		Ext.getStore('Appointments').changeUser();
 		var fullCalendarView = Ext.getCmp('fullCalendarView');

@@ -18,7 +18,8 @@ Ext.define("Zermelo.view.UserSelect", {
 		},
 		listeners: {
 			itemtap: function(dataview, ix, target, record, event, options) {
-				Zermelo.UserManager.setUser(record.get('code'));
+				console.log('selected record', record);
+				Zermelo.UserManager.setUser(record);
 				this.up('home').selectItem();
 			},
 			refresh: {
