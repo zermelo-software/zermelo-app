@@ -13,6 +13,7 @@ Ext.define('Zermelo.AjaxManager', {
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
 		this.getAnnouncementData();
+		this.getSelf();
 	},
 
 	periodicRefresh: function() {
@@ -135,6 +136,8 @@ Ext.define('Zermelo.AjaxManager', {
 			url: this.getUrl('appointments'),
 			params: {
 				user: Zermelo.UserManager.getUser(),
+				// teachers: ['rko'],
+				// locations: ['152'],
 				access_token: Zermelo.UserManager.getAccessToken(),
 				start: startTime,
 				end: endTime
@@ -202,52 +205,93 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-		
-		Ext.Ajax.request({			
-			url: this.getUrl('users'),
-			disableCaching: false,
+
+		Ext.Ajax.on('requestcomplete', this.typesReturn, this);
+		Ext.Ajax.on('requestexception', this.typesReturn, this);
+
+		Ext.getStore('Users').suspendEvents();
+
+		var types = ['users', 'groups', 'locations'];
+		types.forEach(function(type) {
+			Ext.Ajax.request({			
+				// url: this.getUrl('users'),
+				url: this.getUrl(type),
+				type: type,
+				typesReturn: Ext.bind(this.typesReturn, this),
+				disableCaching: false,
+				params: {
+					access_token: Zermelo.UserManager.getAccessToken()
+					// ,fields: 'firstName,prefix,lastName,code'
+					// ,archived: false
+				},
+				method: "GET",
+				useDefaultXhrHeader: false,
+				success: function (response) {
+					var timer = Date.now();
+					var UserStore = Ext.getStore('Users');
+					UserStore.addData(Ext.JSON.decode(response.responseText).response.data);
+				},
+				failure: function (response) {
+					Ext.Viewport.unmask();
+					var error_msg = 'network_error';
+					if (response.status == 403) {
+						error_msg = 'insufficient_permissions';
+					}
+
+					Zermelo.ErrorManager.showErrorBox(error_msg);
+					
+				}
+			});
+		}, this);
+	},
+
+	returned: 0,
+
+	typesReturn: function(connection, response) {
+		this.returned++;
+		if(response.status != 200) 
+			console.log('connection error', response.status);
+
+		if(this.returned == 3) {
+			var UserStore = Ext.getStore('Users');
+			UserStore.sort([
+				{
+					property: 'firstName',
+					direction: 'ASC'
+				},
+				{
+					property: 'lastName',
+					direction: 'ASC'
+				},
+				{
+					property: 'code',
+					direction: 'ASC'
+				}
+			]);
+			UserStore.initSearch();
+			Ext.Viewport.unmask();
+			Ext.Ajax.un('requestcomplete', this.typesReturn, this);
+			Ext.Ajax.un('requestexception', this.typesReturn, this);
+			UserStore.resumeEvents(true);
+			UserStore.fireEvent('refresh');
+		}
+	},
+
+	getSelf: function() {
+		Ext.Ajax.request({
+			url: this.getUrl('tokens/~current'),
 			params: {
 				access_token: Zermelo.UserManager.getAccessToken()
-				,fields: 'firstName,prefix,lastName,code'
-				,archived: false
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
+
 			success: function (response) {
-				var timer = Date.now();
-				var UserStore = Ext.getStore('Users');
-				UserStore.addData(Ext.JSON.decode(response.responseText).response.data);
-
-				// This entry will always be first because nothing < something.
-				// Setting user to '' will set the user to '~me' in UserManager.
-				UserStore.add({firstName: '', prefix: 'Eigen rooster', lastName: '', code: ''});
-				UserStore.sort(
-					[
-						{
-							property: 'firstName',
-							direction: 'ASC'
-						},
-						{
-							property: 'lastName',
-							direction: 'ASC'
-						},
-						{
-							property: 'code',
-							direction: 'ASC'
-						}
-					]);
-				UserStore.initSearch();
-				Ext.Viewport.unmask();
+				console.log(Ext.JSON.decode(response.responseText).response.data[0]);
 			},
-			failure: function (response) {
-				Ext.Viewport.unmask();
-				var error_msg = 'network_error';
-				if (response.status == 403) {
-					error_msg = 'insufficient_permissions';
-				}
 
-				Zermelo.ErrorManager.showErrorBox(error_msg);
-				
+			failure: function (response) {
+				console.log('faal');
 			}
 		});
 	}

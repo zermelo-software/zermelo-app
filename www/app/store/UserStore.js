@@ -19,7 +19,6 @@ Ext.define('Zermelo.store.UserStore', {
 		searchString = searchString.toLowerCase();
 
 		if(!searchString.startsWith(this.currentSearchString)) {
-			console.log('hoi');
 			this.clearFilter();
 			this.resumeEvents();
 		}
@@ -31,7 +30,7 @@ Ext.define('Zermelo.store.UserStore', {
 
 		var searchComponents = searchString.split(' ');
 		this.filterBy(function(record) {
-			return searchComponents.some(function(searchComponent) {
+			return searchComponents.every(function(searchComponent) {
 				if((record.get('firstName') || '').toLowerCase().startsWith(searchComponent))
 					return true;
 				if(record.get('code').toLowerCase().startsWith(searchComponent))
@@ -44,14 +43,21 @@ Ext.define('Zermelo.store.UserStore', {
 			}, this);
 		});
 		console.log('time spent', Date.now() - timer);
-		this.resumeEvents();
+		this.resumeEvents(true);
+		this.fireEvent('refresh');
 	},
 
 	initSearch: function() {
-		this.search(this.currentSearchString);
+		this.search(this.currentSearchString || '');
 	},
 
 	onKeyup: function(searchField) {
 		this.search(searchField.getValue());
+	},
+
+	launch: function() {
+		// This entry will always be first because nothing < something.
+		// Setting user to '' will set the user to '~me' in UserManager.
+		this.add({firstName: '', prefix: 'Eigen rooster', lastName: '', code: ''});
 	}
 });

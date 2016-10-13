@@ -29,22 +29,12 @@ Ext.define("Zermelo.view.UserSearch", {
 			initialize: function() {
 				Zermelo.AjaxManager.getUsers();
 				this.down('searchfield').on({
-					keyup: {
+					action: {
 						fn: Ext.getStore('Users').onKeyup,
-						scope: Ext.getStore('Users')
-					},
-
-					clearicontap: {
-						fn: Ext.getStore('Users').onkeyup,
 						scope: Ext.getStore('Users')
 					}
 				});
 			}
-			// ,
-			// painted: function() {
-			// 	if(this.getStore().getCount() == 0)
-			// 		Zermelo.AjaxManager.getUsers();
-			// }
 		}
 	}
 });
