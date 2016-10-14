@@ -190,6 +190,33 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
+	getBranches: function() {
+			Ext.Ajax.request({			
+			// url: this.getUrl('users'),
+			url: this.getUrl('branchesofschools'),
+			disableCaching: false,
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken()
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+			success: function (response) {
+				Zermelo.AjaxManager.branchIdMap = Ext.JSON.decode(response.responseText).response.data;
+				console.log(Zermelo.AjaxManager.branchIdMap);
+			},
+			failure: function (response) {
+				Ext.Viewport.unmask();
+				var error_msg = 'network_error';
+				if (response.status == 403) {
+					error_msg = 'insufficient_permissions';
+				}
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				
+			}
+		});
+	},
+
 	getUsers: function() {
 		if (!Zermelo.UserManager.loggedIn())
 			return;
@@ -202,13 +229,19 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
+		this.getBranches();
 
 		Ext.Ajax.on('requestcomplete', this.typesReturn, this);
 		Ext.Ajax.on('requestexception', this.typesReturn, this);
 
 		Ext.getStore('Users').suspendEvents();
 
-		var types = ['users', 'groups', 'locations'];
+		var types = [
+			'users',
+			'groupindepartments',
+			'locationofbranches'
+		];
+
 		types.forEach(function(type) {
 			Ext.Ajax.request({			
 				// url: this.getUrl('users'),
@@ -216,17 +249,44 @@ Ext.define('Zermelo.AjaxManager', {
 				disableCaching: false,
 				params: {
 					access_token: Zermelo.UserManager.getAccessToken()
-					,fields: 'firstName,prefix,lastName,code'
+					// ,fields: 'firstName,prefix,lastName,code'
 					// ,archived: false
 				},
+				userRequest: true,
 				method: "GET",
 				useDefaultXhrHeader: false,
 				success: function (response) {
-					console.log(response.request.options.type);
-					var timer = Date.now();
+					// console.log(response.request.options.type);
 					var UserStore = Ext.getStore('Users');
-					console.log(Ext.JSON.decode(response.responseText).response.data);
-					UserStore.addData(Ext.JSON.decode(response.responseText).response.data);
+					var formatFn;
+					if(response.request.options.url.endsWith('locationofbranches'))
+						formatFn = function(item) {
+							return {
+								code: Zermelo.AjaxManager.branchIdMap.find(function(mapping) {return mapping.id == item.branchOfSchool}).branch + '.' + item.name,
+								type: 'location',
+								remoteId: item.id
+							}
+						};
+					else if(response.request.options.url.endsWith('groupindepartments'))
+						formatFn = function(item) {
+							console.log(item);
+							return {
+								type: 'group',
+								code: item.extendedName,
+								remoteId: item.id
+							}
+						};
+					else
+						formatFn = function(item) {
+							item.type = 'user';
+							return item;
+						};
+					var formattedArray = [];
+					Ext.JSON.decode(response.responseText).response.data.forEach(function(item) {
+						formattedArray.push(formatFn(item));
+					});
+					// console.log(Ext.JSON.decode(response.responseText).response.data, formattedArray);
+					UserStore.addData(formattedArray);
 				},
 				failure: function (response) {
 					Ext.Viewport.unmask();
@@ -245,11 +305,14 @@ Ext.define('Zermelo.AjaxManager', {
 	returned: 0,
 
 	typesReturn: function(connection, response) {
+		if(!response.request.options.userRequest)
+			return;
+		console.log(response);
 		this.returned++;
 		if(response.status != 200) 
 			console.log('connection error', response.status);
 
-		if(this.returned == 3) {
+		if(this.returned == 1) {
 			var UserStore = Ext.getStore('Users');
 			UserStore.sort([
 				{
@@ -271,6 +334,7 @@ Ext.define('Zermelo.AjaxManager', {
 			Ext.Ajax.un('requestexception', this.typesReturn, this);
 			UserStore.resumeEvents(true);
 			UserStore.fireEvent('refresh');
+			console.log('typesreturn refresh');
 		}
 	},
 
@@ -284,7 +348,7 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response) {
-				console.log(Ext.JSON.decode(response.responseText).response.data[0]);
+				// console.log(Ext.JSON.decode(response.responseText).response.data[0]);
 			},
 
 			failure: function (response) {

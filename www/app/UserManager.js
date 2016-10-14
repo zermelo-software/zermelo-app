@@ -36,9 +36,9 @@ Ext.define('Zermelo.UserManager', {
 		if(this.getType() == 'user')
 			vieweeParamsObject.user = this.getUser();
 		else if(this.getType() == 'group')
-			vieweeParamsObject.group = this.getUser();
+			vieweeParamsObject.containsStudentsFromGroupInDepartment = this.getUser();
 		else if(this.getType() == 'location')
-			vieweeParamsObject.location = this.getUser();
+			vieweeParamsObject.locationsOfBranch = this.getUser();
 		console.log('vieweeParamsObject', vieweeParamsObject);
 		return vieweeParamsObject;
 	},
@@ -93,8 +93,14 @@ Ext.define('Zermelo.UserManager', {
 	setUser: function(newUser) {
 		var newCode, newType;
 		if(newUser) {
-			newCode = newUser.get('code') || '~me';
-			newType = newUser.getType();
+			if(newUser.get('type') == 'user') {
+				newCode = newUser.get('code');
+				newType = 'user';
+			}
+			else {
+				newCode = newUser.get('remoteId');
+				newType = newUser.get('type');
+			}
 		}
 		else {
 			newCode = '~me';

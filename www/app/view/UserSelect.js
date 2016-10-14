@@ -10,7 +10,7 @@ Ext.define("Zermelo.view.UserSelect", {
 		variableHeights: true,
 		selectedCls: '',
 		itemTpl: new Ext.XTemplate('<div class="z-calendar-list-parent">\
-			<span width="70%" style="display:inline-flex; overflow: hidden;" class="">{firstName} {prefix} {lastName}</span>\
+			<span width="70%" style="display:inline-flex; overflow: hidden;" class="">{[values.firstName || values.extendedName || values.name]} {prefix} {lastName}</span>\
 			<span width="25%" style="display:inline-flex; float: right;" class="">{code}</span>\
 		</div>'),
 		store: {
