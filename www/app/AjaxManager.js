@@ -117,7 +117,7 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(startTime, endTime) {
-		if (!Zermelo.UserManager.loggedIn())
+		if (!Zermelo.UserManager.loggedIn() || this.appointmentsPending)
 			return;
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
@@ -131,7 +131,9 @@ Ext.define('Zermelo.AjaxManager', {
 		// Real unix timestamps use seconds, javascript uses milliseconds
 		startTime = Math.floor(startTime / 1000);
 		endTime = Math.floor(endTime / 1000);
-		
+
+		this.appointmentsPending = true;
+
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
 			params: Zermelo.UserManager.addVieweeParamsToObject({
@@ -140,6 +142,7 @@ Ext.define('Zermelo.AjaxManager', {
 			}),
 			method: "GET",
 			useDefaultXhrHeader: false,
+			scope: this,
 			success: function (response) {
 				var decoded = Ext.JSON.decode(response.responseText).response.data;
 
@@ -174,6 +177,7 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.resumeEvents();
 				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
+				this.appointmentsPending = false;
 			},
 			failure: function (response) {
 				console.log(response);
@@ -185,6 +189,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
+				this.appointmentsPending = false;
 			}
 		});
 	},
@@ -282,7 +287,6 @@ Ext.define('Zermelo.AjaxManager', {
 						}, this);
 					else if(response.request.options.url.endsWith('groupindepartments'))
 						formatFn = Ext.bind(function(item) {
-							console.log(item);
 							return {
 								type: 'group',
 								prefix: this.departmentIdMap.find(function(mapping) {return mapping.id == item.departmentOfBranch}).schoolInSchoolYearName,
