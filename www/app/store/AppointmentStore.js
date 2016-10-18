@@ -129,11 +129,10 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	resetFilters: function() {
 		this.clearFilter();
-		// this.filter('user', Zermelo.UserManager.getUser());
-		var user = Zermelo.UserManager.getUser();
+		var user = Zermelo.UserManager.getUserSuffix();
 		this.filterBy(function(record) {
 			var start = record.get('start');
-			return (record.get('id').endsWith(user) && start > this.windowStart && start < this.windowEnd);
+			return (record.get('user') == user && start > this.windowStart && start < this.windowEnd);
 		});
 	},
 

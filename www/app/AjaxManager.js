@@ -142,7 +142,6 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 			success: function (response) {
 				var decoded = Ext.JSON.decode(response.responseText).response.data;
-				var currentUser = Zermelo.UserManager.getUser();
 
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();
@@ -152,8 +151,8 @@ Ext.define('Zermelo.AjaxManager', {
 				decoded.forEach(function(record) {
 					record.start = new Date(record.start * 1000);
 					record.end = new Date(record.end * 1000);
-					record.user = currentUser;
-					record.id = record.id + currentUser;
+					record.user = Zermelo.UserManager.getUserSuffix();
+					record.id += Zermelo.UserManager.getUserSuffix();
 					record.groups.sort();
 					record.locations.sort();
 					record.teachers.sort();
@@ -192,7 +191,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 	getBranches: function() {
 			Ext.Ajax.request({			
-			// url: this.getUrl('users'),
 			url: this.getUrl('branchesofschools'),
 			disableCaching: false,
 			params: {
@@ -203,6 +201,32 @@ Ext.define('Zermelo.AjaxManager', {
 			success: function (response) {
 				Zermelo.AjaxManager.branchIdMap = Ext.JSON.decode(response.responseText).response.data;
 				console.log(Zermelo.AjaxManager.branchIdMap);
+			},
+			failure: function (response) {
+				Ext.Viewport.unmask();
+				var error_msg = 'network_error';
+				if (response.status == 403) {
+					error_msg = 'insufficient_permissions';
+				}
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				
+			}
+		});
+	},
+
+	getDepartments: function() {
+			Ext.Ajax.request({			
+			url: this.getUrl('departmentsofbranches'),
+			disableCaching: false,
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken()
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+			success: function (response) {
+				Zermelo.AjaxManager.departmentIdMap = Ext.JSON.decode(response.responseText).response.data;
+				console.log(Zermelo.AjaxManager.departmentIdMap);
 			},
 			failure: function (response) {
 				Ext.Viewport.unmask();
@@ -230,63 +254,51 @@ Ext.define('Zermelo.AjaxManager', {
 			indicator: true
 		});
 		this.getBranches();
-
-		Ext.Ajax.on('requestcomplete', this.typesReturn, this);
-		Ext.Ajax.on('requestexception', this.typesReturn, this);
+		this.getDepartments();
 
 		Ext.getStore('Users').suspendEvents();
 
-		var types = [
-			'users',
-			'groupindepartments',
-			'locationofbranches'
-		];
-
-		types.forEach(function(type) {
+		this.types.forEach(function(type) {
 			Ext.Ajax.request({			
-				// url: this.getUrl('users'),
 				url: this.getUrl(type),
 				disableCaching: false,
 				params: {
 					access_token: Zermelo.UserManager.getAccessToken()
-					// ,fields: 'firstName,prefix,lastName,code'
-					// ,archived: false
 				},
 				userRequest: true,
 				method: "GET",
 				useDefaultXhrHeader: false,
+				scope: this,
 				success: function (response) {
-					// console.log(response.request.options.type);
 					var UserStore = Ext.getStore('Users');
 					var formatFn;
 					if(response.request.options.url.endsWith('locationofbranches'))
-						formatFn = function(item) {
+						formatFn = Ext.bind(function(item) {
 							return {
-								code: Zermelo.AjaxManager.branchIdMap.find(function(mapping) {return mapping.id == item.branchOfSchool}).branch + '.' + item.name,
+								code: this.branchIdMap.find(function(mapping) {return mapping.id == item.branchOfSchool}).branch + '.' + item.name,
 								type: 'location',
 								remoteId: item.id
 							}
-						};
+						}, this);
 					else if(response.request.options.url.endsWith('groupindepartments'))
-						formatFn = function(item) {
+						formatFn = Ext.bind(function(item) {
 							console.log(item);
 							return {
 								type: 'group',
+								prefix: this.departmentIdMap.find(function(mapping) {return mapping.id == item.departmentOfBranch}).schoolInSchoolYearName,
 								code: item.extendedName,
 								remoteId: item.id
 							}
-						};
+						}, this);
 					else
 						formatFn = function(item) {
 							item.type = 'user';
 							return item;
 						};
-					var formattedArray = [];
 					Ext.JSON.decode(response.responseText).response.data.forEach(function(item) {
-						formattedArray.push(formatFn(item));
-					});
-					// console.log(Ext.JSON.decode(response.responseText).response.data, formattedArray);
-					UserStore.addData(formattedArray);
+						this.formattedArray.push(formatFn(item));
+					}, this);
+					this.typesReturn(type);
 				},
 				failure: function (response) {
 					Ext.Viewport.unmask();
@@ -302,18 +314,21 @@ Ext.define('Zermelo.AjaxManager', {
 		}, this);
 	},
 
-	returned: 0,
+	formattedArray: [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}],
 
-	typesReturn: function(connection, response) {
-		if(!response.request.options.userRequest)
-			return;
-		console.log(response);
-		this.returned++;
-		if(response.status != 200) 
-			console.log('connection error', response.status);
+	returned: {},
 
-		if(this.returned == 1) {
+	types: [
+		'users',
+		'groupindepartments',
+		'locationofbranches'
+	],
+
+	typesReturn: function(requestName) {
+		this.returned[requestName] = true;
+		if(this.types.every(function(type) {return this.returned[type];}, this)) {
 			var UserStore = Ext.getStore('Users');
+			UserStore.addData(this.formattedArray);
 			UserStore.sort([
 				{
 					property: 'firstName',
@@ -329,12 +344,10 @@ Ext.define('Zermelo.AjaxManager', {
 				}
 			]);
 			UserStore.initSearch();
-			Ext.Viewport.unmask();
-			Ext.Ajax.un('requestcomplete', this.typesReturn, this);
-			Ext.Ajax.un('requestexception', this.typesReturn, this);
 			UserStore.resumeEvents(true);
 			UserStore.fireEvent('refresh');
 			console.log('typesreturn refresh');
+			Ext.Viewport.unmask();
 		}
 	},
 

@@ -2,8 +2,9 @@ Ext.define('Zermelo.UserManager', {
 	alternateClassName: 'UserManager',
 	requires: ['Ux.locale.Manager'],
 	singleton: true,
-	code: window.localStorage.getItem('code') || '~me',
-	type: window.localStorage.getItem('type') || 'user',
+	code: window.localStorage.getItem('code'),
+	name: window.localStorage.getItem('name'),
+	type: window.localStorage.getItem('type'),
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
 
@@ -19,8 +20,20 @@ Ext.define('Zermelo.UserManager', {
 		return this.code;
 	},
 
+	getName: function() {
+		return this.name;
+	},
+
 	getType: function() {
 		return this.type;
+	},
+
+	getUserSuffix: function() {
+		if(this.type == 'user')
+			return this.getUser();
+		if(this.type == 'group')
+			return 'g' + this.getUser();
+		return 'l' + this.getUser();
 	},
 
 	getInstitution: function() {
@@ -39,13 +52,17 @@ Ext.define('Zermelo.UserManager', {
 			vieweeParamsObject.containsStudentsFromGroupInDepartment = this.getUser();
 		else if(this.getType() == 'location')
 			vieweeParamsObject.locationsOfBranch = this.getUser();
-		console.log('vieweeParamsObject', vieweeParamsObject);
 		return vieweeParamsObject;
 	},
 
 	setCode: function(newCode) {
 		localStorage.setItem('code', newCode);
 		this.code = newCode;
+	},
+
+	setName: function(newName) {
+		localStorage.setItem('name', newName);
+		this.name = newName;
 	},
 
 	setType: function(type) {
@@ -79,7 +96,7 @@ Ext.define('Zermelo.UserManager', {
 		// Sets the titles of the appointment views
 		var header;
 		var key_suffix = this.userIsSelf() ? 'self' : 'other';
-		var suffix = this.userIsSelf() ? '' : this.getUser();
+		var suffix = this.userIsSelf() ? '' : this.getName();
 		var titleFields = ['toolbar_main', 'toolbar_day_back', 'calendar_list_title'];
 
 		titleFields.forEach(function(field) {
@@ -92,26 +109,22 @@ Ext.define('Zermelo.UserManager', {
 
 	setUser: function(newUser) {
 		var newCode, newType;
-		if(newUser) {
-			if(newUser.get('type') == 'user') {
-				newCode = newUser.get('code');
-				newType = 'user';
-			}
-			else {
-				newCode = newUser.get('remoteId');
-				newType = newUser.get('type');
-			}
-		}
-		else {
-			newCode = '~me';
+		if(newUser.get('type') == 'user') {
+			newCode = newUser.get('code') || '~me';
 			newType = 'user';
 		}
+		else {
+			newCode = newUser.get('remoteId');
+			newType = newUser.get('type');
+		}
+		newName = newUser.get('firstName') || newUser.get('lastName') || newUser.get('code') || '';
 
 		if (this.code == newCode)
 			return;
 
 		this.setCode(newCode);
 		this.setType(newType);
+		this.setName(newName);
 		this.setTitles();
 		Ext.getStore('Appointments').changeUser();
 		var fullCalendarView = Ext.getCmp('fullCalendarView');

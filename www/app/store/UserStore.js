@@ -33,7 +33,7 @@ Ext.define('Zermelo.store.UserStore', {
 			return searchComponents.every(function(searchComponent) {
 				if((record.get('firstName') || '').toLowerCase().startsWith(searchComponent))
 					return true;
-				if(record.get('code').toLowerCase().includes(searchComponent))
+				if((record.get('code') || '').toLowerCase().includes(searchComponent))
 					return true;
 				if((record.get('lastName') || '').toLowerCase().includes(searchComponent))
 					return true;
