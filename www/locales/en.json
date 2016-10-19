@@ -54,8 +54,16 @@
         "choice" : "Choice",
         "other" : "Other"
     },
-    "network_error":"Error connecting to Zermelo Portal. Are you connected to the internet?",
-    "insufficient_permissions":"You have insufficient permissions to view this schedule",
+
+    "error": {
+        "network": "Error connecting to Zermelo Portal. Are you connected to the internet?",
+        "permissions": "You have insufficient permissions to view this schedule",
+        "user": {
+            "some": "Not all user types could be loaded. You may not have the right permissions",
+            "all": "Could not load users. You may not have the right permissions or there may be a problem with your internet connection"
+        }
+    },
+
     "months" : {
         "1"  : "January",
         "2"  : "February",

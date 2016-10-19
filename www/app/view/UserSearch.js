@@ -30,7 +30,7 @@ Ext.define("Zermelo.view.UserSearch", {
 				Zermelo.AjaxManager.getUsers();
 				this.down('searchfield').on({
 					action: {
-						fn: Ext.getStore('Users').onKeyup,
+						fn: Ext.getStore('Users').onAction,
 						scope: Ext.getStore('Users')
 					}
 				});

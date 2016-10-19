@@ -231,7 +231,7 @@ function authentication() {
                 //failure
                 failure: function (response) {
                     thisObj.unmask();
-                    Zermelo.ErrorManager.showErrorBox('network_error');
+                    Zermelo.ErrorManager.showErrorBox('error.network');
                 }
             });
         } else {

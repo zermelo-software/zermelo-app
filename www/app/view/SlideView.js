@@ -314,7 +314,7 @@ Ext.define('Zermelo.view.SlideView', {
         ]);
 
         this.createContainerCSS();
-        var selectedItemIndex = 3 || this.itemIds[localStorage.getItem('lastView')] || 0;
+        var selectedItemIndex = this.itemIds[localStorage.getItem('lastView')] || 0;
 
         Ext.each(this.list.getStore().getRange(), function(item, index) {
             if (item.get('selected') === true) {
@@ -962,5 +962,9 @@ Ext.define('Zermelo.view.SlideView', {
     selectItem: function(itemName) {
         itemName = itemName || localStorage.getItem('lastView');
         this.list.select(this.itemIds[itemName]);
+    },
+
+    isActiveItem: function(itemName) {
+        return this.getActiveItem().internalId == this.itemIds[itemName];
     }
 });

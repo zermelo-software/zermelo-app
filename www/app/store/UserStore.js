@@ -51,7 +51,7 @@ Ext.define('Zermelo.store.UserStore', {
 		this.search(this.currentSearchString || '');
 	},
 
-	onKeyup: function(searchField) {
+	onAction: function(searchField) {
 		this.search(searchField.getValue());
 	},
 

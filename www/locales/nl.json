@@ -54,8 +54,14 @@
         "choice" : "Keuze",
         "other" : "Overig"
     },
-    "network_error":"Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
-    "insufficient_permissions":"Je hebt onvoldoende rechten om dit rooster te bekijken",
+    "error": {
+        "network": "Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
+        "permissions": "Je hebt onvoldoende rechten om dit rooster te bekijken.",
+        "user": {
+            "some": "niet alle gebruikers types konden worden opgehaald. U heeft mogelijk niet de juiste rechten.",
+            "all": "Gebruikers konden niet worden opgehaald. U heeft mogelijk niet de juiste rechten, of er is geen internetverbinding."
+        }
+    },
     "months" : {
         "1"  : "Januari",
         "2"  : "Februari",
