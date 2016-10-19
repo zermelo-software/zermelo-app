@@ -192,13 +192,13 @@ Ext.define('Zermelo.AjaxManager', {
 				}
 				
 				appointmentStore.add(decoded);
-				appointmentStore.queueDelayedEvents();
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents(true);
 				appointmentStore.fireEvent('refresh');
 				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
+				appointmentStore.queueDelayedEvents();
 			},
 			failure: function (response) {
 				console.log(response);
@@ -329,10 +329,15 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
+		var UserStore = Ext.getStore('Users');
+		UserStore.suspendEvents();
 
 		var userArray = localStorage.getItem('Users')
 		if(userArray) {
 			Ext.getStore('Users').addData(Ext.JSON.decode(userArray));
+			UserStore.initSearch();
+			UserStore.resumeEvents(true);
+			UserStore.fireEvent('refresh');
 			Ext.Viewport.unmask();
 			return;
 		}
@@ -349,8 +354,6 @@ Ext.define('Zermelo.AjaxManager', {
 			'groupindepartments',
 			'locationofbranches'
 		]
-
-		Ext.getStore('Users').suspendEvents();
 
 		this.types.forEach(this.getUsersByType, this);
 	},

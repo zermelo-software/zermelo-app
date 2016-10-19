@@ -38,9 +38,10 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 * @return:
 	 */
 	queueDelayedEvents: function(delay) {
+		console.log('queue');
 		if (delay === undefined)
 			delay = 5 * 1000;
-		Ext.defer(function() {this.pruneLocalStorage(); this.sync();}, delay, this);
+		Ext.defer(function() {console.log('run'); this.pruneLocalStorage();}, delay, this);
 	},
 
 	/**

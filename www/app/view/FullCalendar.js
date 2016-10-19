@@ -40,6 +40,8 @@ Ext.define('Zermelo.view.FullCalendar', {
                 fn: function() {
                     localStorage.setItem('lastView', 'fullCalendarView');
                     this.gotoWeek_Day();
+                    this.updateView();
+                    this.setUpdateViewInterval();
                 },
                 options: {
                     order: 'before'
@@ -386,7 +388,6 @@ Ext.define('Zermelo.view.FullCalendar', {
 
         // add items in main container
         this.setItems([me.topBar, me.calendarPanel]);
-        Ext.defer(this.deferUpdateView, 100000, this);
         Ext.getStore('Appointments').on('refresh', this.handleRefresh, this, {buffer: 5});
         this.on('painted', this.renderFullCalendar, this, {single: true, buffer: 5});
     }, // end initialize
@@ -509,6 +510,11 @@ Ext.define('Zermelo.view.FullCalendar', {
 
     // Calling destroyCalendar and renderFullCalendar updates the red line
     updateView: function() {
+        if(Date.now() - this.lastUpdateView < 100000)
+            return;
+        
+        this.lastUpdateView = Date.now();
+        console.log('updateView');
         var scroller = this.getScrollable().getScroller();
         var currentY = scroller.position.y;
 
@@ -518,9 +524,20 @@ Ext.define('Zermelo.view.FullCalendar', {
         scroller.scrollTo(0, currentY);
     },
 
-    deferUpdateView: function() {
-        this.updateView();
-        Ext.defer(this.deferUpdateView, 100000, this);
+    setUpdateViewInterval: function() {
+        if(!this.updateViewInterval) {
+            this.updateViewInterval = setInterval(Ext.bind(this.updateView, this), 100000);
+
+            var clearUpdateViewInterval = Ext.bind(this.clearUpdateViewInterval, this)
+
+            Ext.getCmp('home').on('select', clearUpdateViewInterval);
+            document.addEventListener('pause', clearUpdateViewInterval)
+        }
+    },
+
+    clearUpdateViewInterval: function() {
+        if(this.updateViewInterval)
+            this.updateViewInterval = clearInterval(this.updateViewInterval);
     },
 
     // Changes the currently shown week or day

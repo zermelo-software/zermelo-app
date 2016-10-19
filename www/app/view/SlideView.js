@@ -494,6 +494,7 @@ Ext.define('Zermelo.view.SlideView', {
             container = me.container,
             func = Ext.emptyFn;
         if (index != this.itemIds.logout) {
+            // this.fireEvent('activeitemchange');
             if (me._cache[index] == undefined) {
                 // If the object has a handler defined, then we don't need to
                 // create an Ext object
