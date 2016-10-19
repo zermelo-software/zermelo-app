@@ -53,7 +53,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         var screenWidth = window.innerWidth;
         // set days button width
         var width = (screenWidth - 49) / 5.2;
-        console.log(screenWidth, width);
         var me = this;
         me.callParent(arguments);
         // create topbar contaier with vertical box and top
@@ -389,14 +388,13 @@ Ext.define('Zermelo.view.FullCalendar', {
         this.setItems([me.topBar, me.calendarPanel]);
         Ext.defer(this.deferUpdateView, 100000, this);
         Ext.getStore('Appointments').on('refresh', this.handleRefresh, this, {buffer: 5});
-        this.on('activate', this.renderFullCalendar, this, {single: true, buffer: 5});
+        this.on('painted', this.renderFullCalendar, this, {single: true, buffer: 5});
     }, // end initialize
 
     /**
      * Apply Fullcalendar widget to panel div
      */
-
-    renderFullCalendar: function () {
+    renderFullCalendar: function() {
         var me = this;
         $('#' + me.getPlaceholderid()).fullCalendar({
             hideHeaders: true, //new property to hide full calendar header
