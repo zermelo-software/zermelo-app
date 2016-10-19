@@ -13,7 +13,6 @@ Ext.define('Zermelo.AjaxManager', {
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
 		this.getAnnouncementData();
-		this.getSelf();
 	},
 
 	periodicRefresh: function() {
@@ -290,24 +289,25 @@ Ext.define('Zermelo.AjaxManager', {
 				allReturned = false;
 		}, this)
 		if(allReturned) {
-			console.log('allRetuned');
+			console.log('allReturned');
 			var UserStore = Ext.getStore('Users');
 			UserStore.removeAll();
+			this.formattedArray.sort(function(a, b) {
+				if(a.firstName < b.firstName)
+					return -1;
+				if(a.firstName > b.firstName)
+					return 1;
+				if(a.lastName < b.lastName)
+					return -1;
+				if(a.lastName > b.lastName)
+					return 1;
+				if(a.code < b.code)
+					return -1;
+				if(a.code > b.code)
+					return 1;
+			});
+			Ext.defer(function() {localStorage.setItem('Users', Ext.JSON.encode(this.formattedArray))}, 5000, this);
 			UserStore.addData(this.formattedArray);
-			UserStore.sort([
-				{
-					property: 'firstName',
-					direction: 'ASC'
-				},
-				{
-					property: 'lastName',
-					direction: 'ASC'
-				},
-				{
-					property: 'code',
-					direction: 'ASC'
-				}
-			]);
 			UserStore.initSearch();
 			UserStore.resumeEvents(true);
 			UserStore.fireEvent('refresh');
@@ -330,6 +330,13 @@ Ext.define('Zermelo.AjaxManager', {
 			indicator: true
 		});
 
+		var userArray = localStorage.getItem('Users')
+		if(userArray) {
+			Ext.getStore('Users').addData(Ext.JSON.decode(userArray));
+			Ext.Viewport.unmask();
+			return;
+		}
+
 		// Creating the user list requires a join on multiple requests. Unformatted responses will be stored in userResponse.
 		// When a pair of responses is available, the correct formatting is applied by userByTypeReturn and appended to formattedArray
 		// When all requests have been formatted, formattedArray is added to UserStore
@@ -346,6 +353,11 @@ Ext.define('Zermelo.AjaxManager', {
 		Ext.getStore('Users').suspendEvents();
 
 		this.types.forEach(this.getUsersByType, this);
+	},
+
+	refreshUsers: function() {
+		localStorage.removeItem('Users');
+		this.getUsers();
 	},
 
 	getSelf: function() {

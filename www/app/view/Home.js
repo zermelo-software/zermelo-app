@@ -286,7 +286,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '4px'
                     },
                     handler: function () {
-                        return;
+                        Zermelo.AjaxManager.refreshUsers();
                     }
                 }]
             }, {

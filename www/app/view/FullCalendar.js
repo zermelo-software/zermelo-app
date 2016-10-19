@@ -25,10 +25,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var width;
-var screenWidth;
-var weeknumbers = [];
-// This page managess the fucntionality and designing of calender.
 Ext.define('Zermelo.view.FullCalendar', {
     extend: 'Ext.Container',
     requires: ['Ext.SegmentedButton', 'Ext.util.DelayedTask','Ext.LoadMask'],
@@ -54,9 +50,10 @@ Ext.define('Zermelo.view.FullCalendar', {
     started: false,
     initialize: function () {
         // get screen width
-        screenWidth = Ext.getBody().getSize().width;
+        var screenWidth = window.innerWidth;
         // set days button width
-        width = (screenWidth - 49) / 5.2;
+        var width = (screenWidth - 49) / 5.2;
+        console.log(screenWidth, width);
         var me = this;
         me.callParent(arguments);
         // create topbar contaier with vertical box and top
@@ -488,7 +485,7 @@ Ext.define('Zermelo.view.FullCalendar', {
     },
 
     handleRefresh: function() {
-        if(this.up('home').isActiveItem('fullCalendarView'))
+        if(this.up('home').getActiveItemName() == 'fullCalendarView')
             this.refreshEvents();
         else
             this.on('activate', this.refreshEvents, this, {single: true, buffer: 5});

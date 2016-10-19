@@ -3,6 +3,10 @@ Ext.define('Zermelo.store.UserStore', {
 	xtype: 'UserStore',
 	requires: ['Zermelo.model.User'],
 	config: {
+		autoSort: false,
+		autoSync: false,
+		autoLoad: false,
+		remoteSort: true,
 		model: 'Zermelo.model.User',
 		storeId: 'Users'
 	},

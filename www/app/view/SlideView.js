@@ -478,10 +478,8 @@ Ext.define('Zermelo.view.SlideView', {
                 }]
             });
 
-        } else if (list.isSelected(item) && this.config.closeOnSelect) {
-            thisobj.closeContainer();
         }
-
+        thisobj.closeContainer();
     },
 
     /**
@@ -508,18 +506,15 @@ Ext.define('Zermelo.view.SlideView', {
 
                     // Wait until the component is painted before closing the container.  This makes
                     // the initial animation much smoother.
-                    if (me.config.closeOnSelect) {
-                        me._cache[index].addListener('painted', function() {
+                    // if (me.config.closeOnSelect) {
+                        // me._cache[index].addListener('painted', function() {
                             // The slight delay here gives the component enough time to update before
                             // the close animation starts.
                             me.closeContainer();
-                        });
-                    }
+                        // });
+                    // }
 
                     // Add a button for controlling the slide, if desired
-                    if ((item.raw.slideButton || false)) {
-                        //  me.createSlideButton(me._cache[index], item.raw.slideButton);
-                    }
                 }
             }
             me.createSlideButton(me._cache[index], item.raw.slideButton);
@@ -964,7 +959,11 @@ Ext.define('Zermelo.view.SlideView', {
         this.list.select(this.itemIds[itemName]);
     },
 
-    isActiveItem: function(itemName) {
-        return this.getActiveItem().internalId == this.itemIds[itemName];
+    getActiveItemName: function(itemName) {
+        var activeItem = this.getActiveItem().internalId;
+        for(var key in this.itemIds) {
+            if(this.itemIds[key] == activeItem)
+                return key;
+        }
     }
 });
