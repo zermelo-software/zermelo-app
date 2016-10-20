@@ -254,7 +254,25 @@ Ext.define('Zermelo.AjaxManager', {
 			this.userResponse['users'] = 200;
 		}
 
-		if(Array.isArray(this.userResponse['groupindepartments']) && Array.isArray(this.userResponse['departmentsofbranches'])) {
+		// When one request of a pair fails, both requests cannot be evaluated.
+		// This function checks whether a pair can be evaluated.
+		// If a pair has failed the successful request is registered as formatted so userByTypeReturn can continue
+		var shouldFormat = Ext.bind(function(a, b) {
+			if(Array.isArray(this.userResponse[a]) && Array.isArray(this.userResponse[b])) {
+				console.log('success', a, b);
+				return true;
+			}
+			else {
+				if(Array.isArray(this.userResponse[a]) && typeof(this.userResponse[b]) == "number")
+					this.userResponse[a] = 200;
+				else if(Array.isArray(this.userResponse[b]) && typeof(this.userResponse[a]) == "number")
+					this.userResponse[b] = 200;
+				console.log('failure', a, b, typeof this.userResponse[a], typeof this.userResponse[b]);
+				return false;
+			}
+		}, this);
+
+		if(shouldFormat('groupindepartments', 'departmentsofbranches')) {
 			this.userResponse['groupindepartments'].forEach(function(item) {
 				this.formattedArray.push({
 					type: 'group',
@@ -268,7 +286,7 @@ Ext.define('Zermelo.AjaxManager', {
 			this.userResponse['departmentsofbranches'] = 200;
 		}
 
-		if(Array.isArray(this.userResponse['locationofbranches']) && Array.isArray(this.userResponse['branchesofschools'])) {
+		if(shouldFormat('locationofbranches', 'branchesofschools')) {
 			this.userResponse['locationofbranches'].forEach(function(item) {
 				this.formattedArray.push({
 					code: this.userResponse['branchesofschools'].find(function(mapping) {return mapping.id == item.branchOfSchool}).branch + '.' + item.name,
@@ -307,7 +325,15 @@ Ext.define('Zermelo.AjaxManager', {
 				if(a.code > b.code)
 					return 1;
 			});
-			Ext.defer(function() {localStorage.setItem('Users', Ext.JSON.encode(this.formattedArray))}, 5000, this);
+			Ext.defer(function() {
+				var timer = performance.now();
+				var encoded = Ext.JSON.encode(this.formattedArray);
+				console.log('encode', performance.now() - timer);
+				timer = performance.now();
+				localStorage.setItem('Users', encoded);
+				console.log('store', performance.now() - timer);
+			}, 5000, this);
+
 			UserStore.addData(this.formattedArray);
 			UserStore.initSearch();
 			UserStore.resumeEvents(true);
@@ -319,6 +345,7 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsers: function() {
+		localStorage.removeItem('Users');
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
