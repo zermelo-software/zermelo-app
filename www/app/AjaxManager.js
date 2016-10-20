@@ -46,7 +46,7 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response, opts) {
-				var decoded = Ext.JSON.decode(response.responseText).response.data;
+				var decoded = JSON.parse(response.responseText).response.data;
 				var announcementStore = Ext.getStore('Announcements');
 				announcementStore.suspendEvents(true);
 
@@ -143,7 +143,7 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 			scope: this,
 			success: function (response) {
-				var decoded = Ext.JSON.decode(response.responseText).response.data;
+				var decoded = JSON.parse(response.responseText).response.data;
 
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();
@@ -217,8 +217,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsersByType: function(type) {
-
-
 			Ext.Ajax.request({			
 				url: this.getUrl(type),
 				disableCaching: false,
@@ -230,7 +228,7 @@ Ext.define('Zermelo.AjaxManager', {
 				useDefaultXhrHeader: false,
 				scope: this,
 				success: function (response) {
-					this.userByTypeReturn(type, response.status, Ext.JSON.decode(response.responseText).response.data);
+					this.userByTypeReturn(type, response.status, JSON.parse(response.responseText).response.data);
 				},
 				failure: function (response) {
 					this.userByTypeReturn(type, response.status);
@@ -259,7 +257,6 @@ Ext.define('Zermelo.AjaxManager', {
 		// If a pair has failed the successful request is registered as formatted so userByTypeReturn can continue
 		var shouldFormat = Ext.bind(function(a, b) {
 			if(Array.isArray(this.userResponse[a]) && Array.isArray(this.userResponse[b])) {
-				console.log('success', a, b);
 				return true;
 			}
 			else {
@@ -267,7 +264,6 @@ Ext.define('Zermelo.AjaxManager', {
 					this.userResponse[a] = 200;
 				else if(Array.isArray(this.userResponse[b]) && typeof(this.userResponse[a]) == "number")
 					this.userResponse[b] = 200;
-				console.log('failure', a, b, typeof this.userResponse[a], typeof this.userResponse[b]);
 				return false;
 			}
 		}, this);
@@ -325,15 +321,8 @@ Ext.define('Zermelo.AjaxManager', {
 				if(a.code > b.code)
 					return 1;
 			});
-			Ext.defer(function() {
-				var timer = performance.now();
-				var encoded = Ext.JSON.encode(this.formattedArray);
-				console.log('encode', performance.now() - timer);
-				timer = performance.now();
-				localStorage.setItem('Users', encoded);
-				console.log('store', performance.now() - timer);
-			}, 5000, this);
 
+			localStorage.setItem('Users', JSON.stringify(this.formattedArray));
 			UserStore.addData(this.formattedArray);
 			UserStore.initSearch();
 			UserStore.resumeEvents(true);
@@ -362,7 +351,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 		var userArray = localStorage.getItem('Users')
 		if(userArray) {
-			Ext.getStore('Users').addData(Ext.JSON.decode(userArray));
+			Ext.getStore('Users').addData(JSON.parse(userArray));
 			UserStore.initSearch();
 			UserStore.resumeEvents(true);
 			UserStore.fireEvent('refresh');
@@ -401,7 +390,7 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response) {
-				// console.log(Ext.JSON.decode(response.responseText).response.data[0]);
+				// console.log(JSON.parse(response.responseText).response.data[0]);
 			},
 
 			failure: function (response) {

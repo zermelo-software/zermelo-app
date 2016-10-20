@@ -220,7 +220,7 @@ function authentication() {
                     // hide loading screen
                     thisObj.unmask();
                     // decode response
-                    var decoded = Ext.JSON.decode(response.responseText);
+                    var decoded = JSON.parse(response.responseText);
                     Zermelo.UserManager.saveLogin('~me', value_institution, decoded.access_token);
                     number_code.setValue("");
                     text_institution.setValue("");
