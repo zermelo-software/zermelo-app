@@ -191,14 +191,15 @@ Ext.define('Zermelo.AjaxManager', {
 					i = collisionEnd;
 				}
 				
-				appointmentStore.add(decoded);
+				appointmentStore.add(decoded).forEach(function(record) {console.log(record.setDirty())});
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents(true);
 				appointmentStore.fireEvent('refresh');
+				appointmentStore.queueDelayedEvents();
 				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
-				appointmentStore.queueDelayedEvents();
+				
 			},
 			failure: function (response) {
 				console.log(response);
@@ -343,7 +344,7 @@ Ext.define('Zermelo.AjaxManager', {
 		}
 
 		// Creating the user list requires a join on multiple requests. Unformatted responses will be stored in userResponse.
-		// When a pair of responses is available, the correct formatting is applied by userByTypeReturn and appended to formattedArray
+		// When a pair of responses is available, the correct formatting is applied by userByTypeReturn and appended to formattedArray.
 		// When all requests have been formatted, formattedArray is added to UserStore
 		this.userResponse = {};
 		this.formattedArray = [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}];

@@ -389,7 +389,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         // add items in main container
         this.setItems([me.topBar, me.calendarPanel]);
         Ext.getStore('Appointments').on('refresh', this.handleRefresh, this, {buffer: 5});
-        this.on('painted', this.renderFullCalendar, this, {single: true, buffer: 5});
+        // this.on('painted', this.renderFullCalendar, this, {single: true, buffer: 5});
     }, // end initialize
 
     /**

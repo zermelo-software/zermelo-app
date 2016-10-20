@@ -38,10 +38,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 * @return:
 	 */
 	queueDelayedEvents: function(delay) {
-		console.log('queue');
 		if (delay === undefined)
 			delay = 5 * 1000;
-		Ext.defer(function() {console.log('run'); this.pruneLocalStorage();}, delay, this);
+		Ext.defer(function() {this.pruneLocalStorage(); this.sync();}, delay, this);
 	},
 
 	/**
@@ -57,7 +56,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		upperBound = upperBound.setDate(upperBound.getDate() + 7 + (6 - upperBound.getDay()));
 
 		this.suspendEvents();
-		this.clearFilter()
+		this.clearFilter();
 		this.each(function(record) {
 			if (record.get('end') < lowerBound || record.get('start') > upperBound) {
 				this.remove(record);
