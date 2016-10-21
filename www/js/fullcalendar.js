@@ -2832,7 +2832,6 @@ function enableTextSelection(element) {
 
                     // set day buttons text
                     Ext.getCmp('day' + (i + 1)).setText(formatDate(date, "ddd\ndd"));
-                    dayData[i] = formatDate(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
                     bodyCell = dayBodyCells.eq(i);
                     //set current day column highlight
                     if (+date == +today) {
@@ -3678,45 +3677,23 @@ function enableTextSelection(element) {
             var skinCss = getSkinCss(event, opt);
             var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
             var classes = ['fc-event', 'fc-event-vert'];
-            if (week_day_view == "agendaWeek" || week_day_view == "") {
-                if (event.valid) {
-                    if (event.cancelled)
-                        classes.push('fc-event-skin-cancelled');
-                    else {
-                        if (event.type == 'lesson')
-                            classes.push('fc-event-skin-lesson');
-                        else if (event.type == 'exam')
-                            classes.push('fc-event-skin-exam');
-                        else if (event.type == 'activity')
-                            classes.push('fc-event-skin-activity');
-                        else if (event.type == 'choice')
-                            classes.push('fc-event-skin-unknown');
-                        else if (event.type == 'unknown' || event.type == 'other')
-                            classes.push('fc-event-skin-unknown');
-                    }
-                } else {
-                    classes.push('fc-event-skin-valid-false');
+            if (event.valid) {
+                if (event.cancelled)
+                    classes.push('fc-event-skin-cancelled');
+                else {
+                    if (event.type == 'lesson')
+                        classes.push('fc-event-skin-lesson');
+                    else if (event.type == 'exam')
+                        classes.push('fc-event-skin-exam');
+                    else if (event.type == 'activity')
+                        classes.push('fc-event-skin-activity');
+                    else if (event.type == 'choice')
+                        classes.push('fc-event-skin-unknown');
+                    else if (event.type == 'unknown' || event.type == 'other')
+                        classes.push('fc-event-skin-unknown');
                 }
             } else {
-                if (event.valid) {
-                    if (event.cancelled)
-                        classes.push('fc-event-day-skin-cancelled');
-                    else {
-                        if (event.type == 'lesson')
-                            classes.push('fc-event-day-skin-lesson');
-                        else if (event.type == 'exam')
-                            classes.push('fc-event-day-skin-exam');
-                        else if (event.type == 'activity')
-                            classes.push('fc-event-day-skin-activity');
-                        else if (event.type == 'choice')
-                            classes.push('fc-event-day-skin-unknown');
-                        else if (event.type == 'unknown' || event.type == 'other')
-                            classes.push('fc-event-day-skin-unknown');
-                    }
-                } else {
-                    classes.push('fc-event-day-skin-valid-false');
-                }
-
+                classes.push('fc-event-skin-valid-false');
             }
             if (isEventDraggable(event)) {
                 classes.push('fc-event-draggable');
@@ -3767,38 +3744,19 @@ function enableTextSelection(element) {
                     "<div class='fc-event-inner'" + skinCssAttr + ">" +
                     "<div class='fc-event-content'>";
            
-            if (week_day_view == "agendaWeek" || week_day_view == "") {
-                html += "<div class='fc-event-title'>" +
-                    htmlEscape(event.teachers) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.subjects) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.locations) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.groups) +
-                    "</div>" +
-                    "<div class='fc-icon-align-bottom-right'>";
-            } else {
-                html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.teachers) +
-                    "</div>" +
-                    "<div class='fc-event-title' style='position: absolute;right: 0;top: 0;'>" +
-                    htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
-                    "</div>" +
-                    "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subjects) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.locations) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.groups) +
-                    "</div>" +
-                    "<div class='fc-icon-align-bottom-right'>";
-            }
+            html += "<div class='fc-event-title'>" +
+                htmlEscape(event.teachers) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.subjects) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.locations) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.groups) +
+                "</div>" +
+                "<div class='fc-icon-align-bottom-right'>";
 
             html += get_special_event_icons_html(event, seg);
 

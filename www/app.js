@@ -65,133 +65,117 @@ if (typeof Ext.Logger === 'undefined') {
 
 //Global variable
 var loc = '';
-// var scrollTopHeight = 0;
-var startFlag = false;
-var currentView;
-var dayData = [];
-var dayview = "";
-var week_day_view = "";
-var picker_open = false;
-var datePicker;
-var todayFlag = false;
-var appointment_detail_open = false;
-var clickButton = false;
-var picker_close = false;
-var refreshDate;
-var messageShow = false;
-var userChange = false;
-Ext
-		.application({
-			name : 'Zermelo',
+Ext.application({
+	name : 'Zermelo',
 
-			//overriede component for multiple langauge
-			requires : [ 'Ux.locale.Manager',
-					'Ux.locale.override.st.Component',
-					'Ux.locale.override.st.Button',
-					'Ux.locale.override.st.Container',
-					'Ux.locale.override.st.TitleBar',
-					'Ux.locale.override.st.ToolBar',
-					'Ux.locale.override.st.Title',
-					'Ux.locale.override.st.Label',
-					'Ux.locale.override.st.field.Field',
-					'Ux.locale.override.st.field.DatePicker',
-					'Ux.locale.override.st.form.FieldSet',
-					'Ux.locale.override.st.picker.Picker',
-					'Ux.locale.override.st.picker.Date',
-					'Ux.locale.override.st.Msgbox',
-					'Ux.locale.override.st.LoadMask',
-					'Zermelo.UserManager',
-					'Zermelo.ErrorManager',
-					'Zermelo.AjaxManager'
-					],
-
-			// views load
-			views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
-					'MessageDetails', 'Schedule', 'FullCalendar',
-					'AppointmentDetails', 'CalendarList', 'UserSearch'
+	//overriede component for multiple langauge
+	requires : [ 'Ux.locale.Manager',
+			'Ux.locale.override.st.Component',
+			'Ux.locale.override.st.Button',
+			'Ux.locale.override.st.Container',
+			'Ux.locale.override.st.TitleBar',
+			'Ux.locale.override.st.ToolBar',
+			'Ux.locale.override.st.Title',
+			'Ux.locale.override.st.Label',
+			'Ux.locale.override.st.field.Field',
+			'Ux.locale.override.st.field.DatePicker',
+			'Ux.locale.override.st.form.FieldSet',
+			'Ux.locale.override.st.picker.Picker',
+			'Ux.locale.override.st.picker.Date',
+			'Ux.locale.override.st.Msgbox',
+			'Ux.locale.override.st.LoadMask',
+			'Zermelo.UserManager',
+			'Zermelo.ErrorManager',
+			'Zermelo.AjaxManager'
 			],
 
-			models : ['Appointment', 'Announcement'],
+	// views load
+	views : [ 'SlideView', 'Login', 'Main', 'Home', 'MessageList',
+			'MessageDetails', 'Schedule', 'FullCalendar',
+			'AppointmentDetails', 'CalendarList', 'UserSearch'
+	],
 
-			// controller load
-			controllers : ['MainController'],
+	models : ['Appointment', 'Announcement'],
 
-			// store load
-			stores : [ 'AnnouncementStore', 'AppointmentStore'],
+	// controller load
+	controllers : ['MainController'],
 
-			isIconPrecomposed : true,
+	// store load
+	stores : [ 'AnnouncementStore', 'AppointmentStore'],
 
-			// Launch application
+	isIconPrecomposed : true,
 
-			launch : function() {
-				Ext.Msg.defaultAllowedConfig.showAnimation = false;
-				// display magnified glass press on textbox
-				Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
-				
-				// check device's default language
+	// Launch application
 
-				if (Ext.os.is('Android') && version == 2) { // only for android 2.3 os
+	launch : function() {
+		Ext.Msg.defaultAllowedConfig.showAnimation = false;
+		// display magnified glass press on textbox
+		Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
+		
+		// check device's default language
 
-					if (navigator
-							&& navigator.userAgent
-							&& (loc = navigator.userAgent
-									.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
-						loc = loc[1];
-					}
-					if (!loc && navigator) {
-						if (navigator.language) {
-							loc = navigator.language;
-						} else if (navigator.browserLanguage) {
-							loc = navigator.browserLanguage;
-						} else if (navigator.systemLanguage) {
-							loc = navigator.systemLanguage;
-						} else if (navigator.userLanguage) {
-							loc = navigator.userLanguage;
-						}
-						loc = loc.substr(0, 2);
-					}
-					if (loc == 'en' || loc == 'nl') {
-						loc = loc;
-					} else {
-						loc = 'en';
-					}
+		if (Ext.os.is('Android') && version == 2) { // only for android 2.3 os
 
-				} else {
-					if (navigator.language.split('-')[0] == 'en'
-							|| navigator.language.split('-')[0] == 'nl') {
-						loc = navigator.language.split('-')[0];
-					} else {
-						//default set english
-						loc = 'en';
-					}
-				}
-				// set locale file
-				Ux.locale.Manager.setConfig({
-					ajaxConfig : {
-						method : 'GET'
-					},
-					language : loc,
-					tpl : 'locales/{locale}.json',
-					type : 'ajax'
-				});
-				Ux.locale.Manager.init();
-				//set datepicker months in Dutch
-				if (loc == 'nl') {
-					Ext.Date.monthNames = [ "Januari", "Februari", "Maart",
-							"April", "Mei", "Juni", "Juli", "Augustus",
-							"September", "Oktober", "November", "December" ];
-					Ext.Date.dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
-				}
-				// Back button handle for android
-				if (Ext.os.is('Android')) {
-					document.addEventListener("backbutton", function() {
-						Ext.Viewport.setActiveItem(Ext.getCmp('home'));
-					});
-				}
-
-				// Destroy the #appLoadingIndicator element
-				Ext.fly('appLoadingIndicator').destroy();
-				// Initialize the main view
-				Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
+			if (navigator
+					&& navigator.userAgent
+					&& (loc = navigator.userAgent
+							.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
+				loc = loc[1];
 			}
+			if (!loc && navigator) {
+				if (navigator.language) {
+					loc = navigator.language;
+				} else if (navigator.browserLanguage) {
+					loc = navigator.browserLanguage;
+				} else if (navigator.systemLanguage) {
+					loc = navigator.systemLanguage;
+				} else if (navigator.userLanguage) {
+					loc = navigator.userLanguage;
+				}
+				loc = loc.substr(0, 2);
+			}
+			if (loc == 'en' || loc == 'nl') {
+				loc = loc;
+			} else {
+				loc = 'en';
+			}
+
+		} else {
+			if (navigator.language.split('-')[0] == 'en'
+					|| navigator.language.split('-')[0] == 'nl') {
+				loc = navigator.language.split('-')[0];
+			} else {
+				//default set english
+				loc = 'en';
+			}
+		}
+		// set locale file
+		Ux.locale.Manager.setConfig({
+			ajaxConfig : {
+				method : 'GET'
+			},
+			language : loc,
+			tpl : 'locales/{locale}.json',
+			type : 'ajax'
 		});
+		Ux.locale.Manager.init();
+		//set datepicker months in Dutch
+		if (loc == 'nl') {
+			Ext.Date.monthNames = [ "Januari", "Februari", "Maart",
+					"April", "Mei", "Juni", "Juli", "Augustus",
+					"September", "Oktober", "November", "December" ];
+			Ext.Date.dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
+		}
+		// Back button handle for android
+		if (Ext.os.is('Android')) {
+			document.addEventListener("backbutton", function() {
+				Ext.Viewport.setActiveItem(Ext.getCmp('home'));
+			});
+		}
+
+		// Destroy the #appLoadingIndicator element
+		Ext.fly('appLoadingIndicator').destroy();
+		// Initialize the main view
+		Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
+	}
+});

@@ -90,9 +90,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    // var date = dayData[0].split("T")[0].split("-");
-                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                     var appointmentStore = Ext.getStore('Appointments');
                     appointmentStore.setWindowDay();
                     appointmentStore.setWindow(1 - (new Date()).getDay());
@@ -109,9 +106,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    // var date = dayData[1].split("T")[0].split("-");
-                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                     var appointmentStore = Ext.getStore('Appointments');
                     appointmentStore.setWindowDay();
                     appointmentStore.setWindow(2 - (new Date()).getDay());
@@ -128,9 +122,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    // var date = dayData[2].split("T")[0].split("-");
-                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                     var appointmentStore = Ext.getStore('Appointments');
                     appointmentStore.setWindowDay();
                     appointmentStore.setWindow(3 - (new Date()).getDay());
@@ -147,9 +138,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    // var date = dayData[3].split("T")[0].split("-");
-                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                     var appointmentStore = Ext.getStore('Appointments');
                     appointmentStore.setWindowDay();
                     appointmentStore.setWindow(4 - (new Date()).getDay());
@@ -166,9 +154,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                 // button type plain
                 ui: 'plain',
                 handler: function () {
-                    // var date = dayData[4].split("T")[0].split("-");
-                    // var selectedDate = new Date(date[0], date[1] - 1, date[2]);
-                    // Ext.getCmp('fullCalendarView').openDayView(selectedDate);
                     var appointmentStore = Ext.getStore('Appointments');
                     appointmentStore.setWindowDay();
                     appointmentStore.setWindow(5 - (new Date()).getDay());
@@ -198,156 +183,90 @@ Ext.define('Zermelo.view.FullCalendar', {
                 docked: 'left',
                 ui: 'plain',
                 handler: function () {
-                    picker_open = true;
-                    //change to week view
-                    if (dayview == "dayview") {
-                        datePicker = Ext.create('Ext.picker.Date', {
-                            //css class resources/images/app.css
-                            cls: 'zermelo-toolbar',
-                            requires: ['Ext.picker.Date'],
-                            name: 'datePicker',
-                            doneButton: {
-                                //done button text in multiple language
-                                locales: {
-                                    text: 'done'
-                                },
-                                ui: 'noraml',
-                                handler: function (btn) {
+                    var weekArray = new Array();
 
-                                    if (!Ext.os.is.iOS) {
-                                        //check webkitversion 
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
-                                    }
-                                    var currentmonth = datePicker.getValue(true).getDate();
-                                    // skip weekend days like sat and sun
-                                    if (datePicker.getValue(true).getDay() == 0) {
-                                        currentmonth = datePicker.getValue(true).getDate() + 1;
-                                    } else if (datePicker.getValue(true).getDay() == 6) {
-                                        currentmonth = datePicker.getValue(true).getDate() + 2;
-                                    }
-                                    var day = new Date(datePicker.getValue(true).getFullYear(), datePicker.getValue(true).getMonth(), currentmonth)
-                                    me.gotoWeek_Day(day);
-                                    picker_open = false;
+                    // set current date, startweek date currentyear-1,endweek date currentyear+1
+                    var currentDate = new Date();
+                    var startWeek = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
+                    var endWeek = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
 
-                                }
-                            },
-                            cancelButton: {
-                                locales: {
-                                    text: 'cancel'
-                                },
-                                handler: function () {
-                                    picker_open = false;
-                                    if (!Ext.os.is.iOS) {
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
-                                    }
-                                }
-                            },
-                            // start year from currentyear-1
-                            yearFrom: new Date().getFullYear() - 1,
-                            // end year to currentyear + 10
-                            yearTo: new Date().getFullYear() + 10,
-                            // set current date
-                            value: new Date()
+                    //get start week number, end week number and current week number
+                    var startWeeks = getISOWeeks(startWeek.getFullYear());
+                    var endWeeks = getISOWeeks(endWeek.getFullYear());
+                    var currentWeeks = getISOWeeks(currentDate.getFullYear());
+
+                    //get total weeks numbers
+                    var totalNumberOfWeek = startWeeks - startWeek.getWeek() + 1;
+                    totalNumberOfWeek = totalNumberOfWeek + currentWeeks;
+                    totalNumberOfWeek = totalNumberOfWeek + endWeek.getWeek();
+
+                    startWeek.setDate(startWeek.getDate() - startWeek.getDay() + 1);
+                    //add data for week picker view 
+                    for (i = 0; i < totalNumberOfWeek; i++) {
+                        startWeek = new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate());
+                        var dateString = ('0' + startWeek.getDate()).slice(-2) + "-" + ('0' + (startWeek.getMonth() + 1)).slice(-2) + "-" + startWeek.getFullYear();
+
+                        var weekString = startWeek.getWeek();
+                        weekArray.push({
+                            text: "<div style='padding-left: 13%;padding-right: 13%;'><font style='font-weight: bold;float:left'>Week " + weekString + "</font><div style='position: relative;float: right;'>&nbsp;&nbsp;&nbsp;&nbsp;" + dateString + "</div></div>",
+                            value: new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate()).toString()
                         });
-                        Ext.Viewport.add(datePicker);
-                        datePicker.show();
-                    } else {
-                        // week picker 
-                        picker_open = true;
-                        // weeks array and 
-                        var weekArray = new Array();
+                        startWeek.setDate(startWeek.getDate() + 7);
+                    }
+                    var currentmonth = currentDate.getDate();
+                    if (currentDate.getDay() == 0) {
+                        currentmonth = currentDate.getDate() + 1;
+                    } else if (currentDate.getDay() == 6) {
+                        currentmonth = currentDate.getDate() + 2;
+                    }
+                    currentDate.setDate(currentmonth);
+                    currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 1)
 
-                        // set current date, startweek date currentyear-1,endweek date currentyear+1
-                        var currentDate = new Date();
-                        var startWeek = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
-                        var endWeek = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
-
-                        //get start week number, end week number and current week number
-                        var startWeeks = getISOWeeks(startWeek.getFullYear());
-                        var endWeeks = getISOWeeks(endWeek.getFullYear());
-                        var currentWeeks = getISOWeeks(currentDate.getFullYear());
-
-                        //get total weeks numbers
-                        var totalNumberOfWeek = startWeeks - startWeek.getWeek() + 1;
-                        totalNumberOfWeek = totalNumberOfWeek + currentWeeks;
-                        totalNumberOfWeek = totalNumberOfWeek + endWeek.getWeek();
-
-                        startWeek.setDate(startWeek.getDate() - startWeek.getDay() + 1);
-                        //add data for week picker view 
-                        for (i = 0; i < totalNumberOfWeek; i++) {
-                            startWeek = new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate());
-                            var dateString = ('0' + startWeek.getDate()).slice(-2) + "-" + ('0' + (startWeek.getMonth() + 1)).slice(-2) + "-" + startWeek.getFullYear();
-
-                            var weekString = startWeek.getWeek();
-                            weekArray.push({
-                                text: "<div style='padding-left: 13%;padding-right: 13%;'><font style='font-weight: bold;float:left'>Week " + weekString + "</font><div style='position: relative;float: right;'>&nbsp;&nbsp;&nbsp;&nbsp;" + dateString + "</div></div>",
-                                value: new Date(startWeek.getFullYear(), startWeek.getMonth(), startWeek.getDate()).toString()
-                            });
-                            startWeek.setDate(startWeek.getDate() + 7);
-                        }
-                        var currentmonth = currentDate.getDate();
-                        if (currentDate.getDay() == 0) {
-                            currentmonth = currentDate.getDate() + 1;
-                        } else if (currentDate.getDay() == 6) {
-                            currentmonth = currentDate.getDate() + 2;
-                        }
-                        currentDate.setDate(currentmonth);
-                        currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 1)
-
-                        var defaultValue = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-                        //open custom week picker view
-                        datePicker = Ext.create('Ext.Picker', {
-                            modal: true,
-                            cls: 'zermelo-toolbar',
-                            value: {
-                                'week': new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toString()
+                    var defaultValue = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+                    //open custom week picker view
+                    datePicker = Ext.create('Ext.Picker', {
+                        modal: true,
+                        cls: 'zermelo-toolbar',
+                        value: {
+                            'week': new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).toString()
+                        },
+                        slots: [{
+                            name: 'week',
+                            data: weekArray
+                        }],
+                        doneButton: {
+                            locales: {
+                                text: 'done'
                             },
-                            slots: [{
-                                name: 'week',
-                                data: weekArray
-                            }],
-                            doneButton: {
-                                locales: {
-                                    text: 'done'
-                                },
-                                ui: 'noraml',
-                                handler: function () {
-                                    if (!Ext.os.is.iOS) {
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
+                            ui: 'noraml',
+                            handler: function () {
+                                if (!Ext.os.is.iOS) {
+                                    if (webkitVersion < 537.36) {
+                                        setClickButton();
                                     }
-                                    var week = datePicker.getValue().week;
-                                    week = new Date(week);
-                                    me.gotoWeek_Day(week);
-                                    picker_open = false;
                                 }
+                                var week = datePicker.getValue().week;
+                                week = new Date(week);
+                                me.gotoWeek_Day(week);
+                                picker_open = false;
+                            }
+                        },
+                        cancelButton: {
+                            locales: {
+                                text: 'cancel'
                             },
-                            cancelButton: {
-                                locales: {
-                                    text: 'cancel'
-                                },
-                                handler: function () {
-                                    picker_open = false;
-                                    if (!Ext.os.is.iOS) {
-                                        if (webkitVersion < 537.36) {
-                                            clickButton = true;
-                                            setClickButton();
-                                        }
+                            handler: function () {
+                                picker_open = false;
+                                if (!Ext.os.is.iOS) {
+                                    if (webkitVersion < 537.36) {
+                                        setClickButton();
                                     }
                                 }
                             }
-                        });
-                        Ext.Viewport.add(datePicker);
-                        datePicker.show();
-                    }
+                        }
+                    });
+                    Ext.Viewport.add(datePicker);
+                    datePicker.show();
                 }
             }, {
                 xtype: "button",
@@ -363,7 +282,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 docked: 'left',
                 ui: 'plain',
                 handler: function () {
-                    me.getWeekData('left', dayview);
+                    me.getWeekData('left');
                 }
             }, {
                 // next button
@@ -373,7 +292,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                 docked: 'right',
                 ui: 'plain',
                 handler: function () {
-                    me.getWeekData('right', dayview);
+                    me.getWeekData('right');
                 }
             }]
         });
@@ -541,11 +460,11 @@ Ext.define('Zermelo.view.FullCalendar', {
     },
 
     // Changes the currently shown week or day
-    getWeekData: function(nextprev, dayview) {
-        var offset = dayview == "dayview" ? 1 : 7;      // one day in day view, 7 days otherwise
-        var direction = nextprev == 'left' ? -1 : 1;    // subtract days for left, add for right
+    getWeekData: function(nextprev) {
+        // subtract days for left, add for right
+        var direction = nextprev == 'left' ? -7 : 7;
 
-        Ext.getStore('Appointments').setWindow(offset * direction);
+        Ext.getStore('Appointments').setWindow(direction);
 
         this.navigateCalendar(nextprev);
     },
