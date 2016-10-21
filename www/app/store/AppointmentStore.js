@@ -82,19 +82,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	/**
-	 * Filters items for the new user and fetches events if none are known
-	 *
-	 * @param:
-	 * @return:
-	 */
-	changeUser: function() {
-		this.resetFilters();
-		if(this.getCount() == 0) {
-			this.fetchWeek();
-		}
-	},
-
-	/**
 	 * Sets the date to the current week during object creation
 	 *
 	 * @param:

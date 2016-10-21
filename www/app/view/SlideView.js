@@ -529,7 +529,7 @@ Ext.define('Zermelo.view.SlideView', {
                 me.fireAction('select', [me, me._cache[index], index], func, me);
             }
             if (index == this.itemIds.weekView) {
-                Ext.getStore('Appointments').fetchWeek();
+                Ext.getStore('Appointments').prepareData();
             }
         }
     },

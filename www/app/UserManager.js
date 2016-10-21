@@ -7,6 +7,7 @@ Ext.define('Zermelo.UserManager', {
 	type: window.localStorage.getItem('type'),
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
+	permissions: JSON.parse(window.localStorage.getItem('permissions') || '{}'),
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -44,15 +45,8 @@ Ext.define('Zermelo.UserManager', {
 		return this.accessToken;
 	},
 
-	addVieweeParamsToObject: function(vieweeParamsObject) {
-		vieweeParamsObject.access_token = this.getAccessToken();
-		if(this.getType() == 'user')
-			vieweeParamsObject.user = this.getUser();
-		else if(this.getType() == 'group')
-			vieweeParamsObject.containsStudentsFromGroupInDepartment = this.getUser();
-		else if(this.getType() == 'location')
-			vieweeParamsObject.locationsOfBranch = this.getUser();
-		return vieweeParamsObject;
+	getPermissions: function() {
+		return this.permissions;
 	},
 
 	setCode: function(newCode) {
@@ -78,6 +72,12 @@ Ext.define('Zermelo.UserManager', {
 	setAccessToken: function(newAccessToken) {
 		this.accessToken = newAccessToken;
 		window.localStorage.setItem('accessToken', newAccessToken);
+	},
+
+	setPermissions: function(permissions) {
+		this.permissions = permissions;
+		console.log(permissions);
+		window.localStorage.setItem('permissions', JSON.stringify(permissions));
 	},
 
 	saveLogin: function(code, institution, accessToken) {
@@ -109,6 +109,8 @@ Ext.define('Zermelo.UserManager', {
 
 	setUser: function(newUser) {
 		var newCode, newType;
+		if(!newUser)
+			newUser = Ext.create('Zermelo.model.User', {firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'});
 		if(newUser.get('type') == 'user') {
 			newCode = newUser.get('code') || '~me';
 			newType = 'user';
@@ -126,10 +128,7 @@ Ext.define('Zermelo.UserManager', {
 		this.setType(newType);
 		this.setName(newName);
 		this.setTitles();
-		Ext.getStore('Appointments').changeUser();
-		// var fullCalendarView = Ext.getCmp('fullCalendarView');
-		// if(fullCalendarView)
-		// 	fullCalendarView.refreshEvents();
+		Ext.getStore('Appointments').prepareData();
 	},
 
 	getScheduleTitle: function() {

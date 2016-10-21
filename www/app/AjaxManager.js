@@ -10,6 +10,26 @@ Ext.define('Zermelo.AjaxManager', {
 		)
 	},
 
+	addAccessTokenToParams: function(params) {
+		params.access_token = Zermelo.UserManager.getAccessToken();
+		return params;
+	},
+
+	addVieweeToParams: function(params) {
+		var type = Zermelo.UserManager.getType();
+		var user = Zermelo.UserManager.getUser();
+
+		this.addAccessTokenToParams(params);
+
+		if(type == 'user')
+			params.user = user;
+		else if(type == 'group')
+			params.containsStudentsFromGroupInDepartment = user;
+		else if(type == 'location')
+			params.locationsOfBranch = user;
+		return params;
+	},
+
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
 		this.getAnnouncementData();
@@ -116,8 +136,10 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(startTime, endTime) {
+		console.log('getAppointment try', performance.now(), this.appointmentsPending);
 		if (!Zermelo.UserManager.loggedIn() || this.appointmentsPending)
 			return;
+		console.log('getAppointment start', performance.now(), this.appointmentsPending);
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -126,18 +148,15 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-		
-		// Real unix timestamps use seconds, javascript uses milliseconds
-		startTime = Math.floor(startTime / 1000);
-		endTime = Math.floor(endTime / 1000);
 
 		this.appointmentsPending = true;
 
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
-			params: Zermelo.UserManager.addVieweeParamsToObject({
-				start: startTime,
-				end: endTime
+			params: this.addVieweeToParams({
+				// Real unix timestamps use seconds, javascript uses milliseconds
+				start: Math.floor(startTime / 1000),
+				end: Math.floor(endTime / 1000)
 			}),
 			method: "GET",
 			useDefaultXhrHeader: false,
@@ -191,7 +210,7 @@ Ext.define('Zermelo.AjaxManager', {
 					i = collisionEnd;
 				}
 				
-				appointmentStore.add(decoded).forEach(function(record) {console.log(record.setDirty())});
+				appointmentStore.add(decoded).forEach(function(record) {record.setDirty()});
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents(true);
 				appointmentStore.fireEvent('refresh');
@@ -199,10 +218,9 @@ Ext.define('Zermelo.AjaxManager', {
 				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
-				
+				console.log('getAppointment end', performance.now(), this.appointmentsPending);
 			},
 			failure: function (response) {
-				console.log(response);
 				var error_msg = 'error.network';
 				if (response.status == 403) {
 					error_msg = 'error.permissions';
@@ -212,38 +230,46 @@ Ext.define('Zermelo.AjaxManager', {
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
+				console.log('getAppointment fail', performance.now(), this.appointmentsPending);
 			}
 		});
 	},
 
-	getUsersByType: function(type) {
-			Ext.Ajax.request({			
-				url: this.getUrl(type),
-				disableCaching: false,
-				params: {
-					access_token: Zermelo.UserManager.getAccessToken()
-				},
-				userRequest: true,
-				method: "GET",
-				useDefaultXhrHeader: false,
-				scope: this,
-				success: function (response) {
-					this.userByTypeReturn(type, response.status, JSON.parse(response.responseText).response.data);
-				},
-				failure: function (response) {
-					this.userByTypeReturn(type, response.status);
-				}
-			});
+	getUsersByType: function(request) {
+		Ext.Ajax.request({			
+			url: this.getUrl(request.endpoint),
+			disableCaching: false,
+			params: this.addAccessTokenToParams(request.params),
+			userRequest: true,
+			method: "GET",
+			useDefaultXhrHeader: false,
+			scope: this,
+			success: function (response) {
+				this.userByTypeReturn(request.endpoint, response.status, JSON.parse(response.responseText).response.data);
+			},
+			failure: function (response) {
+				this.userByTypeReturn(request.endpoint, response.status);
+			}
+		});
 	},
 
-	userByTypeReturn: function(type, status, responseData) {
+	// Each of the user sub-requests calls this method.
+	// When we have responses for all requests belonging to a user type we format that user type.
+	// When all requests have been formatted or errored we save the data we found.
+	userByTypeReturn: function(endpoint, status, responseData) {
 		console.log(arguments);
 		if(status == 200)
-			this.userResponse[type] = responseData;
+			this.userResponse[endpoint] = responseData;
 		else
-			this.userResponse[type] = status;
+			this.userResponse[endpoint] = status;
 
-		if(Array.isArray(this.userResponse['users'])) {
+		var allCompleted = Ext.bind(function(types) {
+			return types.every(function(type) {
+				return Array.isArray(this.userResponse[type]);
+			}, this);
+		}, this);
+
+		if(allCompleted(['users'])) {
 			this.userResponse['users'].forEach(function(item) {
 				item.type = 'user';
 				this.formattedArray.push(item);
@@ -252,59 +278,46 @@ Ext.define('Zermelo.AjaxManager', {
 			this.userResponse['users'] = 200;
 		}
 
-		// When one request of a pair fails, both requests cannot be evaluated.
-		// This function checks whether a pair can be evaluated.
-		// If a pair has failed the successful request is registered as formatted so userByTypeReturn can continue
-		var shouldFormat = Ext.bind(function(a, b) {
-			if(Array.isArray(this.userResponse[a]) && Array.isArray(this.userResponse[b])) {
-				return true;
-			}
-			else {
-				if(Array.isArray(this.userResponse[a]) && typeof(this.userResponse[b]) == "number")
-					this.userResponse[a] = 200;
-				else if(Array.isArray(this.userResponse[b]) && typeof(this.userResponse[a]) == "number")
-					this.userResponse[b] = 200;
-				return false;
-			}
-		}, this);
-
-		if(shouldFormat('groupindepartments', 'departmentsofbranches')) {
-			this.userResponse['groupindepartments'].forEach(function(item) {
-				this.formattedArray.push({
-					type: 'group',
-					prefix: this.userResponse['departmentsofbranches'].find(function(mapping) {return mapping.id == item.departmentOfBranch}).schoolInSchoolYearName,
-					code: item.extendedName,
-					remoteId: item.id
-				});
-			}, this);
-
-			this.userResponse['groupindepartments'] = 200;
-			this.userResponse['departmentsofbranches'] = 200;
-		}
-
-		if(shouldFormat('locationofbranches', 'branchesofschools')) {
+		if(allCompleted(['locationofbranches', 'branchesofschools', 'schoolsinschoolyears'])) {
 			this.userResponse['locationofbranches'].forEach(function(item) {
-				this.formattedArray.push({
-					code: this.userResponse['branchesofschools'].find(function(mapping) {return mapping.id == item.branchOfSchool}).branch + '.' + item.name,
-					type: 'location',
-					remoteId: item.id
-				});
+				var branchOfSchool = this.userResponse['branchesofschools'].find(function(branch) {return branch.id == item.branchOfSchool});
+				if(this.userResponse['schoolsinschoolyears'].find(function(school) {return school.id == branchOfSchool.schoolInSchoolYear}))
+					this.formattedArray.push({
+						code: branchOfSchool.branch + '.' + item.name,
+						type: 'location',
+						remoteId: item.id
+					});
 			}, this);
 
 			this.userResponse['locationofbranches'] = 200;
-			this.userResponse['branchesofschools'] = 200;
+		}
+
+		if(allCompleted(['groupindepartments', 'departmentsofbranches', 'branchesofschools', 'schoolsinschoolyears'])) {
+			this.userResponse['groupindepartments'].forEach(function(item) {
+				var departmentOfBranch = this.userResponse['departmentsofbranches'].find(function(mapping) {return mapping.id == item.departmentOfBranch});
+				var branchOfSchool = this.userResponse['branchesofschools'].find(function(branch) {return branch.id == departmentOfBranch.branchOfSchool});
+				if(this.userResponse['schoolsinschoolyears'].find(function(school) {return school.id == branchOfSchool.schoolInSchoolYear}))
+					this.formattedArray.push({
+						type: 'group',
+						prefix: departmentOfBranch.schoolInSchoolYearName,
+						code: item.extendedName,
+						remoteId: item.id
+					});
+			}, this);
+
+			this.userResponse['groupindepartments'] = 200;
 		}
 
 		var errorCount = 0;
 		var allReturned = true;
 		this.types.forEach(function(type) {
-			if(typeof(this.userResponse[type]) == "number")
-				errorCount += this.userResponse[type] != 200;
-			else
+			if(typeof(this.userResponse[type.endpoint]) == 'undefined')
 				allReturned = false;
+			else
+				errorCount += (this.userResponse[type.endpoint] != 200 && typeof(this.userResponse[type.endpoint]) == 'number');
+				
 		}, this)
 		if(allReturned) {
-			console.log('allReturned');
 			var UserStore = Ext.getStore('Users');
 			UserStore.removeAll();
 			this.formattedArray.sort(function(a, b) {
@@ -334,7 +347,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsers: function() {
-		localStorage.removeItem('Users');
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
@@ -365,11 +377,12 @@ Ext.define('Zermelo.AjaxManager', {
 		this.userResponse = {};
 		this.formattedArray = [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}];
 		this.types = [
-			'branchesofschools',
-			'departmentsofbranches',
-			'users',
-			'groupindepartments',
-			'locationofbranches'
+			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}},
+			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}},
+			{endpoint: 'departmentsofbranches', params: {fields: 'branchOfSchool,schoolInSchoolYearName,id'}},
+			{endpoint: 'users', params: {archived: false}}, // The field firstName isn't always available so we ask for everything and see what we get
+			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}},
+			{endpoint: 'locationofbranches', params: {fields: 'branchOfSchool,name,id'}}
 		]
 
 		this.types.forEach(this.getUsersByType, this);
@@ -390,11 +403,11 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response) {
-				// console.log(JSON.parse(response.responseText).response.data[0]);
+				Zermelo.UserManager.setPermissions(JSON.parse(response.responseText).response.data[0].permissions)
 			},
 
 			failure: function (response) {
-				console.log('faal');
+				return;
 			}
 		});
 	}
