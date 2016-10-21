@@ -504,14 +504,12 @@ Ext.define('Zermelo.view.FullCalendar', {
                     });
             }
         }
-        week_day_view = "agendaDay";
         this.changeCalendarView('agendaDay');
         $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
         this.day.hide();
         Ext.getCmp('toolbar_main').setHidden(true);
         Ext.getCmp('toolbar_day_back').setHidden(false);
         // currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-        dayview = "dayview";
     },
 
     getStore: function() {

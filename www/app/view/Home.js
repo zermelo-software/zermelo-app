@@ -182,10 +182,8 @@ Ext.define('Zermelo.view.Home', {
                     },
                     handler: function () {
                         // call announcement screen
-                        week_day_view = "agendaWeek";
                         Ext.getCmp('fullCalendarView').changeCalendarView('agendaWeek');
                         Ext.getCmp('fullCalendarView').day.show();
-                        dayview = "";
                         Ext.getCmp('toolbar_main').setHidden(false);
                         Ext.getCmp('toolbar_day_back').setHidden(true);
                     }

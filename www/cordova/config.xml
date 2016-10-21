@@ -11,8 +11,11 @@
         <!-- <preference name="phonegap-version" value="3.7.0" /> -->
 
         <access origin="*" />
-        <plugin name="cordova-plugin-whitelist" version="1" />
         <allow-intent href="*" />
+
+        <plugin name="cordova-plugin-whitelist" spec="~1" source="npm"/>
+        <plugin name="cordova-plugin-statusbar" spec="~1" source="npm"/> <!-- Fix statusbar on iOS -->
+        <gap:plugin name="com.badrit.backbutton" version="0.1.0" />
 
         <preference name="orientation" value="portrait" />
         <preference name="autorotate" value="false" readonly="true"/> <!-- Lock screen rotation on Android -->
@@ -53,7 +56,6 @@
         <feature name="http://api.phonegap.com/1.0/file"/>
         <!-- gap:plugin name="org.apache.cordova.network-information"  / -->
 
-        <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" /> <!-- Fix statusbar on iOS -->
         <preference name="StatusBarOverlaysWebView" value="false" />
 
         <gap:splash src="www/resources/screens/screen-iphone-portrait-2x.png" gap:platform="android" gap:density="ldpi"/>
@@ -70,6 +72,4 @@
         <icon src="www/resources/icons/72.png" width="72" height="72" />
         <icon src="www/resources/icons/114.png" width="114" height="114" />
         <icon src="www/resources/icons/144.png" width="144" height="144" />
-
-        <gap:plugin name="com.badrit.backbutton" version="0.1.0" />
     </widget>
