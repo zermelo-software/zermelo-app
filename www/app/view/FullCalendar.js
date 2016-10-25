@@ -72,9 +72,15 @@ Ext.define('Zermelo.view.FullCalendar', {
             },
 
             layout: 'hbox',
-            //initial hidden
 
-            // buttons which show weekdays of the week.
+            selectDay: function(dayNumber) {
+                var appointmentStore = this.parent.parent.getStore();
+                appointmentStore.setWindowDay();
+                appointmentStore.setWindow(dayNumber - (new Date()).getDay());
+
+                this.up('home').selectItem('calendarList');
+            },
+
             items: [{
                 //balnk label
                 xtype: 'label',
@@ -84,80 +90,45 @@ Ext.define('Zermelo.view.FullCalendar', {
                 xtype: 'button',
                 id: 'day1',
                 width: width + 1,
-                // css class resources/css/app.css
-                // cls: 'fc-day-button',
-                // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var appointmentStore = this.getStore();
-                    appointmentStore.setWindowDay();
-                    appointmentStore.setWindow(1 - (new Date()).getDay());
-
-                    me.up('home').selectItem('calendarList');
+                    this.parent.selectDay(1);
                 }
             }, {
                 // Tuesday button    
                 xtype: 'button',
                 id: 'day2',
                 width: width + 1,
-                // css class resources/css/app.css
-                // cls: 'fc-day-button',
-                // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var appointmentStore = this.getStore();
-                    appointmentStore.setWindowDay();
-                    appointmentStore.setWindow(2 - (new Date()).getDay());
-
-                    me.up('home').selectItem('calendarList');
+                    this.parent.selectDay(2);
                 }
             }, {
                 //Wednesday button
                 xtype: 'button',
                 id: 'day3',
                 width: width + 1,
-                // css class resources/css/app.css
-                //cls: 'fc-day-button',
-                // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var appointmentStore = this.getStore();
-                    appointmentStore.setWindowDay();
-                    appointmentStore.setWindow(3 - (new Date()).getDay());
-
-                    me.up('home').selectItem('calendarList');
+                    this.parent.selectDay(3);
                 }
             }, {
                 //Thursday button
                 xtype: 'button',
                 id: 'day4',
                 width: width + 1,
-                // css class resources/css/app.css
-                //cls: 'fc-day-button',
-                // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var appointmentStore = this.getStore();
-                    appointmentStore.setWindowDay();
-                    appointmentStore.setWindow(4 - (new Date()).getDay());
-
-                    me.up('home').selectItem('calendarList');
+                    this.parent.selectDay(4);
                 }
             }, {
                 //Friday button
                 xtype: 'button',
                 id: 'day5',
                 width: width - 2,
-                // css class resources/css/app.css
-                // cls: 'fc-day-button',
-                // button type plain
                 ui: 'plain',
                 handler: function () {
-                    var appointmentStore = this.getStore();
-                    appointmentStore.setWindowDay();
-                    appointmentStore.setWindow(5 - (new Date()).getDay());
-
-                    me.up('home').selectItem('calendarList');
+                    this.parent.selectDay(5);
                 }
             }]
         }); // end day container
