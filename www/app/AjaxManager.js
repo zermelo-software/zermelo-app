@@ -3,7 +3,9 @@ Ext.define('Zermelo.AjaxManager', {
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
 
-	getUrl: function(target) {
+	getUrl: function(target, institution) {
+		if(!institution)
+			institution = Zermelo.UserManager.getInstitution();
 		return (
 			'http://ulbeportal.zermelo.local/api/v3/' +
 			target
@@ -40,6 +42,41 @@ Ext.define('Zermelo.AjaxManager', {
 			clearInterval(this.queuedRefresh);
 		this.refresh();
 		this.queuedRefresh = setInterval(Ext.bind(this.refresh, this), 1000 * 60 * 20);
+	},
+
+	getLogin: function(institution, code) {
+		console.log(institution, code);
+		Ext.Viewport.setMasked({
+			xtype: 'loadmask',
+			locale: {
+				message: 'loading'
+			},
+
+			indicator: true
+		});
+
+		Ext.Ajax.request({
+			url: this.getUrl('oauth/token', institution),
+			params: {
+				grant_type: 'authorization_code',
+				code: code
+			},
+			method: "POST",
+			useDefaultXhrHeader: false,
+			success: function (response) {
+				Ext.Viewport.unmask();
+				var decoded = JSON.parse(response.responseText);
+				Zermelo.UserManager.saveLogin('~me', institution, decoded.access_token);
+				Ext.getCmp('main').setActiveItem(1);
+				Zermelo.AjaxManager.refresh();
+				Zermelo.AjaxManager.getSelf();
+			},
+
+			failure: function (response) {
+				Ext.Viewport.unmask();
+				Zermelo.ErrorManager.showErrorBox(response.status == 400 ? 'error.wrong_code' : 'error.network');
+			}
+		});
 	},
 	
 	getAnnouncementData: function() {

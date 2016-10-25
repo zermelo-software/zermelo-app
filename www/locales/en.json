@@ -6,7 +6,16 @@
         "login":"Login",
         "institution_code_error_msg":"Please enter a valid institution</br>Please enter a valid code",
         "institution_error_msg":"Please enter a valid institution",
-        "code_error_msg":"Please enter a valid code"
+        "code_error_msg":"Please enter a valid code",
+        "upgrade": {
+            "intro_message": "There is a new method to select users. If you would like to use this method you need to re-authenticate with the Portal.\
+                <br><br>Would you like to upgrade now?",
+            "new_code_message": "Please obtain a new access code from the Zermelo Portal and enter it here.",
+            "upgrade": "Upgrade now",
+            "later": "Upgrade later",
+            "never": "Never upgrade",
+            "code": "New code"
+            }
     },
     "menu":{
         "schedule_self": "Schedule", 
@@ -58,6 +67,7 @@
     "error": {
         "network": "Error connecting to Zermelo Portal. Are you connected to the internet?",
         "permissions": "You have insufficient permissions to view this schedule",
+        "wrong_code": "The code was incorrect or it has already been used",
         "user": {
             "some": "Not all user types could be loaded. You may not have the right permissions",
             "all": "Could not load users. You may not have the right permissions or there may be a problem with your internet connection"

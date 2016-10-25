@@ -441,7 +441,7 @@ Ext.define('Zermelo.view.SlideView', {
      * Always called when item in the list is tapped.
      */
     onItemTap: function(list, index, target, item, event, eOpts) {
-        var thisobj = this;
+        this.closeContainer();
         if (index == this.itemIds.logout) {
             // Create 'are you sure you want to log out?' box
             Ext.Msg.show({
@@ -471,15 +471,21 @@ Ext.define('Zermelo.view.SlideView', {
                     },
                     ui: 'normal',
                     handler: function() {
-                        thisobj.closeContainer();
                         this.destroy();
                     }
 
                 }]
             });
 
+        } else if(index == this.itemIds.userChange) {
+            if(false && Zermelo.UserManager.canViewUsers())
+                return true;
+            else if(localStorage.getItem('skipTokenUpgrade') == 'true')
+                Ext.create('Zermelo.view.OldUserSelect').show();
+            else 
+                Ext.create('Zermelo.view.NewOrOldUserSelect').show();
+            return false;
         }
-        thisobj.closeContainer();
     },
 
     /**

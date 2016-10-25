@@ -701,8 +701,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "Zermelo.view.Main": [],
   "Zermelo.view.MessageDetails": [],
   "Zermelo.view.MessageList": [],
+  "Zermelo.view.NewOrOldUserSelect": [],
+  "Zermelo.view.OldUserSelect": [],
   "Zermelo.view.Schedule": [],
   "Zermelo.view.SlideView": [],
+  "Zermelo.view.TokenUpgrade": [],
   "Zermelo.view.UserSearch": [],
   "Zermelo.view.UserSelect": []
 });
@@ -1476,11 +1479,18 @@ Ext.ClassManager.addNameAliasMappings({
   "Zermelo.view.MessageList": [
     "widget.messageList"
   ],
+  "Zermelo.view.NewOrOldUserSelect": [
+    "widget.tokenupgrade"
+  ],
+  "Zermelo.view.OldUserSelect": [],
   "Zermelo.view.Schedule": [
     "widget.schedule"
   ],
   "Zermelo.view.SlideView": [
     "widget.slidenavigationview"
+  ],
+  "Zermelo.view.TokenUpgrade": [
+    "widget.tokenupgrade"
   ],
   "Zermelo.view.UserSearch": [
     "widget.UserSearch"

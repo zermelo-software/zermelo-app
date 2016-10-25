@@ -8135,17 +8135,40 @@ $z-calendar-list-line-height: 18px;
 	padding: 0.5em 0.7em;
 }
 
-.z-msgbox-list{
+.z-msgbox{
 	border: 2px solid #2d63e2;
-	background-color: #DDD;
-	padding: 2px;
-	color: black;
+	background-color: #202020;
+	padding: 0.7em 0.7em 0.5em 0.7em;
 }
 
-.z-msgbox-list-item{
+.z-msgbox-button{
+	margin: 0.5em 0.7em;
+}
+
+.z-msgbox-button-narrow{
+	@extend .z-msgbox-buton;
+	display: inline !important;
+	width: 30%;
+}
+
+.z-msgbox-field{
+	background-color: #F7F7F7;
+	margin: 1em 0.7em 0.5em 0.7em;
+	padding: 0.5em 0.8em;
+	border: 1px solid #2e6ee2;
+}
+
+.z-msgbox-text{
+	@extend .z-msgbox-field;
 	text-align: center;
-	border-top: 1px solid black;
-	padding: 5px;
+	font-size: 1em;
+}
+
+.z-msgbox-input{
+	background-color: #F7F7F7;
+	margin: 1em 0.7em 0.5em 0.7em;
+	padding: 0.5em 0.8em;
+	border: 1px solid #2e6ee2;
 }
 
 .z-user-list-item{

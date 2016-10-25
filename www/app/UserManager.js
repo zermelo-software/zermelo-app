@@ -49,6 +49,10 @@ Ext.define('Zermelo.UserManager', {
 		return this.permissions;
 	},
 
+	canViewUsers: function() {
+		return this.getPermissions().readNames > 0;
+	},
+
 	setCode: function(newCode) {
 		localStorage.setItem('code', newCode);
 		this.code = newCode;
