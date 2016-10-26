@@ -478,7 +478,7 @@ Ext.define('Zermelo.view.SlideView', {
             });
 
         } else if(index == this.itemIds.userChange) {
-            if(false && Zermelo.UserManager.canViewUsers())
+            if(Zermelo.UserManager.canViewUsers())
                 return true;
             else if(localStorage.getItem('skipTokenUpgrade') == 'true')
                 Ext.create('Zermelo.view.OldUserSelect').show();
@@ -962,7 +962,10 @@ Ext.define('Zermelo.view.SlideView', {
     },
 
     selectItem: function(itemName) {
-        itemName = itemName || localStorage.getItem('lastView');
+        if(itemName == 'lastView')
+            itemName = localStorage.getItem('lastView') || 'fullCalendarView';
+        if(this.itemIds[itemName] === undefined)
+            console.log('Unknown view', itemName, this.itemIds);
         this.list.select(this.itemIds[itemName]);
     },
 

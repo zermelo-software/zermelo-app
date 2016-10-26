@@ -14,7 +14,8 @@
             "upgrade": "Upgrade now",
             "later": "Upgrade later",
             "never": "Never upgrade",
-            "code": "New code"
+            "code": "New code",
+            "failure": "Token upgrade failed. It appears you do not have permission to read names of students"
             }
     },
     "menu":{

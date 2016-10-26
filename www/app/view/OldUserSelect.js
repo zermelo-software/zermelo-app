@@ -1,5 +1,6 @@
 Ext.define('Zermelo.view.OldUserSelect', {
 	extend: 'Ext.MessageBox',
+	xtype: 'userselect',
 	config: {
 		baseCls: 'z-msgbox',
 		showAnimation: false,
@@ -21,8 +22,14 @@ Ext.define('Zermelo.view.OldUserSelect', {
 			xtype: 'textfield',
 			baseCls: '',
 			inputCls: 'z-msgbox-field',
+			clearIcon: false,
 			locales: {
 				placeHolder: 'enter_user_code'
+			},
+			listeners: {
+				keyup: function() {
+					this.up('userselect').code = (this.getValue() || '').trim().toLowerCase();
+				}
 			}
 		},
 		{
@@ -40,14 +47,13 @@ Ext.define('Zermelo.view.OldUserSelect', {
 				},
 				ui: 'normal',
 				handler: function() {
-					var user_code = Ext.getCmp('new_user_code').getValue();
-					if (user_code.length == 0) {
-						this.parent.parent.destroy();
+					var user_code = this.up('userselect').code;
+					if(user_code.length == 0)
 						Zermelo.ErrorManager.showErrorBox('enter_user_code');
-					} else {
+					else
 						Zermelo.UserManager.setUser(user_code);
-						this.parent.parent.destroy();
-					}
+					
+					this.parent.parent.destroy();
 				}
 			},
 			{

@@ -3,7 +3,6 @@ Ext.define('Zermelo.view.TokenUpgrade', {
 	xtype: 'tokenupgrade',
 	config: {
 		baseCls: 'z-msgbox',
-		itemCls: 'z-msgbox-item',
 		showAnimation: false,
 		hideAnimation: false,
 		items: [
@@ -14,22 +13,28 @@ Ext.define('Zermelo.view.TokenUpgrade', {
 				html: 'login.upgrade.new_code_message'
 			}
 		},
-		{
-			xtype: 'numberfield',
-			baseCls: '',
-			inputCls: 'z-msgbox-field',
-			clearIcon: false,
-			locales: {
-				placeHolder: 'login.upgrade.code'
-			},
-			listeners: {
-				keyup: function (thisField, e) {
-					this.up('tokenupgrade').code = (thisField.getValue() || 0).toString();
-					if (e.browserEvent.keyCode == 13) 
-						this.up('tokenupgrade').authenticate();
+			{
+				xtype: 'numberfield',
+				cls: 'z-msgbox-field-low-padding',
+				inputCls: 'z-msgbox-bg',
+				anchor: '100%',
+				id: 'hoi',
+				labelWidth: '500px',
+				clearIcon: false,
+				locales: {
+					placeHolder: 'login.upgrade.code'
+				},
+				listeners: {
+					keyup: function (thisField, e) {
+						this.up('tokenupgrade').code = (thisField.getValue() || 0).toString();
+						if (e.browserEvent.keyCode == 13) 
+							this.up('tokenupgrade').authenticate();
+					},
+					initialize: function() {
+
+					}
 				}
-			}
-		},
+			},
 		{
 			xtype: 'container',
 			layout: 'hbox',
@@ -66,11 +71,14 @@ Ext.define('Zermelo.view.TokenUpgrade', {
 
 	authenticate: function() {
 		var code = this.code;
-		if (code.length == 0) {
+		var code_regex = /^[0-9]*$/;
+		if (!code_regex.test(this.code) || this.code.length == 0) {
+			Zermelo.ErrorManager.showErrorBox('login.code_error_msg');
 			return;
 		}
 		while(code.length < 12)
 			code = '0' + code;
+
 		Zermelo.AjaxManager.getLogin(Zermelo.UserManager.getInstitution(), code);
 		this.destroy();
 	}

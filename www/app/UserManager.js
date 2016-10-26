@@ -112,18 +112,31 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	setUser: function(newUser) {
-		var newCode, newType;
-		if(!newUser)
-			newUser = Ext.create('Zermelo.model.User', {firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'});
-		if(newUser.get('type') == 'user') {
-			newCode = newUser.get('code') || '~me';
+		var newCode, newType, newName;
+		// Empty input, set to self
+		if(!newUser) {
+			newCode = '~me';
 			newType = 'user';
+			newName = '';
 		}
+		// Old user select input sends strings and can only select users
+		else if(typeof(newUser) == 'string') {
+			newCode = newUser;
+			newType = 'user';
+			newName = newUser;
+		}
+		// New user select input
 		else {
-			newCode = newUser.get('remoteId');
-			newType = newUser.get('type');
+			if(newUser.get('type') == 'user') {
+				newCode = newUser.get('code') || '~me';
+				newType = 'user';
+			}
+			else {
+				newCode = newUser.get('remoteId');
+				newType = newUser.get('type');
+			}
+			newName = newUser.get('firstName') || newUser.get('lastName') || newUser.get('code') || '';
 		}
-		newName = newUser.get('firstName') || newUser.get('lastName') || newUser.get('code') || '';
 
 		if (this.code == newCode)
 			return;

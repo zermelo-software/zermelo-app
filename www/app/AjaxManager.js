@@ -64,12 +64,14 @@ Ext.define('Zermelo.AjaxManager', {
 			method: "POST",
 			useDefaultXhrHeader: false,
 			success: function (response) {
-				Ext.Viewport.unmask();
+				// If the user is already logged in, this is a token upgrade attempt
+				var upgrade = Zermelo.UserManager.loggedIn();
 				var decoded = JSON.parse(response.responseText);
 				Zermelo.UserManager.saveLogin('~me', institution, decoded.access_token);
 				Ext.getCmp('main').setActiveItem(1);
 				Zermelo.AjaxManager.refresh();
-				Zermelo.AjaxManager.getSelf();
+				Zermelo.AjaxManager.getSelf(upgrade);
+				Ext.Viewport.unmask();
 			},
 
 			failure: function (response) {
@@ -222,9 +224,12 @@ Ext.define('Zermelo.AjaxManager', {
 					record.end = new Date(record.end * 1000);
 					record.user = Zermelo.UserManager.getUserSuffix();
 					record.id += Zermelo.UserManager.getUserSuffix();
-					record.groups.sort();
-					record.locations.sort();
-					record.teachers.sort();
+					if(Array.isArray(record.groups))
+						record.groups.sort();
+					if(Array.isArray(record.locations))
+						record.locations.sort();
+					if(Array.isArray(record.teachers))
+						record.teachers.sort();
 					if(record.startTimeSlotName === undefined || record.startTimeSlotName === null)
 						record.startTimeSlotName = record.startTimeSlot;
 				});
@@ -430,7 +435,7 @@ Ext.define('Zermelo.AjaxManager', {
 		this.getUsers();
 	},
 
-	getSelf: function() {
+	getSelf: function(upgrade) {
 		Ext.Ajax.request({
 			url: this.getUrl('tokens/~current'),
 			params: {
@@ -440,11 +445,24 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response) {
-				Zermelo.UserManager.setPermissions(JSON.parse(response.responseText).response.data[0].permissions)
+				var permissions = JSON.parse(response.responseText).response.data[0].permissions;
+				Zermelo.UserManager.setPermissions(permissions);
+				if(upgrade) {
+					if(permissions.readNames == 0) {
+						localStorage.setItem('skipTokenUpgrade', 'true');
+						Zermelo.ErrorManager.showErrorBox('login.upgrade.failure');
+					}
+					else {
+						Ext.getCmp('home').selectItem('userChange');
+					}
+				}
 			},
 
 			failure: function (response) {
-				return;
+				var error_msg = response.status == 403 ? 'error.permissions' : 'error.network';
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				Ext.Viewport.unmask();
 			}
 		});
 	}

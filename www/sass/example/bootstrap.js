@@ -3328,7 +3328,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Zermelo.view.NewOrOldUserSelect": [
     "widget.tokenupgrade"
   ],
-  "Zermelo.view.OldUserSelect": [],
+  "Zermelo.view.OldUserSelect": [
+    "widget.userselect"
+  ],
   "Zermelo.view.Schedule": [
     "widget.schedule"
   ],

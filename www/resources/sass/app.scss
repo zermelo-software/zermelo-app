@@ -8135,6 +8135,12 @@ $z-calendar-list-line-height: 18px;
 	padding: 0.5em 0.7em;
 }
 
+$z-msgbox-bg-color: #F7F7F7;
+
+.z-msgbox-bg{
+	background-color: $z-msgbox-bg-color;
+}
+
 .z-msgbox{
 	border: 2px solid #2d63e2;
 	background-color: #202020;
@@ -8152,23 +8158,21 @@ $z-calendar-list-line-height: 18px;
 }
 
 .z-msgbox-field{
-	background-color: #F7F7F7;
+	background-color: $z-msgbox-bg-color;
 	margin: 1em 0.7em 0.5em 0.7em;
 	padding: 0.5em 0.8em;
 	border: 1px solid #2e6ee2;
+}
+
+.z-msgbox-field-low-padding{
+	@extend .z-msgbox-field;
+	padding: 0em 0.8em;
 }
 
 .z-msgbox-text{
 	@extend .z-msgbox-field;
 	text-align: center;
 	font-size: 1em;
-}
-
-.z-msgbox-input{
-	background-color: #F7F7F7;
-	margin: 1em 0.7em 0.5em 0.7em;
-	padding: 0.5em 0.8em;
-	border: 1px solid #2e6ee2;
 }
 
 .z-user-list-item{

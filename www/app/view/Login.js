@@ -29,7 +29,6 @@
 Ext.define('Zermelo.view.Login', {
     extend: 'Ext.Container',
     xtype: 'login',
-    id: 'login',
     requires: [
         'Ext.Img',
         'Ext.Label',
@@ -77,8 +76,6 @@ Ext.define('Zermelo.view.Login', {
                         items: [{
                             xtype: 'textfield',
                             width: '100%',
-                            name: 'institution',
-                            id: 'text_login_institution',
                             locales: {
                                 placeHolder: 'login.institution'
                             },
@@ -101,8 +98,6 @@ Ext.define('Zermelo.view.Login', {
                         html: '<img height="46px" src="resources/images/password_icon.png" style="margin-top: 1px;">'
                     }, {
                         xtype: 'numberfield',
-                        name: 'cdoe',
-                        id: 'number_login_code',
                         locales: {
                             placeHolder: 'login.code'
                         },
@@ -118,7 +113,6 @@ Ext.define('Zermelo.view.Login', {
                 }]
             }, {
                 xtype: 'button',
-                id: 'btn_login_login',
                 locales: {
                     text: 'login.login'
                 },
@@ -143,7 +137,7 @@ Ext.define('Zermelo.view.Login', {
             return;
         }
         while (this.code.length < 12) {
-            value_code = '0' + value_code;
+            this.code = '0' + this.code;
         }
 
         Zermelo.AjaxManager.getLogin(this.institution, this.code);
