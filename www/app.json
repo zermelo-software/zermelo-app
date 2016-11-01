@@ -8,7 +8,7 @@
                     // Uncomment the line below and add the platforms you wish to build for
                     "platforms": "android",
 
-                    "id": "nl.Zermelo.App",
+                    "id": "nl.Zermelo.online.App",
                     "name": "Zermelo"
                 }
             }
@@ -20,7 +20,19 @@
                     // Uncomment the line below and add the platforms you wish to build for
                     "platforms": "ios",
 
-                    "id": "nl.Zermelo.App",
+                    "id": "nl.Zermelo.online.App",
+                    "name": "Zermelo"
+                }
+            }
+        },
+        "windows": {
+            "packager": "cordova",
+            "cordova" : {
+                "config": {
+                    // Uncomment the line below and add the platforms you wish to build for
+                    "platforms": "windows",
+
+                    "id": "nl.Zermelo.online.App",
                     "name": "Zermelo"
                 }
             }
