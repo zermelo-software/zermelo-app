@@ -7,9 +7,19 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "nl.Zermelo.App"
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
+        }
+    }
 }

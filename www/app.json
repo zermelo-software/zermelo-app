@@ -1,12 +1,24 @@
 {
     "builds": {
         "web": {"default": true},
-        "native": {
+        "android": {
             "packager": "cordova",
             "cordova" : {
                 "config": {
                     // Uncomment the line below and add the platforms you wish to build for
                     "platforms": "android",
+
+                    "id": "nl.Zermelo.App",
+                    "name": "Zermelo"
+                }
+            }
+        },
+        "ios": {
+            "packager": "cordova",
+            "cordova" : {
+                "config": {
+                    // Uncomment the line below and add the platforms you wish to build for
+                    "platforms": "ios",
 
                     "id": "nl.Zermelo.App",
                     "name": "Zermelo"
