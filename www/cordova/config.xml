@@ -49,11 +49,22 @@
         <preference name="FadeSplashScreen" value="false"/>
         <preference name="ShowSplashScreenSpinner" value="false"/>
 
-        <gap:platform name="winphone">
-            <!-- <preference name="windows-appx-target" value="uap" /> -->
-            <preference name="windows-appx-target" value="wp8" />
-            <preference name="windows-identity-name" value="6D7654C9.ZermeloRooster" />
-        </gap:platform>
+        <platform name="windows">
+            <!-- <preference name="windows-appx-target" value="wp8" /> -->
+            <!-- <preference name="windows-identity-name" value="6D7654C9.ZermeloRooster" /> -->
+            <icon src="www/resources/icons/StoreLogo.png" target="StoreLogo" />
+            <icon src="www/resources/icons/Square30x30Logo.png" target="Square30x30Logo" />
+            <icon src="www/resources/icons/Square44x44Logo.png" target="Square44x44Logo" />
+            <icon src="www/resources/icons/Square70x70Logo.png" target="Square70x70Logo" />
+            <icon src="www/resources/icons/Square71x71Logo.png" target="Square71x71Logo" />
+            <icon src="www/resources/icons/Square150x150Logo.png" target="Square150x150Logo" />
+            <icon src="www/resources/icons/Square310x310Logo.png" target="Square310x310Logo" />
+            <icon src="www/resources/icons/Wide310x150Logo.png" target="Wide310x150Logo" />
+            <splash src="www/resources/screens/SplashScreen.png" target="SplashScreen"/>
+            <!-- <splash src="www/resources/screens/SplashScreen.scale-240.png" width="1152" height="1920"/> -->
+            <splash src="www/resources/screens/SplashScreenPhone.png" target="SplashScreenPhone"/>
+            <!-- <splash src="www/resources/screens/SplashScreenPhone.scale-240.png" width="1152" height="1920"/> -->
+        </platform>
 
         <platform name="android">
             <preference name="android-minSdkVersion" value="10" />
