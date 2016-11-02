@@ -10,8 +10,17 @@
         global.Ext = Ext = {};
     }
 
-    function write(content) {
-        document.write(content);
+    // WP8 doesn't allow direct calls to document.write
+    if(navigator.userAgent.match(/Windows Phone 8/))
+        function write(content) {
+            MSApp.execUnsafeLocalFunction(function () {
+                document.write(content);
+            });
+        }
+    else {
+        function write(content) {
+            document.write(content);
+        }
     }
 
     function addMeta(name, content) {

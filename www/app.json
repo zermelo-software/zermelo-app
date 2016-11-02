@@ -100,6 +100,11 @@
             "path": "js/fullcalendar.js",
             "update": "full",
             "includeInBundle": true
+        },
+        {
+            "path": "js/winstore-jscompat.js",
+            "update": "full",
+            "includeInBundle": false
         }
     ],
 

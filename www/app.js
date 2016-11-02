@@ -26,15 +26,15 @@
  */
 
 /*
-    This file is generated and updated by Sencha Cmd. You can edit this file as
-    needed for your application, but these edits will have to be merged by
-    Sencha Cmd when it performs code generation tasks such as generating new
-    models, controllers or views and when running "sencha app upgrade".
+	This file is generated and updated by Sencha Cmd. You can edit this file as
+	needed for your application, but these edits will have to be merged by
+	Sencha Cmd when it performs code generation tasks such as generating new
+	models, controllers or views and when running "sencha app upgrade".
 
-    Ideally changes to this file would be limited and most work would be done
-    in other places (such as Controllers). If Sencha Cmd cannot merge your
-    changes and its generated code, it will produce a "merge conflict" that you
-    will need to resolve manually.
+	Ideally changes to this file would be limited and most work would be done
+	in other places (such as Controllers). If Sencha Cmd cannot merge your
+	changes and its generated code, it will produce a "merge conflict" that you
+	will need to resolve manually.
  */
 // DO NOT DELETE - this directive is required for Sencha Cmd packages to work.
 //@require @packageOverrides
@@ -48,23 +48,75 @@ Ext.Loader.setPath({
 // workaround for release mode
 if (typeof Ext.Logger === 'undefined') {
 	Ext.Logger = {
-            log: function(message, priority) {
-            },
-            verbose: function(message) {
-            },
-            info: function(message) {
-            },
-            warn: function(message) {
-            },
-            error: function(message) {
-            },
-            deprecate: function(message) {
-            }
-        };
+		log: function(message, priority) {
+		},
+		verbose: function(message) {
+		},
+		info: function(message) {
+		},
+		warn: function(message) {
+		},
+		error: function(message) {
+		},
+		deprecate: function(message) {
+		}
+	};
 }
 
 //Global variable
 var loc = '';
+
+// IE is streets behind so we need to polyfill all these methods
+(function() {
+	if (!Array.prototype.find) {
+		Object.defineProperty(Array.prototype, 'find', {
+			value: function(predicate) {
+			 'use strict';
+			 if (this == null) {
+				 throw new TypeError('Array.prototype.find called on null or undefined');
+			 }
+			 if (typeof predicate !== 'function') {
+				 throw new TypeError('predicate must be a function');
+			 }
+			 var list = Object(this);
+			 var length = list.length >>> 0;
+			 var thisArg = arguments[1];
+			 var value;
+
+			 for (var i = 0; i < length; i++) {
+				 value = list[i];
+				 if (predicate.call(thisArg, value, i, list)) {
+					 return value;
+				 }
+			 }
+			 return undefined;
+			}
+		});
+	}
+
+	if (!String.prototype.startsWith) {
+		String.prototype.startsWith = function(searchString, position){
+			position = position || 0;
+			return this.substr(position, searchString.length) === searchString;
+		};
+	}
+
+	if (!String.prototype.includes) {
+		String.prototype.includes = function(search, start) {
+			'use strict';
+			if (typeof start !== 'number') {
+				start = 0;
+			}
+			
+			if (start + search.length > this.length) {
+				return false;
+			} else {
+				return this.indexOf(search, start) !== -1;
+			}
+		};
+	}
+})();
+
 Ext.application({
 	name : 'Zermelo',
 
