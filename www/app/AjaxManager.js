@@ -393,7 +393,7 @@ Ext.define('Zermelo.AjaxManager', {
 			UserStore.fireEvent('refresh');
 			Ext.Viewport.unmask();
 			if(errorCount != 0)
-				Zermelo.ErrorManager.showErrorBox(errorCount == 5 ? 'error.user.all' : 'error.user.some');
+				Zermelo.ErrorManager.showErrorBox(errorCount == this.types.length ? 'error.user.all' : 'error.user.some');
 		}
 	},
 

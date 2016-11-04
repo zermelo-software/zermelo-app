@@ -54,8 +54,12 @@ Ext.define('Zermelo.UserManager', {
 		return this.userAttributes;
 	},
 
-	canViewUsers: function() {
-		return this.getPermissions().readNames > 0;
+	needsTokenUpgrade: function() {
+		return this.permissions.readNames < 5 &&
+			this.permissions.readScheduleStudents < 5 &&
+			this.permissions.readScheduleTeachers < 5 &&
+			this.permissions.readScheduleGroups < 5 &&
+			this.permissions.readScheduleLocations < 5;
 	},
 
 	isParentOnly: function() {

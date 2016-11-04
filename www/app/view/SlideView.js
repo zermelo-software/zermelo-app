@@ -478,7 +478,7 @@ Ext.define('Zermelo.view.SlideView', {
             });
 
         } else if(index == this.itemIds.userChange) {
-            if(Zermelo.UserManager.canViewUsers())
+            if(!Zermelo.UserManager.needsTokenUpgrade())
                 return true;
             else if(localStorage.getItem('skipTokenUpgrade') == 'true')
                 Ext.create('Zermelo.view.OldUserSelect').show();
