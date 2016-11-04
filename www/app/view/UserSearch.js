@@ -6,13 +6,6 @@ Ext.define("Zermelo.view.UserSearch", {
 		layout: 'vbox',
 		items: [
 			{
-				xtype: 'UserSelect',
-				flex: 1,
-				config: {
-					docked: 'top'
-				}
-			},
-			{
 				xtype: 'searchfield',
 				value: localStorage.getItem('searchString'),
 				config: {
@@ -22,6 +15,13 @@ Ext.define("Zermelo.view.UserSearch", {
 					autoCapitalize: false,
 					autoComplete: false,
 					autoCorrect: false
+				}
+			},
+			{
+				xtype: 'UserSelect',
+				flex: 1,
+				config: {
+					docked: 'top'
 				}
 			}
 		],

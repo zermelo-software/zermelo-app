@@ -8,6 +8,7 @@ Ext.define('Zermelo.UserManager', {
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
 	permissions: JSON.parse(window.localStorage.getItem('permissions') || '{}'),
+	userAttributes: JSON.parse(window.localStorage.getItem('userAttributes') || '{}'),
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -49,8 +50,16 @@ Ext.define('Zermelo.UserManager', {
 		return this.permissions;
 	},
 
+	getUserAttributes: function() {
+		return this.userAttributes;
+	},
+
 	canViewUsers: function() {
 		return this.getPermissions().readNames > 0;
+	},
+
+	isParentOnly: function() {
+		return this.userAttributes.isFamilyMember && !this.userAttributes.isStudent && !this.userAttributes.isEmployee;
 	},
 
 	setCode: function(newCode) {
@@ -82,6 +91,12 @@ Ext.define('Zermelo.UserManager', {
 		this.permissions = permissions;
 		console.log(permissions);
 		window.localStorage.setItem('permissions', JSON.stringify(permissions));
+	},
+
+	setUserAttributes: function(userAttributes) {
+		this.userAttributes = userAttributes;
+		console.log(userAttributes);
+		window.localStorage.setItem('userAttributes', JSON.stringify(userAttributes));
 	},
 
 	saveLogin: function(code, institution, accessToken) {

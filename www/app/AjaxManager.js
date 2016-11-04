@@ -278,6 +278,11 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsersByType: function(request) {
+		if(request.requires && Zermelo.userManager.getPermissions()[request.requires] < request.requireLevel) {
+			this.userResponse[request.endpoint] = 403;
+			return;
+		}
+
 		Ext.Ajax.request({			
 			url: this.getUrl(request.endpoint),
 			disableCaching: false,
@@ -379,7 +384,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 			localStorage.setItem('Users', JSON.stringify(this.formattedArray));
 			UserStore.addData(this.formattedArray);
-			UserStore.initSearch();
 			UserStore.resumeEvents(true);
 			UserStore.fireEvent('refresh');
 			Ext.Viewport.unmask();
@@ -405,8 +409,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 		var userArray = localStorage.getItem('Users')
 		if(userArray) {
-			Ext.getStore('Users').addData(JSON.parse(userArray));
-			UserStore.initSearch();
+			UserStore.addData(JSON.parse(userArray));
 			UserStore.resumeEvents(true);
 			UserStore.fireEvent('refresh');
 			Ext.Viewport.unmask();
@@ -416,16 +419,29 @@ Ext.define('Zermelo.AjaxManager', {
 		// Creating the user list requires a join on multiple requests. Unformatted responses will be stored in userResponse.
 		// When a pair of responses is available, the correct formatting is applied by userByTypeReturn and appended to formattedArray.
 		// When all requests have been formatted, formattedArray is added to UserStore
+		// The values requires and requireLevel are used to check whether the current token has the correct rights to view the schedules of this type
+		// We check that _token_[permissions.requires] >= requireLevel
 		this.userResponse = {};
 		this.formattedArray = [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}];
 		this.types = [
-			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}},
+			// users
+			{endpoint: 'users', params: {archived: false}, requires: '', requireLevel: 2}, // The field firstName isn't always available so we ask for everything and see what we get
+
+			// groups
+			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}, requires: '', requireLevel: 2},
+			{endpoint: 'departmentsofbranches', params: {fields: 'branchOfSchool,schoolInSchoolYearName,id'}, requires: '', requireLevel: 2},
+
+			// locations
+			{endpoint: 'locationofbranches', params: {fields: 'branchOfSchool,name,id'}, requires: '', requireLevel: 2},
+
+			// required for groups and locations
 			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}},
-			{endpoint: 'departmentsofbranches', params: {fields: 'branchOfSchool,schoolInSchoolYearName,id'}},
-			{endpoint: 'users', params: {archived: false}}, // The field firstName isn't always available so we ask for everything and see what we get
-			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}},
-			{endpoint: 'locationofbranches', params: {fields: 'branchOfSchool,name,id'}}
+			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}}
 		]
+
+		if(Zermelo.UserManager.isParentOnly()) {
+			this.types = [{endpoint: 'users', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: '', requireLevel: 2}];
+		}
 
 		this.types.forEach(this.getUsersByType, this);
 	},
@@ -436,6 +452,7 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getSelf: function(upgrade) {
+		console.log('getSelf');
 		Ext.Ajax.request({
 			url: this.getUrl('tokens/~current'),
 			params: {
@@ -445,6 +462,7 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response) {
+				console.log(JSON.parse(response.responseText).response.data[0]);
 				var permissions = JSON.parse(response.responseText).response.data[0].permissions;
 				Zermelo.UserManager.setPermissions(permissions);
 				if(upgrade) {
@@ -456,6 +474,27 @@ Ext.define('Zermelo.AjaxManager', {
 						Ext.getCmp('home').selectItem('userChange');
 					}
 				}
+			},
+
+			failure: function (response) {
+				var error_msg = response.status == 403 ? 'error.permissions' : 'error.network';
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				Ext.Viewport.unmask();
+			}
+		});
+
+		Ext.Ajax.request({
+			url: this.getUrl('users/~me'),
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken(),
+				fields: 'code,isFamilyMember,isEmployee,isStudent'
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+
+			success: function (response) {
+				Zermelo.UserManager.setUserAttributes(JSON.parse(response.responseText).response.data[0]);
 			},
 
 			failure: function (response) {
