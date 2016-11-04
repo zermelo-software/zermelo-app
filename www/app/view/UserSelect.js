@@ -20,6 +20,7 @@ Ext.define("Zermelo.view.UserSelect", {
 			itemtap: function(dataview, ix, target, record, event, options) {
 				Zermelo.UserManager.setUser(record);
 				this.up('home').selectItem('lastView');
+				this.up('UserSearch').clear();
 			},
 			refresh: {
 				fn: function() {

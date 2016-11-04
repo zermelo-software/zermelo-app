@@ -10,16 +10,10 @@ Ext.define('Zermelo.store.UserStore', {
 		model: 'Zermelo.model.User',
 		storeId: 'Users'
 	},
-	currentSearchString: localStorage.getItem('searchString') || '',
-
-	setCurrentSearchString: function(searchString) {
-		this.currentSearchString = searchString;
-		localStorage.setItem('searchString', searchString);
-	},
 
 	search: function(searchString) {
 		this.suspendEvents();
-		var timer = Date.now();
+		var timer = performance.now();
 		searchString = searchString.toLowerCase();
 
 		if(!searchString.startsWith(this.currentSearchString)) {
@@ -27,7 +21,7 @@ Ext.define('Zermelo.store.UserStore', {
 			this.resumeEvents();
 		}
 
-		this.setCurrentSearchString(searchString);
+		this.currentSearchString = searchString;
 
 		if(searchString == '')
 			return;
@@ -46,13 +40,9 @@ Ext.define('Zermelo.store.UserStore', {
 				return false;
 			}, this);
 		});
-		console.log('time spent', Date.now() - timer);
+		console.log('time spent', performance.now() - timer);
 		this.resumeEvents(true);
 		this.fireEvent('refresh');
-	},
-
-	initSearch: function() {
-		this.search(this.currentSearchString || '');
 	},
 
 	onAction: function(searchField) {

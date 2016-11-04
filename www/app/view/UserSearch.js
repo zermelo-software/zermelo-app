@@ -7,7 +7,6 @@ Ext.define("Zermelo.view.UserSearch", {
 		items: [
 			{
 				xtype: 'searchfield',
-				value: localStorage.getItem('searchString'),
 				config: {
 					docked: 'bottom',
 					height: '47px',
@@ -36,5 +35,10 @@ Ext.define("Zermelo.view.UserSearch", {
 				});
 			}
 		}
+	},
+
+	clear: function() {
+		this.down('searchfield').setValue('');
+		Ext.getStore('Users').search('');
 	}
 });

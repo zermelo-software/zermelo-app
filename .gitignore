@@ -27,3 +27,4 @@ scripts
 !scripts/zapp
 plugins/
 todo.txt
+response.json
