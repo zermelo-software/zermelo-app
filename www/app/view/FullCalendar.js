@@ -406,7 +406,6 @@ Ext.define('Zermelo.view.FullCalendar', {
             return;
         
         this.lastUpdateView = Date.now();
-        console.log('updateView');
         var scroller = this.getScrollable().getScroller();
         var currentY = scroller.position.y;
 
