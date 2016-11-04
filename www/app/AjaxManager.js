@@ -278,8 +278,13 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsersByType: function(request) {
-		if(request.requires && Zermelo.userManager.getPermissions()[request.requires] < request.requireLevel) {
-			this.userResponse[request.endpoint] = 403;
+		// Check whether at least one of the requires permissions is set to related or higher
+		if(request.requires.split(',').every(function(permission) {
+				console.log(permission, Zermelo.UserManager.getPermissions()[permission]);
+				return Zermelo.UserManager.getPermissions()[permission] < 5;
+			}))
+		{
+			this.userByTypeReturn(request.endpoint, 403);
 			return;
 		}
 
@@ -425,22 +430,22 @@ Ext.define('Zermelo.AjaxManager', {
 		this.formattedArray = [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}];
 		this.types = [
 			// users
-			{endpoint: 'users', params: {archived: false}, requires: '', requireLevel: 2}, // The field firstName isn't always available so we ask for everything and see what we get
+			{endpoint: 'users', params: {archived: false}, requires: 'readScheduleStudents,readScheduleTeachers'}, // The field firstName isn't always available so we ask for everything and see what we get
 
 			// groups
-			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}, requires: '', requireLevel: 2},
-			{endpoint: 'departmentsofbranches', params: {fields: 'branchOfSchool,schoolInSchoolYearName,id'}, requires: '', requireLevel: 2},
+			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}, requires: 'readScheduleGroups'},
+			{endpoint: 'departmentsofbranches', params: {fields: 'branchOfSchool,schoolInSchoolYearName,id'}, requires: 'readScheduleGroups'},
 
 			// locations
-			{endpoint: 'locationofbranches', params: {fields: 'branchOfSchool,name,id'}, requires: '', requireLevel: 2},
+			{endpoint: 'locationofbranches', params: {fields: 'branchOfSchool,name,id'}, requires: 'readScheduleLocations'},
 
 			// required for groups and locations
-			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}},
-			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}}
+			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}, requires: 'readScheduleGroups,readScheduleLocations'},
+			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}, requires: 'readScheduleGroups,readScheduleLocations'}
 		]
 
 		if(Zermelo.UserManager.isParentOnly()) {
-			this.types = [{endpoint: 'users', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: '', requireLevel: 2}];
+			this.types = [{endpoint: 'users', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: ''}];
 		}
 
 		this.types.forEach(this.getUsersByType, this);
@@ -463,7 +468,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 			success: function (response) {
 				console.log(JSON.parse(response.responseText).response.data[0]);
-				var permissions = JSON.parse(response.responseText).response.data[0].permissions;
+				var permissions = JSON.parse(response.responseText).response.data[0].effectivePermissions;
 				Zermelo.UserManager.setPermissions(permissions);
 				if(upgrade) {
 					if(permissions.readNames == 0) {
