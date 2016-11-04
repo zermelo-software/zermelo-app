@@ -33,6 +33,7 @@ Ext.define("Zermelo.view.UserSearch", {
 						scope: Ext.getStore('Users')
 					}
 				});
+				Ext.getStore('Users').on('clear', this.clear, this);
 			}
 		}
 	},

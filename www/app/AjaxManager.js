@@ -45,7 +45,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getLogin: function(institution, code) {
-		console.log(institution, code);
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -175,10 +174,8 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(startTime, endTime) {
-		console.log('getAppointment try', performance.now(), this.appointmentsPending);
 		if (!Zermelo.UserManager.loggedIn() || this.appointmentsPending)
 			return;
-		console.log('getAppointment start', performance.now(), this.appointmentsPending);
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -260,7 +257,6 @@ Ext.define('Zermelo.AjaxManager', {
 				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
-				console.log('getAppointment end', performance.now(), this.appointmentsPending);
 			},
 			failure: function (response) {
 				var error_msg = 'error.network';
@@ -272,7 +268,6 @@ Ext.define('Zermelo.AjaxManager', {
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
-				console.log('getAppointment fail', performance.now(), this.appointmentsPending);
 			}
 		});
 	},
@@ -280,7 +275,6 @@ Ext.define('Zermelo.AjaxManager', {
 	getUsersByType: function(request) {
 		// Check whether at least one of the requires permissions is set to related or higher
 		if(request.requires.split(',').every(function(permission) {
-				console.log(permission, Zermelo.UserManager.getPermissions()[permission]);
 				return Zermelo.UserManager.getPermissions()[permission] < 5;
 			}))
 		{
@@ -410,7 +404,10 @@ Ext.define('Zermelo.AjaxManager', {
 			indicator: true
 		});
 		var UserStore = Ext.getStore('Users');
+		// removeAll triggers clearing the current search value field so we allow it to fire before suspendEvents
+		UserStore.removeAll();
 		UserStore.suspendEvents();
+
 
 		var userArray = localStorage.getItem('Users')
 		if(userArray) {
