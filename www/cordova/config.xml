@@ -78,6 +78,7 @@
             </feature>
             <preference name="StatusBarStyle" value="lightcontent" />
             <preference name="StatusBarBackgroundColor" value="#000000" />
+            <preference name="BackupWebStorage" value="none" />
             <splash src="www/resources/screens/screen-iphone-portrait.png" width="320" height="480"/>
             <splash src="www/resources/screens/screen-iphone-portrait-2x.png" width="640" height="960"/>
             <splash src="www/resources/screens/screen-ipad-portrait.png" width="768" height="1024"/>
