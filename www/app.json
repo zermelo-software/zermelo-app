@@ -1,14 +1,38 @@
 {
     "builds": {
         "web": {"default": true},
-        "native": {
+        "android": {
             "packager": "cordova",
             "cordova" : {
                 "config": {
                     // Uncomment the line below and add the platforms you wish to build for
                     "platforms": "android",
 
-                    "id": "nl.Zermelo.App",
+                    "id": "nl.Zermelo.online.App",
+                    "name": "Zermelo"
+                }
+            }
+        },
+        "ios": {
+            "packager": "cordova",
+            "cordova" : {
+                "config": {
+                    // Uncomment the line below and add the platforms you wish to build for
+                    "platforms": "ios",
+
+                    "id": "nl.Zermelo.online.App",
+                    "name": "Zermelo"
+                }
+            }
+        },
+        "windows": {
+            "packager": "cordova",
+            "cordova" : {
+                "config": {
+                    // Uncomment the line below and add the platforms you wish to build for
+                    "platforms": "windows",
+
+                    "id": "nl.Zermelo.online.App",
                     "name": "Zermelo"
                 }
             }
@@ -76,6 +100,11 @@
             "path": "js/fullcalendar.js",
             "update": "full",
             "includeInBundle": true
+        },
+        {
+            "path": "js/winstore-jscompat.js",
+            "update": "full",
+            "includeInBundle": false
         }
     ],
 
@@ -103,33 +132,12 @@
     ],
 
     /**
-     * Used to automatically generate cache.manifest (HTML 5 application cache manifest) file when you build
-     */
-    "appCache": {
-        /**
-         * List of items in the CACHE MANIFEST section
-         */
-        "cache": [
-            "index.html"
-        ],
-        /**
-         * List of items in the NETWORK section
-         */
-        "network": [
-            "*"
-        ],
-        /**
-         * List of items in the FALLBACK section
-         */
-        "fallback": []
-    },
-
-    /**
      * Extra resources to be copied along when build
      */
     "resources": [
         "resources/images",
         "resources/icons",
+        "resources/screens",
         "locales/"
     ],
 

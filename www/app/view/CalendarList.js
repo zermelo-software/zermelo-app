@@ -48,7 +48,7 @@ Ext.define("Zermelo.view.CalendarList", {
 				selectedCls: 'zermelo-menu-list-item-select',
 				itemTpl: new Ext.XTemplate(
 					'<div class="{[this.getClass(values)]} fc-event fc-event-vert fc-event-content z-calendar-list-parent">',
-						'<div class="z-calendar-list-number">',
+						'<div class={[values.valid && !values.cancelled ? "z-calendar-list-number-valid" : "z-calendar-list-number-invalid"]}>',
 							'{startTimeSlotName}',
 						'</div>',
 						'<div style="display: table-cell;">',
@@ -71,23 +71,15 @@ Ext.define("Zermelo.view.CalendarList", {
 									'{locations}',
 								'</span>',
 								'<span class="z-calender-list-right">',
-									
+									'{[this.getIcon(values)]}',
 								'</span>',
 							'</div>',
-							'<tpl if="values.changeDescription != \'\'">',
-								'<div class="z-calendar-list-center">',
-									'<i>{changeDescription}</i>',
-								'</div>',
-							'</tpl>',
-							'<tpl if="values.remark != \'\'">',
-								'<div class="z-calendar-list-center">',
-									'<i>{remark}</i>',
-								'</div>',
-							'</tpl>',
 						'</div>',
 					'</div>',
 					{
 						getClass: function(event) {
+							if(!event.valid)
+								return 'fc-event-skin-valid-false';
 							if (event.cancelled)
 								return 'fc-event-skin-cancelled';
 							if (event.type == 'lesson')
@@ -101,6 +93,22 @@ Ext.define("Zermelo.view.CalendarList", {
 							if (event.type == 'unknown' || event.type == 'other')
 								return 'fc-event-skin-unknown';
 							return '';
+						},
+						compiled: true
+					},
+					{
+						getIcon: function(event) {
+							var stringHead = '<img src="resources/images/';
+							var stringTail = '.' + imageType + '" class="z-calendar-list-icon"/>';
+
+							if(event.cancelled)
+								return stringHead + "cancel" + stringTail;
+							if(event.moved)
+								return stringHead + "move" + stringTail;
+							if(event['new'])
+								return stringHead + "new" + stringTail;
+							if(event.modified)
+								return stringHead + "edit" + stringTail;
 						},
 						compiled: true
 					}

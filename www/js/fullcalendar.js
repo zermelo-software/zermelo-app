@@ -2567,19 +2567,13 @@ function enableTextSelection(element) {
                     if (date.getMinutes() < (0 + 5) / 2 && todayFlag) {
                         currentline = currentTimeLine.eq(i - 1);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 5-10
                     else if (date.getMinutes() < (5 + 10) / 2 && todayFlag) {
                         currentline = currentTimeLine.eq(i - 1);
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i);
-                        currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-                    }
+                        currentline.addClass('fc-show-currentTimeLine');                    }
                     //check today and current time slot 10-15
                     else if (date.getMinutes() < (10 + 15) / 2 && todayFlag) {
                         currentline = currentTimeLine.eq(i - 1);
@@ -2588,9 +2582,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 1);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 15-20
                     else if (date.getMinutes() < (15 + 20) / 2 && todayFlag) {
@@ -2602,9 +2593,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 2);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 20-25
                     else if (date.getMinutes() < (20 + 25) / 2 && todayFlag) {
@@ -2618,9 +2606,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 3);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 25-30
                     else if (date.getMinutes() < (25 + 30) / 2 && todayFlag) {
@@ -2636,9 +2621,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 4);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 30-35
                     else if (date.getMinutes() < (30 + 35) / 2 && todayFlag) {
@@ -2656,9 +2638,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 5);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 35-40
                     else if (date.getMinutes() < (35 + 40) / 2 && todayFlag) {
@@ -2678,9 +2657,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 6);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 40-45
                     else if (date.getMinutes() < (40 + 45) / 2 && todayFlag) {
@@ -2702,9 +2678,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 7);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 45-50
                     else if (date.getMinutes() < (45 + 50) / 2 && todayFlag) {
@@ -2728,9 +2701,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 8);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 50-55
                     else if (date.getMinutes() < (50 + 55) / 2 && todayFlag) {
@@ -2756,9 +2726,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 9);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 55-60
                     else if (date.getMinutes() < (55 + 60) / 2 && todayFlag) {
@@ -2786,9 +2753,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 10);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     }
                     //check today and current time slot 60
                     else if (date.getMinutes() < 60 && todayFlag) {
@@ -2818,9 +2782,6 @@ function enableTextSelection(element) {
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 11);
                         currentline.addClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-
                     } else {
                         currentline = currentTimeLine.eq(i - 1);
                         currentline.removeClass('fc-show-currentTimeLine');
@@ -2847,10 +2808,7 @@ function enableTextSelection(element) {
                         currentline = currentTimeLine.eq(i + 10);
                         currentline.removeClass('fc-show-currentTimeLine');
                         currentline = currentTimeLine.eq(i + 11);
-                        currentline.removeClass('fc-show-currentTimeLine');
-                        //calculate top start
-                        scrollTopHeight = 54 * i / 12;
-                    }
+                        currentline.removeClass('fc-show-currentTimeLine');                    }
 
                 } //end if
                 else {
@@ -2874,7 +2832,6 @@ function enableTextSelection(element) {
 
                     // set day buttons text
                     Ext.getCmp('day' + (i + 1)).setText(formatDate(date, "ddd\ndd"));
-                    dayData[i] = formatDate(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
                     bodyCell = dayBodyCells.eq(i);
                     //set current day column highlight
                     if (+date == +today) {
@@ -3686,11 +3643,8 @@ function enableTextSelection(element) {
             } else if (event.modified || event.remark.length != 0) {
                 extra_html += "<img src='resources/images/edit." + imageType + "' style='margin-right: 3px;'/>";
             }
-            if (event.collidingIds != event.id) {
-                var collidingIds = event.collidingIds.split(",");
-                for(var i=1; i<collidingIds.length; i++)
-                    extra_html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
-            }
+            for(var i = 1; i < event.validCollisionCount; i++)
+                extra_html += "<img src='resources/images/collision." + imageType + "' style='margin-right: 3px;'/>";
 
             extra_html += "</div>" +
                 "</div>";
@@ -3723,45 +3677,23 @@ function enableTextSelection(element) {
             var skinCss = getSkinCss(event, opt);
             var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
             var classes = ['fc-event', 'fc-event-vert'];
-            if (week_day_view == "agendaWeek" || week_day_view == "") {
-                if (event.valid) {
-                    if (event.cancelled)
-                        classes.push('fc-event-skin-cancelled');
-                    else {
-                        if (event.type == 'lesson')
-                            classes.push('fc-event-skin-lesson');
-                        else if (event.type == 'exam')
-                            classes.push('fc-event-skin-exam');
-                        else if (event.type == 'activity')
-                            classes.push('fc-event-skin-activity');
-                        else if (event.type == 'choice')
-                            classes.push('fc-event-skin-unknown');
-                        else if (event.type == 'unknown' || event.type == 'other')
-                            classes.push('fc-event-skin-unknown');
-                    }
-                } else {
-                    classes.push('fc-event-skin-valid-false');
+            if (event.valid) {
+                if (event.cancelled)
+                    classes.push('fc-event-skin-cancelled');
+                else {
+                    if (event.type == 'lesson')
+                        classes.push('fc-event-skin-lesson');
+                    else if (event.type == 'exam')
+                        classes.push('fc-event-skin-exam');
+                    else if (event.type == 'activity')
+                        classes.push('fc-event-skin-activity');
+                    else if (event.type == 'choice')
+                        classes.push('fc-event-skin-unknown');
+                    else if (event.type == 'unknown' || event.type == 'other')
+                        classes.push('fc-event-skin-unknown');
                 }
             } else {
-                if (event.valid) {
-                    if (event.cancelled)
-                        classes.push('fc-event-day-skin-cancelled');
-                    else {
-                        if (event.type == 'lesson')
-                            classes.push('fc-event-day-skin-lesson');
-                        else if (event.type == 'exam')
-                            classes.push('fc-event-day-skin-exam');
-                        else if (event.type == 'activity')
-                            classes.push('fc-event-day-skin-activity');
-                        else if (event.type == 'choice')
-                            classes.push('fc-event-day-skin-unknown');
-                        else if (event.type == 'unknown' || event.type == 'other')
-                            classes.push('fc-event-day-skin-unknown');
-                    }
-                } else {
-                    classes.push('fc-event-day-skin-valid-false');
-                }
-
+                classes.push('fc-event-skin-valid-false');
             }
             if (isEventDraggable(event)) {
                 classes.push('fc-event-draggable');
@@ -3812,38 +3744,19 @@ function enableTextSelection(element) {
                     "<div class='fc-event-inner'" + skinCssAttr + ">" +
                     "<div class='fc-event-content'>";
            
-            if (week_day_view == "agendaWeek" || week_day_view == "") {
-                html += "<div class='fc-event-title'>" +
-                    htmlEscape(event.teachers) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.subjects) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.locations) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.groups) +
-                    "</div>" +
-                    "<div class='fc-icon-align-bottom-right'>";
-            } else {
-                html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.teachers) +
-                    "</div>" +
-                    "<div class='fc-event-title' style='position: absolute;right: 0;top: 0;'>" +
-                    htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
-                    "</div>" +
-                    "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subjects) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.locations) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.groups) +
-                    "</div>" +
-                    "<div class='fc-icon-align-bottom-right'>";
-            }
+            html += "<div class='fc-event-title'>" +
+                htmlEscape(event.teachers) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.subjects) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.locations) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.groups) +
+                "</div>" +
+                "<div class='fc-icon-align-bottom-right'>";
 
             html += get_special_event_icons_html(event, seg);
 
@@ -3864,46 +3777,25 @@ function enableTextSelection(element) {
             var skinCss = getSkinCss(event, opt);
             var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
             var classes = ['fc-event', 'fc-event-vert'];
-            if (week_day_view == "agendaWeek" || week_day_view == "") {
-                if (event.valid) {
-                    if (event.cancelled)
-                        classes.push('fc-event-skin-cancelled');
-                    else {
-                        if (event.type == 'lesson')
-                            classes.push('fc-event-skin-lesson');
-                        else if (event.type == 'exam')
-                            classes.push('fc-event-skin-exam');
-                        else if (event.type == 'activity')
-                            classes.push('fc-event-skin-activity');
-                        else if (event.type == 'choice')
-                            classes.push('fc-event-skin-unknown');
-                        else if (event.type == 'unknown' || event.type == 'other')
-                            classes.push('fc-event-skin-unknown');
-                    }
-                } else {
-                    classes.push('fc-event-skin-valid-false');
+            if (event.valid) {
+                if (event.cancelled)
+                    classes.push('fc-event-skin-cancelled');
+                else {
+                    if (event.type == 'lesson')
+                        classes.push('fc-event-skin-lesson');
+                    else if (event.type == 'exam')
+                        classes.push('fc-event-skin-exam');
+                    else if (event.type == 'activity')
+                        classes.push('fc-event-skin-activity');
+                    else if (event.type == 'choice')
+                        classes.push('fc-event-skin-unknown');
+                    else if (event.type == 'unknown' || event.type == 'other')
+                        classes.push('fc-event-skin-unknown');
                 }
             } else {
-                if (event.valid) {
-                    if (event.cancelled)
-                        classes.push('fc-event-day-skin-cancelled');
-                    else {
-                        if (event.type == 'lesson')
-                            classes.push('fc-event-day-skin-lesson');
-                        else if (event.type == 'exam')
-                            classes.push('fc-event-day-skin-exam');
-                        else if (event.type == 'activity')
-                            classes.push('fc-event-day-skin-activity');
-                        else if (event.type == 'choice')
-                            classes.push('fc-event-day-skin-unknown');
-                        else if (event.type == 'unknown' || event.type == 'other')
-                            classes.push('fc-event-day-skin-unknown');
-                    }
-                } else {
-                    classes.push('fc-event-day-skin-valid-false');
-                }
-
+                classes.push('fc-event-skin-valid-false');
             }
+
             if (isEventDraggable(event)) {
                 classes.push('fc-event-draggable');
             }
@@ -3933,38 +3825,19 @@ function enableTextSelection(element) {
             html += "<div class='fc-event-inner'" + skinCssAttr + ">" + "<div class='fc-event-content'>";
 
 
-            if (week_day_view == "agendaWeek" || week_day_view == "") {
-                html += "<div class='fc-event-title'>" +
-                    htmlEscape(event.teachers) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.subjects) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.locations) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.groups) +
-                    "</div>" +
-                    "<div class='fc-icon-align-bottom-right'>";
-            } else {
-                html += "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.teachers) +
-                    "</div>" +
-                    "<div class='fc-event-title' style='position: absolute;right: 0;top: 0;'>" +
-                    htmlEscape(Ext.Date.format(event.start, 'H:i') + "u") + "-" + htmlEscape(Ext.Date.format(event.end, 'H:i') + "u") +
-                    "</div>" +
-                    "<div class='fc-event-title' style='font-weight: bolder;'>" +
-                    htmlEscape(event.subjects) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.locations) +
-                    "</div>" +
-                    "<div class='fc-event-title'>" +
-                    htmlEscape(event.groups) +
-                    "</div>" +
-                    "<div class='fc-icon-align-bottom-right'>";
-            }
+            html += "<div class='fc-event-title'>" +
+                htmlEscape(event.teachers) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.subjects) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.locations) +
+                "</div>" +
+                "<div class='fc-event-title'>" +
+                htmlEscape(event.groups) +
+                "</div>" +
+                "<div class='fc-icon-align-bottom-right'>";
 
             html += get_special_event_icons_html(event, seg);
 

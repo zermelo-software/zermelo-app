@@ -47,12 +47,8 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	logout: function() {
-		this.setCode('');
-		this.setInstitution('');
-		this.setAccessToken('');
-		var appVersion = localStorage.getItem('appVersion');
 		localStorage.clear();
-		localStorage.setItem('appVersion', appVersion);
+		window.location.reload();
 	},
 
 	setTitles: function() {
@@ -82,8 +78,7 @@ Ext.define('Zermelo.UserManager', {
 
 		this.setCode(newCode);
 		this.setTitles();
-		Ext.getStore('Appointments').changeUser();
-		Ext.getCmp('fullCalendarView').refreshEvents();
+		Ext.getStore('Appointments').prepareData();
 	},
 
 	getScheduleTitle: function() {

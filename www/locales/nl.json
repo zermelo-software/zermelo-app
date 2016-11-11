@@ -13,6 +13,7 @@
         "schedule_other": "Rooster van ",
         "announcement_self": "Mededelingen", 
         "announcement_other": "Mededelingen voor ",
+        "user_select": "Kies gebruiker",
         "Logout":"Uitloggen",
         "logout_message":"Weet u zeker dat u de app wilt ontkoppelen? Voordat u hier uw rooster weer kunt zien dient u de app opnieuw te koppelen via Zermelo Portal."
     },
@@ -53,8 +54,14 @@
         "choice" : "Keuze",
         "other" : "Overig"
     },
-    "network_error":"Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
-    "insufficient_permissions":"Je hebt onvoldoende rechten om dit rooster te bekijken",
+    "error": {
+        "network": "Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
+        "permissions": "Je hebt onvoldoende rechten om dit rooster te bekijken.",
+        "user": {
+            "some": "niet alle gebruikers types konden worden opgehaald. U heeft mogelijk niet de juiste rechten.",
+            "all": "Gebruikers konden niet worden opgehaald. U heeft mogelijk niet de juiste rechten, of er is geen internetverbinding."
+        }
+    },
     "months" : {
         "1"  : "Januari",
         "2"  : "Februari",

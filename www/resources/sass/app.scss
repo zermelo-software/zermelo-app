@@ -7319,7 +7319,6 @@ a.fc-event {
 	color: #ffffff;   
 	/*padding: 2px 2px 0;*/  /* default TEXT color */
 	border-style: dashed;
-	display: none;
 }
 .fc-event-skin-exam {
 	border-color: #278f7b;     /* default BORDER color */
@@ -7361,7 +7360,6 @@ border-top: 1px dashed #808080;
 border-right: 1px dashed #808080;
 border-bottom: 1px dashed #808080;
 border-left: 12px solid #808080;
-display: none;
 }
 .fc-event-day-skin-exam {
 	border-color: #278f7b;     /* default BORDER color */
@@ -8068,6 +8066,9 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	float: right;
 }
 
+
+$z-calendar-list-line-height: 18px;
+
 .z-calender-list-left{
 	padding-left: 0.5em;
 }
@@ -8083,10 +8084,11 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	padding-right: 0.5em;
 	padding-top: 0.4em;
 	padding-bottom: 0.2em;
+	text-align: center;
 }
 
 .z-calendar-list-parent{
-	font-size: 18px;
+	font-size: $z-calendar-list-line-height;
 	width: 100%;
 	display: inline-table;
 }
@@ -8097,10 +8099,26 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	padding: 0.2em;
 	vertical-align: middle;
 	width: 11%;
-	color: #2d63e2;
+	
 	font-weight: bolder;
 	border-right: solid;
 	border-width: 1px;
+}
+
+.z-calendar-list-number-valid{
+	@extend .z-calendar-list-number;
+	color: #2d63e2;
+}
+
+.z-calendar-list-number-invalid{
+	@extend .z-calendar-list-number;
+	color: #999999;
+}
+
+.z-calendar-list-icon{
+	 height: $z-calendar-list-line-height;
+	 width: $z-calendar-list-line-height;
+	 margin-right: $z-calendar-list-line-height / 2;
 }
 
 .circle{
@@ -8115,4 +8133,53 @@ background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #E2E
 	max-width: 95%;
 	position: absolute;
 	padding: 0.5em 0.7em;
+}
+
+$z-msgbox-bg-color: #F7F7F7;
+
+.z-msgbox-bg{
+	background-color: $z-msgbox-bg-color;
+}
+
+.z-msgbox{
+	border: 2px solid #2d63e2;
+	background-color: #202020;
+	padding: 0.7em 0.7em 0.5em 0.7em;
+}
+
+.z-msgbox-button{
+	margin: 0.5em 0.7em;
+}
+
+.z-msgbox-button-narrow{
+	@extend .z-msgbox-buton;
+	display: inline !important;
+	width: 30%;
+}
+
+.z-msgbox-field{
+	background-color: $z-msgbox-bg-color;
+	margin: 1em 0.7em 0.5em 0.7em;
+	padding: 0.5em 0.8em;
+	border: 1px solid #2e6ee2;
+}
+
+.z-msgbox-field-low-padding{
+	@extend .z-msgbox-field;
+	padding: 0em 0.8em;
+}
+
+.z-msgbox-text{
+	@extend .z-msgbox-field;
+	text-align: center;
+	font-size: 1em;
+}
+
+.z-user-list-item{
+	border-bottom: 1px solid black;
+	padding: 3px;
+}
+
+.z-user-list-cell{
+	display: table-cell;
 }

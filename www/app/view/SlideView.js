@@ -441,7 +441,7 @@ Ext.define('Zermelo.view.SlideView', {
      * Always called when item in the list is tapped.
      */
     onItemTap: function(list, index, target, item, event, eOpts) {
-        var thisobj = this;
+        this.closeContainer();
         if (index == this.itemIds.logout) {
             // Create 'are you sure you want to log out?' box
             Ext.Msg.show({
@@ -460,8 +460,7 @@ Ext.define('Zermelo.view.SlideView', {
                     ui: 'normal',
                     handler: function() {
                         Zermelo.UserManager.logout();
-                        window.localStorage.setItem('refreshTime', '');
-                        window.location.reload();
+                        this.destroy();
                     }
                 }, {
                     xtype: 'spacer'
@@ -472,8 +471,7 @@ Ext.define('Zermelo.view.SlideView', {
                     },
                     ui: 'normal',
                     handler: function() {
-                        thisobj.closeContainer();
-                        this.hide();
+                        this.destroy();
                     }
 
                 }]
@@ -504,7 +502,6 @@ Ext.define('Zermelo.view.SlideView', {
                         ui: 'normal',
                         handler: function() {
                             Zermelo.UserManager.setUser();
-                            thisobj.closeContainer();
                             this.getParent().getParent().hide();
                         }
                     }]
@@ -529,12 +526,10 @@ Ext.define('Zermelo.view.SlideView', {
                     handler: function() {
                         var user_code = Ext.getCmp('new_user_code').getValue();
                         if (user_code.length == 0) {
-                            thisobj.closeContainer();
                             this.hide();
                             Zermelo.ErrorManager.showErrorBox('enter_user_code');
                         } else {
                             Zermelo.UserManager.setUser(user_code);
-                            thisobj.closeContainer();
                             this.hide();
                         }
                     }
@@ -547,19 +542,13 @@ Ext.define('Zermelo.view.SlideView', {
                     },
                     ui: 'normal',
                     handler: function() {
-                        thisobj.closeContainer();
                         this.hide();
                     }
 
                 }]
             });
 
-        } else {
-            if (list.isSelected(item) && this.config.closeOnSelect) {
-                thisobj.closeContainer();
-            }
         }
-
     },
 
     /**
@@ -586,18 +575,15 @@ Ext.define('Zermelo.view.SlideView', {
 
                     // Wait until the component is painted before closing the container.  This makes
                     // the initial animation much smoother.
-                    if (me.config.closeOnSelect) {
-                        me._cache[index].addListener('painted', function() {
+                    // if (me.config.closeOnSelect) {
+                        // me._cache[index].addListener('painted', function() {
                             // The slight delay here gives the component enough time to update before
                             // the close animation starts.
                             me.closeContainer();
-                        });
-                    }
+                        // });
+                    // }
 
                     // Add a button for controlling the slide, if desired
-                    if ((item.raw.slideButton || false)) {
-                        //  me.createSlideButton(me._cache[index], item.raw.slideButton);
-                    }
                 }
             }
             me.createSlideButton(me._cache[index], item.raw.slideButton);
@@ -611,10 +597,7 @@ Ext.define('Zermelo.view.SlideView', {
                 me.fireAction('select', [me, me._cache[index], index], func, me);
             }
             if (index == this.itemIds.weekView) {
-                messageShow = false;
-                Ext.getStore('Appointments').fetchWeek();
-            } else if (index == this.itemIds.messages) {
-                messageShow = true;
+                Ext.getStore('Appointments').prepareData();
             }
         }
     },
@@ -1041,6 +1024,18 @@ Ext.define('Zermelo.view.SlideView', {
     },
 
     selectItem: function(itemName) {
+        if(itemName == 'lastView')
+            itemName = localStorage.getItem('lastView') || 'fullCalendarView';
+        if(this.itemIds[itemName] === undefined)
+            console.log('Unknown view', itemName, this.itemIds);
         this.list.select(this.itemIds[itemName]);
+    },
+
+    getActiveItemName: function(itemName) {
+        var activeItem = this.getActiveItem().internalId;
+        for(var key in this.itemIds) {
+            if(this.itemIds[key] == activeItem)
+                return key;
+        }
     }
 });

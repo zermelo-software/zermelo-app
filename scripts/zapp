@@ -8,7 +8,9 @@ ROOT_DIR = '/newApp/'
 SCRIPTS_DIR = ROOT_DIR + 'scripts/'
 WWW_DIR = ROOT_DIR + 'www/'
 ZIP_DIR = os.path.expanduser('~/Downloads/')
-BUILD_DIR = WWW_DIR + 'cordova/www/'
+CORDOVA_DIR = WWW_DIR + 'cordova/'
+PREPARED_DIR = CORDOVA_DIR + 'www/'
+APK_DIR = CORDOVA_DIR + 'platforms/android/build/outputs/apk/'
 
 def convert_to(color):
 	os.chdir(SCRIPTS_DIR + 'conversion/')
@@ -23,19 +25,36 @@ def zip():
 	zip_file = ZIP_DIR + 'Zermelo.zip'
 	if os.path.isfile(zip_file):
 		os.remove(zip_file)
-	print subprocess.check_output(['zip', '-r', zip_file, '.'], cwd = BUILD_DIR)
+	print subprocess.check_output(['zip', '-r', zip_file, '.'], cwd = PREPARED_DIR)
 
-def build():
+def prepare(target):
 	os.chdir(WWW_DIR)
-	print subprocess.check_output(['sencha', 'app', 'prepare', 'native'])
+	print subprocess.check_output(['sencha', 'app', 'prepare', target])
 
+def install():
+	print subprocess.check_output(['adb', 'install', '-r', '-d', APK_DIR + 'android-release.apk'])
 
-def release():
-	convert_to('red')
-	build()
-	zip()
-	convert_to('blue')
-	build()
+# def release():
+# 	convert_to('red')
+# 	prepare()
+# 	build()
+# 	convert_to('blue')
+# 	prepare()
+
+def push(target):
+	print subprocess.check_output(['rsync', '-r', '-e', 'ssh', WWW_DIR, target])
+
+def remote_build(target):
+	print subprocess.check_output(['ssh', target, 'cd app && /Users/zermelo/bin/Sencha/Cmd/sencha app prepare ios'])
+
+def android():
+	prepare('android')
+	print subprocess.check_output(['cordova', 'build', 'android', '--release'], cwd = CORDOVA_DIR)
+
+def ios():
+	prepare('ios')
+	# push('zermelo@macbook:app/')
+	# remote_build('zermelo@macbook')
 
 def set_locale(locale):
 	input_file = WWW_DIR + 'locales/' + locale + '.json'
@@ -57,8 +76,14 @@ def main():
 			zip()
 		elif cmd == 'build':
 			build()
-		elif cmd == 'release':
-			release()
+		elif cmd == 'install':
+			install()
+		elif cmd == 'android':
+			android()
+		elif cmd == 'ios':
+			ios()
+		elif cmd == 'push':
+			push('zermelo@macbook:app/')
 		elif cmd == 'en':
 			set_locale('en')
 		elif cmd == 'nl':

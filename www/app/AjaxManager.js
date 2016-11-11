@@ -12,9 +12,13 @@ Ext.define('Zermelo.AjaxManager', {
 		)
 	},
 
+	addAccessTokenToParams: function(params) {
+		params.access_token = Zermelo.UserManager.getAccessToken();
+		return params;
+	},
 	refresh: function() {
 		Ext.getStore('Appointments').fetchWeek();
-		Zermelo.AjaxManager.getAnnouncementData();
+		this.getAnnouncementData();
 	},
 
 	periodicRefresh: function() {
@@ -48,7 +52,7 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 
 			success: function (response, opts) {
-				var decoded = Ext.JSON.decode(response.responseText).response.data;
+				var decoded = JSON.parse(response.responseText).response.data;
 				var announcementStore = Ext.getStore('Announcements');
 				announcementStore.suspendEvents(true);
 
@@ -109,7 +113,7 @@ Ext.define('Zermelo.AjaxManager', {
 					}
 				}
 				else {
-					Zermelo.ErrorManager.showErrorBox('network_error');
+					Zermelo.ErrorManager.showErrorBox('error.network');
 				}
 				Ext.getStore('Announcements').resetFilters();
 				Ext.Viewport.unmask();
@@ -118,9 +122,10 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(startTime, endTime) {
-		if (!Zermelo.UserManager.loggedIn())
+		console.log('getAppointment try', performance.now(), this.appointmentsPending);
+		if (!Zermelo.UserManager.loggedIn() || this.appointmentsPending)
 			return;
-
+		console.log('getAppointment start', performance.now(), this.appointmentsPending);
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -140,56 +145,84 @@ Ext.define('Zermelo.AjaxManager', {
 				user: Zermelo.UserManager.getUser(),
 				access_token: Zermelo.UserManager.getAccessToken(),
 				start: startTime,
-				end: endTime,
-				valid: true
+				end: endTime
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
+			scope: this,
 			success: function (response) {
-				var decoded = Ext.JSON.decode(response.responseText).response.data;
-				var currentUser = Zermelo.UserManager.getUser();
+				var decoded = JSON.parse(response.responseText).response.data;
 
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();
 
 				appointmentStore.clearWeek();
-
-				decoded.forEach(function(record) {
+				decoded
+				.sort(function(a, b) {
+					if(a.start < b.start)
+						return -1;
+					if(a.start > b.start)
+						return 1;
+					if(a.end > b.end)
+						return -1;
+					if(a.end < b.end)
+						return 1;
+					return 0;
+				})
+				.forEach(function(record) {
 					record.start = new Date(record.start * 1000);
 					record.end = new Date(record.end * 1000);
-					record.user = currentUser;
-					record.id = record.id + currentUser;
-					record.groups.sort();
-					record.locations.sort();
-					record.teachers.sort();
+					record.user = Zermelo.UserManager.getUser();
+					record.id += Zermelo.UserManager.getUser();
+					if(Array.isArray(record.groups))
+						record.groups.sort();
+					if(Array.isArray(record.locations))
+						record.locations.sort();
+					if(Array.isArray(record.teachers))
+						record.teachers.sort();
 					if(record.startTimeSlotName === undefined || record.startTimeSlotName === null)
 						record.startTimeSlotName = record.startTimeSlot;
-
-					appointmentStore.add(record);
 				});
-
-				appointmentStore.detectCollisions();
-				appointmentStore.queueDelayedEvents();
-
-				// Let FullCalendar know we have new events
-				var fullCalendarView = Ext.getCmp('fullCalendarView');
-				if(fullCalendarView)
-					fullCalendarView.refreshOrStart();
-
+				var currentCollision, validCollisionCount, j, collisionEnd;
+				for(var i = 0; i < decoded.length; i++) {
+					currentCollision = [];
+					validCollisionCount = 0;
+					for(j = i;j < decoded.length && decoded[j].start >= decoded[i].start && decoded[j].end <= decoded[i].end; j++) {
+						currentCollision.push(decoded[j].id);
+						validCollisionCount += decoded[j].valid;
+					}
+					j--;
+					collisionEnd = j;
+					currentCollision = currentCollision.join(',');
+					while(j >= i) {
+						decoded[j].collidingIds = currentCollision;
+						decoded[j].validCollisionCount = validCollisionCount;
+						j--;
+					}
+					i = collisionEnd;
+				}
+				
+				appointmentStore.add(decoded).forEach(function(record) {record.setDirty()});
 				appointmentStore.resetFilters();
-				appointmentStore.resumeEvents();
+				appointmentStore.resumeEvents(true);
+				appointmentStore.fireEvent('refresh');
+				appointmentStore.queueDelayedEvents();
 				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
+				this.appointmentsPending = false;
+				console.log('getAppointment end', performance.now(), this.appointmentsPending);
 			},
 			failure: function (response) {
-				var error_msg = 'network_error';
+				var error_msg = 'error.network';
 				if (response.status == 403) {
-					error_msg = 'insufficient_permissions';
+					error_msg = 'error.permissions';
 					Zermelo.UserManager.setUser();
 				}
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
+				this.appointmentsPending = false;
+				console.log('getAppointment fail', performance.now(), this.appointmentsPending);
 			}
 		});
 	}

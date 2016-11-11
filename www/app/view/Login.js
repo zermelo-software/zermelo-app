@@ -29,7 +29,6 @@
 Ext.define('Zermelo.view.Login', {
     extend: 'Ext.Container',
     xtype: 'login',
-    id: 'login',
     requires: [
         'Ext.Img',
         'Ext.Label',
@@ -38,11 +37,6 @@ Ext.define('Zermelo.view.Login', {
         'Ext.data.JsonP'
     ],
     config: {
-        listeners: {
-            show: function () {
-                thisObj = this;
-            }
-        },
         layout: {
             type: 'vbox',
             align: 'stretch'
@@ -51,13 +45,11 @@ Ext.define('Zermelo.view.Login', {
         padding: '0 5% 0 5%',
         scrollable: true,
         items: [{
-                //zermelo logo
                 xtype: 'container',
                 pack: 'center',
                 padding: '30 0 0 0',
                 html: '<div align="center"><img src="resources/images/LogoZermelo.png" height="100" align="middle"/></div>'
             }, {
-                // info text
                 xtype: 'container',
                 padding: '10 0 10 0',
                 locales: {
@@ -202,7 +194,7 @@ function authentication() {
             }
 
             // show loading screen
-            thisObj.setMasked({
+            Ext.Viewport.setMasked({
                 xtype: 'loadmask',
                 locale: {
                     message: 'loading'
@@ -218,7 +210,7 @@ function authentication() {
                 //success
                 success: function (response) {
                     // hide loading screen
-                    thisObj.unmask();
+                    Ext.Viewport.unmask();
                     // decode response
                     var decoded = Ext.JSON.decode(response.responseText);
                     Zermelo.UserManager.saveLogin('~me', value_institution, decoded.access_token);
@@ -229,7 +221,7 @@ function authentication() {
                 },
                 //failure
                 failure: function (response) {
-                    thisObj.unmask();
+                    Ext.Viewport.unmask();
                     Zermelo.ErrorManager.showErrorBox('network_error');
                 }
             });

@@ -6,7 +6,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		model: 'Zermelo.model.Appointment',
 		storeId: 'Appointments',
 		autoLoad: true,
-		autoSync: true,
+		autoSync: false,
 		autoSort: false,
 		proxy: {
 			type: 'localstorage',
@@ -23,61 +23,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	getAsArray: function() {
 		var appointmentArray = [];
 		this.each(function(record) {
-			appointmentArray.push(record.getData());
+			if(record.get('collidingIds').startsWith(record.get('id'))) {
+				appointmentArray.push(record.getData());
+			}
 		});
+
 		return appointmentArray;
-	},
-
-	/**
-	 * Determines which appointments in the current scope overlap
-	 *
-	 * @param:
-	 * @return:
-	 */
-	detectCollisions: function() {
-		if(this.getCount() <= 1) {
-			var first = this.first();
-			if(first)
-				first.set('collidingIds', first.get('id'));
-			return;
-		}
-		this.sort([
-			{
-				property: 'start',
-				direction: 'ASC'
-			},
-			{
-				property: 'end',
-				direction: 'ASC'
-			}
-		]);
-
-		var currentCollision;
-		var collisionEnd = 0;
-		this.getData().each(function(record, index, length) {
-			if (record.get('start') < collisionEnd) {
-				record.set('collidingIds', currentCollision);
-				return true;
-			}
-
-			// NB: The loop below works because the store is already sorted by 'start'
-			currentCollision = [record.get('id')];
-			collisionEnd = record.get('end');
-			var overlap = true;
-			for(var i = index + 1; i < length && overlap; i++) {
-				var next = this.getAt(i);
-
-				if(next && next.get('start') < record.get('end')) {
-					currentCollision.push(next.get('id'));
-				}
-				else {
-					overlap = false;
-				}
-			}
-			currentCollision = currentCollision.join(',');
-			record.set('collidingIds', currentCollision);			
-			return true;
-		}, this);
 	},
 
 	/**
@@ -89,7 +40,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	queueDelayedEvents: function(delay) {
 		if (delay === undefined)
 			delay = 5 * 1000;
-		Ext.defer(this.pruneLocalStorage, delay, this);
+		Ext.defer(function() {this.pruneLocalStorage(); this.sync();}, delay, this);
 	},
 
 	/**
@@ -105,14 +56,14 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		upperBound = upperBound.setDate(upperBound.getDate() + 7 + (6 - upperBound.getDay()));
 
 		this.suspendEvents();
-		this.clearFilter()
+		this.clearFilter();
 		this.each(function(record) {
 			if (record.get('end') < lowerBound || record.get('start') > upperBound) {
 				this.remove(record);
 			}
 		}, this);
 		this.resetFilters();
-		this.resumeEvents();
+		this.resumeEvents(true);
 	},
 
 	/**
@@ -123,24 +74,11 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	resetFilters: function() {
 		this.clearFilter();
-		this.filter('user', Zermelo.UserManager.getUser());
+		var user = Zermelo.UserManager.getUser();
 		this.filterBy(function(record) {
 			var start = record.get('start');
-			return (start > this.windowStart && start < this.windowEnd);
+			return (record.get('user') == user && start > this.windowStart && start < this.windowEnd);
 		});
-	},
-
-	/**
-	 * Filters items for the new user and fetches events if none are known
-	 *
-	 * @param:
-	 * @return:
-	 */
-	changeUser: function() {
-		this.resetFilters();
-		if(this.getCount() == 0) {
-			this.fetchWeek();
-		}
 	},
 
 	/**
@@ -218,8 +156,22 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.resetFilters();
 		if(this.getCount() == 0)
 			this.fetchWeek();
-		else
-			this.detectCollisions();
+	},
+
+	getView: function() {
+		return this.windowEnd.getDay() - this.windowStart.getDay() > 2 ? 'week' : 'day';
+	},
+
+	/**
+	 * Determines whether a given date is inside the current week
+	 *
+	 * +2 to ensure saturday and sunday don't cause issues
+	 *
+	 * @param: The date check
+	 * @return: true or false
+	 */
+	inScope: function(date) {
+		return (date >= this.windowStart) && date < new Date(this.windowEnd.getFullYear(), this.windowEnd.getMonth(), this.windowEnd.getDate() + 2);
 	},
 
 	/**
@@ -231,6 +183,15 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	setWindowWeek: function(target) {
 		if(target === undefined)
 			target = this.windowStart;
+		// Check if we're already in the correct week view
+		if(this.windowStart 
+			&& this.windowEnd 
+			&& this.windowStart == this.getMonday() 
+			&& this.windowEnd == this.getSaturday() 
+			&& this.windowStart < target 
+			&& target < this.windowEnd
+		)
+			return false;
 		this.windowStart = new Date(target.getFullYear(), target.getMonth(), target.getDate() + (1 - target.getDay()));
 		this.windowEnd = new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + 5);
 		this.prepareData();
@@ -268,6 +229,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 
 		this.windowStart.setDate(this.windowStart.getDate() + direction);
 		this.windowEnd.setDate(this.windowEnd.getDate() + direction);
+
+		this.suspendEvents();
 		this.prepareData();
+		this.resumeEvents();
 	}
 });
