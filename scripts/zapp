@@ -9,6 +9,7 @@ SCRIPTS_DIR = ROOT_DIR + 'scripts/'
 WWW_DIR = ROOT_DIR + 'www/'
 ZIP_DIR = os.path.expanduser('~/Downloads/')
 CORDOVA_DIR = WWW_DIR + 'cordova/'
+PLATFORMS_DIR = CORDOVA_DIR + 'platforms/'
 PREPARED_DIR = CORDOVA_DIR + 'www/'
 APK_DIR = CORDOVA_DIR + 'platforms/android/build/outputs/apk/'
 
@@ -34,15 +35,11 @@ def prepare(target):
 def install():
 	print subprocess.check_output(['adb', 'install', '-r', '-d', APK_DIR + 'android-release.apk'])
 
-# def release():
-# 	convert_to('red')
-# 	prepare()
-# 	build()
-# 	convert_to('blue')
-# 	prepare()
-
 def push(target):
-	print subprocess.check_output(['rsync', '-r', '-e', 'ssh', WWW_DIR, target])
+	print subprocess.check_output(['rsync', '-ru', '-e', 'ssh', WWW_DIR, target])
+
+def pull(target):
+	print subprocess.check_output(['rsync', '-ru', '-e', 'ssh', target, PLATFORMS_DIR])
 
 def remote_build(target):
 	print subprocess.check_output(['ssh', target, 'cd app && /Users/zermelo/bin/Sencha/Cmd/sencha app prepare ios'])
@@ -50,11 +47,6 @@ def remote_build(target):
 def android():
 	prepare('android')
 	print subprocess.check_output(['cordova', 'build', 'android', '--release'], cwd = CORDOVA_DIR)
-
-def ios():
-	prepare('ios')
-	# push('zermelo@macbook:app/')
-	# remote_build('zermelo@macbook')
 
 def set_locale(locale):
 	input_file = WWW_DIR + 'locales/' + locale + '.json'
@@ -84,6 +76,8 @@ def main():
 			ios()
 		elif cmd == 'push':
 			push('zermelo@macbook:app/')
+		elif cmd == 'pull':
+			pull('zermelo@macbook:app/cordova/platforms/ios')
 		elif cmd == 'en':
 			set_locale('en')
 		elif cmd == 'nl':
