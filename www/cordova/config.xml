@@ -63,7 +63,9 @@
         <platform name="android">
             <preference name="android-minSdkVersion" value="10" />
             <preference name="android-targetSdkVersion" value="19" />
-            <splash src="www/resources/screens/screen-iphone-portrait-736h.png" platform="android" density="ldpi"/>
+            <splash src="www/resources/screens/screen-iphone-portrait.png" density="port-mdpi"/>
+            <splash src="www/resources/screens/SplashScreenPhone.scale-100.png" density="port-hdpi"/>
+            <splash src="www/resources/screens/screen-iphone-portrait-667h.png" density="port-xhdpi"/>
             <icon src="www/resources/icons/36.png" density="ldpi" />
             <icon src="www/resources/icons/48.png" density="mdpi" />
             <icon src="www/resources/icons/72.png" density="hdpi" />
@@ -105,6 +107,6 @@
             <icon src="www/resources/icons/152.png" width="152" height="152" />
         </platform>
 
-        <splash src="www/resources/screens/screen-iphone-portrait-736h.png" />
+        <splash src="www/resources/screens/screen-iphone-portrait.png" />
         <icon src="www/resources/icons/192.png" />
     </widget>

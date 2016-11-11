@@ -7,7 +7,7 @@ Ext.define('Zermelo.UserManager', {
 	type: window.localStorage.getItem('type'),
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
-	permissions: JSON.parse(window.localStorage.getItem('permissions') || '{}'),
+	tokenAttributes: JSON.parse(window.localStorage.getItem('tokenAttributes') || '{}'),
 	userAttributes: JSON.parse(window.localStorage.getItem('userAttributes') || '{}'),
 
 	loggedIn: function() {
@@ -46,8 +46,8 @@ Ext.define('Zermelo.UserManager', {
 		return this.accessToken;
 	},
 
-	getPermissions: function() {
-		return this.permissions;
+	getTokenAttributes: function() {
+		return this.tokenAttributes;
 	},
 
 	getUserAttributes: function() {
@@ -55,11 +55,13 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	needsTokenUpgrade: function() {
-		return this.permissions.readNames < 5 &&
-			this.permissions.readScheduleStudents < 5 &&
-			this.permissions.readScheduleTeachers < 5 &&
-			this.permissions.readScheduleGroups < 5 &&
-			this.permissions.readScheduleLocations < 5;
+		return this.tokenAttributes.schedule == 0 &&
+			this.tokenAttributes.effectivePermissions && 
+			this.tokenAttributes.effectivePermissions.readNames < 5 &&
+			this.tokenAttributes.effectivePermissions.readScheduleStudents < 5 &&
+			this.tokenAttributes.effectivePermissions.readScheduleTeachers < 5 &&
+			this.tokenAttributes.effectivePermissions.readScheduleGroups < 5 &&
+			this.tokenAttributes.effectivePermissions.readScheduleLocations < 5;
 	},
 
 	isParentOnly: function() {
@@ -91,10 +93,10 @@ Ext.define('Zermelo.UserManager', {
 		window.localStorage.setItem('accessToken', newAccessToken);
 	},
 
-	setPermissions: function(permissions) {
-		this.permissions = permissions;
-		console.log(permissions);
-		window.localStorage.setItem('permissions', JSON.stringify(permissions));
+	setTokenAttributes: function(tokenAttributes) {
+		this.tokenAttributes = tokenAttributes;
+		console.log(tokenAttributes);
+		window.localStorage.setItem('tokenAttributes', JSON.stringify(tokenAttributes));
 	},
 
 	setUserAttributes: function(userAttributes) {
@@ -128,6 +130,12 @@ Ext.define('Zermelo.UserManager', {
 				header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
 			} 
 		});
+	},
+
+	getTitle: function() {
+		var key_suffix = this.userIsSelf() ? 'self' : 'other';
+		var suffix = this.userIsSelf() ? '' : this.getName();
+		return console.log(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
 	},
 
 	setUser: function(newUser) {

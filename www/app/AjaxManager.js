@@ -275,7 +275,7 @@ Ext.define('Zermelo.AjaxManager', {
 	getUsersByType: function(request) {
 		// Check whether at least one of the requires permissions is set to related or higher
 		if(request.requires.split(',').every(function(permission) {
-				return Zermelo.UserManager.getPermissions()[permission] < 5;
+				return Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission] < 5;
 			}))
 		{
 			this.userByTypeReturn(request.endpoint, 403);
@@ -449,8 +449,9 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	refreshUsers: function() {
+		this.getSelf();
 		localStorage.removeItem('Users');
-		this.getUsers();
+		this.on('tokenupdated', this.getUsers(), this, {single: true});
 	},
 
 	getSelf: function(upgrade) {
@@ -462,13 +463,14 @@ Ext.define('Zermelo.AjaxManager', {
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
+			scope: this,
 
 			success: function (response) {
 				console.log(JSON.parse(response.responseText).response.data[0]);
-				var permissions = JSON.parse(response.responseText).response.data[0].effectivePermissions;
-				Zermelo.UserManager.setPermissions(permissions);
+				var tokenAttributes = JSON.parse(response.responseText).response.data[0];
+				Zermelo.UserManager.setTokenAttributes(tokenAttributes);
 				if(upgrade) {
-					if(permissions.readNames == 0) {
+					if(tokenAttributes.effectivePermissions.readNames == 0) {
 						localStorage.setItem('skipTokenUpgrade', 'true');
 						Zermelo.ErrorManager.showErrorBox('login.upgrade.failure');
 					}
@@ -476,6 +478,7 @@ Ext.define('Zermelo.AjaxManager', {
 						Ext.getCmp('home').selectItem('userChange');
 					}
 				}
+				this.fireEvent('tokenupdated');
 			},
 
 			failure: function (response) {

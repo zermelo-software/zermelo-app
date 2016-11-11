@@ -118,9 +118,9 @@ Ext.define('Zermelo.view.Home', {
                 height: '47px',
                 width: '100%',
                 // set title in multiple language
-                locales: {
-                    title: 'menu.schedule_self'
-                },
+                // locales: {
+                //     title: 'menu.schedule_self'
+                // },
                 docked: 'top',
                 // Add two buttons refresh and new announcement
                 items: [{
@@ -147,9 +147,9 @@ Ext.define('Zermelo.view.Home', {
                 id: 'toolbar_day_back',
                 hidden: true,
                 // set title in multiple language
-                locales: {
-                    title: 'menu.schedule_self'
-                },
+                // locales: {
+                //     title: 'menu.schedule_self'
+                // },
                 docked: 'top',
                 // Add two buttons refresh and new announcement 
                 items: [{

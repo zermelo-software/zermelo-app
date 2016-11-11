@@ -36,8 +36,6 @@ Ext.define("Zermelo.view.Schedule", {
         listeners: {
             show: function() {
                 changeRefreshIcon();
-                messageShow = false;
-                Zermelo.UserManager.setTitles();
             }
         },
         items: [{
