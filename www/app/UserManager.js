@@ -113,6 +113,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	logout: function() {
+		navigator.splashscreen.show();
 		localStorage.clear();
 		window.location.reload();
 	},
