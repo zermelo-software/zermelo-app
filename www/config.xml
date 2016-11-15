@@ -56,7 +56,6 @@
             <icon src="www/resources/icons/Square150x150Logo.png" target="Square150x150Logo" />
             <icon src="www/resources/icons/Square310x310Logo.png" target="Square310x310Logo" />
             <icon src="www/resources/icons/Wide310x150Logo.png" target="Wide310x150Logo" />
-            <splash src="www/resources/screens/SplashScreen.png" target="SplashScreen"/>
             <splash src="www/resources/screens/SplashScreenPhone.png" target="SplashScreenPhone"/>
             <preference name="AutoHideSplashScreen" value="false"/>
         </platform>
