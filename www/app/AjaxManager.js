@@ -451,7 +451,7 @@ Ext.define('Zermelo.AjaxManager', {
 	refreshUsers: function() {
 		this.getSelf();
 		localStorage.removeItem('Users');
-		this.on('tokenupdated', this.getUsers(), this, {single: true});
+		Ext.Ajax.on('tokenupdated', this.getUsers(), this, {single: true});
 	},
 
 	getSelf: function(upgrade) {
@@ -478,7 +478,7 @@ Ext.define('Zermelo.AjaxManager', {
 						Ext.getCmp('home').selectItem('userChange');
 					}
 				}
-				this.fireEvent('tokenupdated');
+				Ext.Ajax.fireEvent('tokenupdated');
 			},
 
 			failure: function (response) {
