@@ -206,17 +206,31 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.suspendEvents();
 
 				appointmentStore.clearWeek();
+				var getPriority = function(a) {
+					if(!a.valid) 				return 0;
+					if(a.cancelled) 			return 1;
+					if(a.type == "unknown") 	return 2;
+					if(a.type == "other")	 	return 3;
+					if(a.type == "choice")	 	return 4;
+					if(a.type == "lesson") 		return 5;
+					if(a.type == "activity") 	return 6;
+					if(a.type == "talk")	 	return 7;
+					if(a.type == "exam") 		return 8;
+				};
 				decoded
 				.sort(function(a, b) {
+					// Sort the earliest start time first
 					if(a.start < b.start)
 						return -1;
 					if(a.start > b.start)
 						return 1;
+					// Then sort the latest end time first
 					if(a.end > b.end)
 						return -1;
 					if(a.end < b.end)
 						return 1;
-					return 0;
+					// Then sort the highest prio first (if prio(a) > prio(b) this will be negative)
+					return (getPriority(b) - getPriority(a));
 				})
 				.forEach(function(record) {
 					record.start = new Date(record.start * 1000);
