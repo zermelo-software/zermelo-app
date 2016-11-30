@@ -33,29 +33,16 @@ Building using Adobe PhoneGap
 The easiest way to build the app both for Android and iOS is using [PhoneGap Build](https://build.phonegap.com). You should create an account
 and add signing keys for the platforms you are interested in. You can manually create a zip file for PhoneGap Build by zipping the contents of the www directory.
 
-Building using Apache Cordova
------------------------------
+Building using Sencha CMD and Apache Cordova 
+--------------------------------------------
 
-You can also use Apache Cordova to build the app:
+To build the app go to the www folder and run
 
 ````bash
-zermelo-app$ cordova platform add android@4.0.0
-
-zermelo-app$ cordova build
+zermelo-app/www$ sencha app prepare [platform]
 ````
 
-Optimizing using Sencha CMD
----------------------------
-
-Creating a zip of the entire www/ folder creates a bloated app. The code is not minified, and unused parts of the Sencha Touch framework are packaged into the app. To create an optimized version we use [Sencha CMD](https://www.sencha.com/products/extjs/cmd-download/).
-
-To create an optimized version of the app:
-
-''''bash
-zermelo-app$ sencha app prepare native
-''''
-
-This will place a minified and trimmed version of the app in www/cordova/www. Uploading this version to PhoneGap Build will yield a smaller, faster app.
+where you replace [platform] with android, ios, or windows. When the build completes there will be a project in www/cordova/platforms/[platform] which you can open with Android Studio for Android, Xcode for iOS, and Visual Studio for Windows.
 
 Architecture
 ============
