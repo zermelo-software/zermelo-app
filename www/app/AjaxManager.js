@@ -8,6 +8,7 @@ Ext.define('Zermelo.AjaxManager', {
 			institution = Zermelo.UserManager.getInstitution();
 		return (
 			'http://ulbeportal.zermelo.local/api/v3/' +
+			// 'https://' + institution + '.zportal.nl/api/v3/' +
 			target
 		)
 	},
@@ -273,8 +274,9 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsersByType: function(request) {
-		// Check whether at least one of the requires permissions is set to related or higher
+		// Check whether at least one of the requires permissions is set to PORTAL
 		if(request.requires.split(',').every(function(permission) {
+				console.log(permission, Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission]);
 				return Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission] < 5;
 			}))
 		{
@@ -426,8 +428,9 @@ Ext.define('Zermelo.AjaxManager', {
 		this.userResponse = {};
 		this.formattedArray = [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}];
 		this.types = [
-			// users
-			{endpoint: 'users', params: {archived: false}, requires: 'readScheduleStudents,readScheduleTeachers'}, // The field firstName isn't always available so we ask for everything and see what we get
+			// users (students and teachers)
+			{endpoint: 'users', params: {archived: false, isStudent: true}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
+			{endpoint: 'users', params: {archived: false, isEmployee: true}, requires: 'readScheduleTeachers'}, // The field firstName isn't always available so we ask for everything and see what we get
 
 			// groups
 			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}, requires: 'readScheduleGroups'},
