@@ -538,6 +538,7 @@ Ext.define('Zermelo.view.SlideView', {
                 Ext.getStore('Appointments').prepareData();
             }
         }
+        Zermelo.UserManager.setTitles();
     },
 
     /**

@@ -118,25 +118,23 @@ Ext.define('Zermelo.UserManager', {
 		window.location.reload();
 	},
 
-	setTitles: function() {
-		// Sets the titles of the appointment views
-		var header;
-		var key_suffix = this.userIsSelf() ? 'self' : 'other';
-		var suffix = this.userIsSelf() ? '' : this.getName();
-		var titleFields = ['toolbar_main', 'toolbar_day_back', 'calendar_list_title'];
-
-		titleFields.forEach(function(field) {
-			header = Ext.getCmp(field);
-			if (header) {
-				header.setTitle(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
-			} 
-		});
-	},
-
 	getTitle: function() {
 		var key_suffix = this.userIsSelf() ? 'self' : 'other';
 		var suffix = this.userIsSelf() ? '' : this.getName();
-		return console.log(Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix);
+		return Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+	},
+
+	setTitles: function() {
+		var header;
+		var key_suffix = this.userIsSelf() ? 'self' : 'other';
+		var title = this.getTitle();
+
+		['toolbar_main', 'calendar_list_title'].forEach(function(field) {
+			header = Ext.getCmp(field);
+			if (header) {
+				header.setTitle(title);
+			} 
+		});
 	},
 
 	setUser: function(newUser) {

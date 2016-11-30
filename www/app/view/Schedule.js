@@ -33,11 +33,6 @@ Ext.define("Zermelo.view.Schedule", {
     requires: ['Zermelo.view.AppointmentDetails'],
     appointmentDetailView: null,
     config: {
-        listeners: {
-            show: function() {
-                changeRefreshIcon();
-            }
-        },
         items: [{
             xtype: 'fullcalendarpanel',
             height: '100%',
@@ -57,9 +52,3 @@ Ext.define("Zermelo.view.Schedule", {
         }]
     }
 });
-
-function changeRefreshIcon() {
-    
-    Ext.getCmp('button_week_refresh').setIconCls('zermelo-refresh-button-' + imageType);
-    Ext.getCmp('button_day_refresh').setIconCls('zermelo-refresh-button-' + imageType);
-}

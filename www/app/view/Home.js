@@ -117,17 +117,14 @@ Ext.define('Zermelo.view.Home', {
                 id: 'toolbar_main',
                 height: '47px',
                 width: '100%',
-                // set title in multiple language
-                // locales: {
-                //     title: 'menu.schedule_self'
-                // },
+                // title: Zermelo.UserManager ? Zermelo.UserManager.getTitle() : '',
                 docked: 'top',
                 // Add two buttons refresh and new announcement
                 items: [{
                     // refresh button
                     xtype: 'button',
                     //css class resources/images/app.css
-                   // iconCls: 'zermelo-refresh-button-' + imageType,
+                   iconCls: 'zermelo-refresh-button-' + imageType,
                     docked: 'right',
                     ui: 'plain',
                     id:'button_week_refresh',
@@ -138,57 +135,7 @@ Ext.define('Zermelo.view.Home', {
                         Zermelo.AjaxManager.refresh();
                     }
                 }]
-            }, {
-                // set toolbar with menu, refresh, announcement buttons
-                xtype: 'toolbar',
-                //css class resources/images/app.css
-                cls: 'zermelo-toolbar',
-
-                id: 'toolbar_day_back',
-                hidden: true,
-                // set title in multiple language
-                // locales: {
-                //     title: 'menu.schedule_self'
-                // },
-                docked: 'top',
-                // Add two buttons refresh and new announcement 
-                items: [{
-                    // refresh button
-                    xtype: 'button',
-                    //css class resources/images/app.css
-                    // iconCls: 'zermelo-refresh-button-' + imageType,
-                    docked: 'right',
-                    ui: 'plain',
-                    id:'button_day_refresh',
-                    style: {
-                        'padding-right': '0px'
-                    },
-                    handler: function () {
-                        Zermelo.AjaxManager.refresh();
-                    }
-                }, {
-                    // announcement button
-                    xtype: 'button',
-                    //css class resources/images/app.css
-                    iconCls: 'zermelo-back-button-' + imageType,
-                    docked: 'left',
-                    locales: {
-                        text: 'back.back'
-                    },
-                    ui: 'plain',
-                    id: 'btn_day_back',
-                    style: {
-                        'padding-left': '0px'
-                    },
-                    handler: function () {
-                        // call announcement screen
-                        Ext.getCmp('fullCalendarView').changeCalendarView('agendaWeek');
-                        Ext.getCmp('fullCalendarView').day.show();
-                        Ext.getCmp('toolbar_main').setHidden(false);
-                        Ext.getCmp('toolbar_day_back').setHidden(true);
-                    }
-                }]
-            }, {
+            },{
                 // open schedule view
                 xtype: 'schedule'
             }]
@@ -205,9 +152,7 @@ Ext.define('Zermelo.view.Home', {
                 height: '47px',
                 // set title in multiple language
                 id:'calendar_list_title',
-                locales: {
-                    title: 'menu.schedule_self'
-                },
+                // title: Zermelo.UserManager ? Zermelo.UserManager.getTitle() : '',
                 docked: 'top',
                 items:[{
                     // refresh button

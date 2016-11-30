@@ -210,7 +210,8 @@ Ext.application({
 			tpl : 'locales/{locale}.json',
 			type : 'ajax'
 		});
-		Ux.locale.Manager.init();
+		// Pass setTitles into init to run setTitles as soon as locale.Manager in initialized
+		Ux.locale.Manager.init(Ext.bind(Zermelo.UserManager.setTitles, Zermelo.UserManager));
 		//set datepicker months in Dutch
 		if (loc == 'nl') {
 			Ext.Date.monthNames = [ "Januari", "Februari", "Maart",

@@ -2,6 +2,7 @@ Ext.define('Zermelo.AjaxManager', {
 	alternateClassName: 'AjaxManager',
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
+	mixins: ['Ext.mixin.Observable'],
 
 	getUrl: function(target, institution) {
 		if(!institution)
@@ -454,7 +455,7 @@ Ext.define('Zermelo.AjaxManager', {
 	refreshUsers: function() {
 		this.getSelf();
 		localStorage.removeItem('Users');
-		Ext.Ajax.on('tokenupdated', this.getUsers(), this, {single: true});
+		this.on('tokenupdated', this.getUsers, this, {single: true});
 	},
 
 	getSelf: function(upgrade) {
@@ -481,7 +482,8 @@ Ext.define('Zermelo.AjaxManager', {
 						Ext.getCmp('home').selectItem('userChange');
 					}
 				}
-				Ext.Ajax.fireEvent('tokenupdated');
+				console.log('tokenupdated', Zermelo.UserManager.getTokenAttributes());
+				this.fireEvent('tokenupdated');
 			},
 
 			failure: function (response) {

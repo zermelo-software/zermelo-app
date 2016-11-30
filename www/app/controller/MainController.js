@@ -94,6 +94,5 @@ Ext.define('Zermelo.controller.MainController', {
         this.updateNewMessagesIndicator();
         
         Zermelo.AjaxManager.periodicRefresh();
-        Zermelo.UserManager.setTitles();
     }
 });
