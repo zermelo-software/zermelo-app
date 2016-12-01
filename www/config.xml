@@ -48,6 +48,7 @@
         <preference name="ShowSplashScreenSpinner" value="false"/>
 
         <platform name="windows">
+            <name>Zermelo Rooster</name>
             <icon src="www/resources/icons/StoreLogo.png" target="StoreLogo" />
             <icon src="www/resources/icons/Square30x30Logo.png" target="Square30x30Logo" />
             <icon src="www/resources/icons/Square44x44Logo.png" target="Square44x44Logo" />
@@ -57,6 +58,7 @@
             <icon src="www/resources/icons/Square310x310Logo.png" target="Square310x310Logo" />
             <icon src="www/resources/icons/Wide310x150Logo.png" target="Wide310x150Logo" />
             <splash src="www/resources/screens/SplashScreenPhone.png" target="SplashScreenPhone"/>
+            <splash src="www/resources/screens/SplashScreen.png" target="SplashScreen"/>
             <preference name="AutoHideSplashScreen" value="false"/>
         </platform>
 

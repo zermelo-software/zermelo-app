@@ -2,7 +2,7 @@ Ext.define('Zermelo.UserManager', {
 	alternateClassName: 'UserManager',
 	requires: ['Ux.locale.Manager'],
 	singleton: true,
-	code: window.localStorage.getItem('code'),
+	code: window.localStorage.getItem('code') || '~me',
 	name: window.localStorage.getItem('name'),
 	type: window.localStorage.getItem('type'),
 	institution: window.localStorage.getItem('institution'),

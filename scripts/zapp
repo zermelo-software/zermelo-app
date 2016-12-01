@@ -75,13 +75,9 @@ def main():
 		elif cmd == 'ios':
 			ios()
 		elif cmd == 'push':
-<<<<<<< HEAD
-			push('zermelo@macbook:app')
-=======
 			push('zermelo@macbook:app/')
 		elif cmd == 'pull':
 			pull('zermelo@macbook:app/cordova/platforms/ios')
->>>>>>> staging
 		elif cmd == 'en':
 			set_locale('en')
 		elif cmd == 'nl':
