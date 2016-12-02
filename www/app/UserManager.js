@@ -55,13 +55,25 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	needsTokenUpgrade: function() {
-		return this.tokenAttributes.schedule == 0 &&
-			this.tokenAttributes.effectivePermissions && 
-			this.tokenAttributes.effectivePermissions.readNames < 5 &&
-			this.tokenAttributes.effectivePermissions.readScheduleStudents < 5 &&
-			this.tokenAttributes.effectivePermissions.readScheduleTeachers < 5 &&
-			this.tokenAttributes.effectivePermissions.readScheduleGroups < 5 &&
-			this.tokenAttributes.effectivePermissions.readScheduleLocations < 5;
+		if (this.tokenAttributes.schedule >= 1)
+			return false;
+
+		// Parents only need to be able to read info for their children, everyone else needs to be able to read everything
+		if(this.isParentOnly()) {
+			return !this.tokenAttributes.effectivePermissions ||
+				this.tokenAttributes.effectivePermissions.readScheduleStudents < 2 ||
+				this.tokenAttributes.effectivePermissions.readScheduleTeachers < 2 ||
+				this.tokenAttributes.effectivePermissions.readScheduleGroups < 2 ||
+				this.tokenAttributes.effectivePermissions.readScheduleLocations < 2;
+		}
+		else {
+			return !this.tokenAttributes.effectivePermissions ||
+				this.tokenAttributes.effectivePermissions.readNames < 5 ||
+				this.tokenAttributes.effectivePermissions.readScheduleStudents < 5 ||
+				this.tokenAttributes.effectivePermissions.readScheduleTeachers < 5 ||
+				this.tokenAttributes.effectivePermissions.readScheduleGroups < 5 ||
+				this.tokenAttributes.effectivePermissions.readScheduleLocations < 5;
+		}
 	},
 
 	isParentOnly: function() {
