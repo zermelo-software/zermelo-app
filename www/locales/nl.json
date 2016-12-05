@@ -7,6 +7,16 @@
         "institution_code_error_msg":"Vul alstublieft een geldige instelling in</br>Vul alstublieft een geldige code in",
         "institution_error_msg":" Vul alstublieft een geldige instelling in ",
         "code_error_msg":" Vul alstublieft een geldige code in ",
+        "upgrade": {
+            "intro_message": "Er is een nieuwe methode om gebruikers te kiezen. Als u van deze methode gebruik wilt maken moet u de app opnieuw koppelen.\
+                <br><br>Wilt u nu opnieuw koppelen?",
+            "new_code_message": "Haal een nieuwe code op uit het Portal (via Koppelingen > Koppel app) en voer deze hier in.",
+            "upgrade": "Nu opnieuw koppelen",
+            "later": "Later opnieuw koppelen",
+            "never": "Niet opnieuw koppelen",
+            "code": "Nieuwe code",
+            "failure": "Het lijkt er op dat uw account niet de roosters van anderen mag bekijken."
+            }
     },
     "menu":{
         "schedule_self": "Rooster", 
@@ -58,7 +68,7 @@
         "network": "Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
         "permissions": "Je hebt onvoldoende rechten om dit rooster te bekijken.",
         "user": {
-            "some": "niet alle gebruikers types konden worden opgehaald. U heeft mogelijk niet de juiste rechten.",
+            "some": "Niet alle gebruikers types konden worden opgehaald. U heeft mogelijk niet de juiste rechten.",
             "all": "Gebruikers konden niet worden opgehaald. U heeft mogelijk niet de juiste rechten, of er is geen internetverbinding."
         }
     },
