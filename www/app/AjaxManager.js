@@ -70,6 +70,7 @@ Ext.define('Zermelo.AjaxManager', {
 				var decoded = JSON.parse(response.responseText);
 				Zermelo.UserManager.saveLogin('~me', institution, decoded.access_token);
 				Ext.getCmp('main').setActiveItem(1);
+				Ext.getCmp('fullCalendarView').updateView();
 				Zermelo.AjaxManager.refresh();
 				Zermelo.AjaxManager.getSelf(upgrade);
 				Ext.Viewport.unmask();

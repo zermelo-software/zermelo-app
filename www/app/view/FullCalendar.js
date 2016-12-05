@@ -282,8 +282,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         // this.up('home').onBefore('select', this.initScroller, this);
         this.initScroller();
         // this.on('painted', this.renderFullCalendar, this, {single: true, buffer: 5});
-        if (Ext.os.is.Android && Ext.os.version.version <= 4)
-            this.updateView();
     },
 
     /**
