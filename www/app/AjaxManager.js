@@ -219,18 +219,22 @@ Ext.define('Zermelo.AjaxManager', {
 				};
 				decoded
 				.sort(function(a, b) {
+					var A_B = -1, B_A = 1;
 					// Sort the earliest start time first
 					if(a.start < b.start)
-						return -1;
+						return A_B;
 					if(a.start > b.start)
-						return 1;
+						return B_A;
+					// Then sort the highest priority first
+					if (getPriority(a) > getPriority(b))
+						return A_B;
+					if (getPriority(a) < getPriority(b))
+						return B_A;
 					// Then sort the latest end time first
 					if(a.end > b.end)
-						return -1;
+						return A_B;
 					if(a.end < b.end)
-						return 1;
-					// Then sort the highest prio first (if prio(a) > prio(b) this will be negative)
-					return (getPriority(b) - getPriority(a));
+						return B_A;
 				})
 				.forEach(function(record) {
 					record.start = new Date(record.start * 1000);
