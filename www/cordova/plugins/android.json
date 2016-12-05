@@ -20,6 +20,12 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "nl.zermelo.online.App"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
+        },
+        "cordova-plugin-app-event": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
         }
     }
 }

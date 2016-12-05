@@ -277,7 +277,6 @@ Ext.define('Zermelo.AjaxManager', {
 	getUsersByType: function(request) {
 		// Check whether at least one of the requires permissions is set to PORTAL
 		if(request.requires.split(',').every(function(permission) {
-				console.log(permission, Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission]);
 				return Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission] < 5;
 			}))
 		{
@@ -306,7 +305,6 @@ Ext.define('Zermelo.AjaxManager', {
 	// When we have responses for all requests belonging to a user type we format that user type.
 	// When all requests have been formatted or errored we save the data we found.
 	userByTypeReturn: function(endpoint, status, responseData) {
-		console.log(arguments);
 		if(status == 200)
 			this.userResponse[endpoint] = responseData;
 		else
@@ -459,7 +457,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getSelf: function(upgrade) {
-		console.log('getSelf');
 		Ext.Ajax.request({
 			url: this.getUrl('tokens/~current'),
 			params: {
@@ -470,7 +467,6 @@ Ext.define('Zermelo.AjaxManager', {
 			scope: this,
 
 			success: function (response) {
-				console.log(JSON.parse(response.responseText).response.data[0]);
 				var tokenAttributes = JSON.parse(response.responseText).response.data[0];
 				Zermelo.UserManager.setTokenAttributes(tokenAttributes);
 				if(upgrade) {
@@ -482,7 +478,6 @@ Ext.define('Zermelo.AjaxManager', {
 						Ext.getCmp('home').selectItem('userChange');
 					}
 				}
-				console.log('tokenupdated', Zermelo.UserManager.getTokenAttributes());
 				this.fireEvent('tokenupdated');
 			},
 

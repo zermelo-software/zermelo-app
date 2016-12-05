@@ -13,7 +13,6 @@ Ext.define('Zermelo.store.UserStore', {
 
 	search: function(searchString) {
 		this.suspendEvents();
-		var timer = performance.now();
 		searchString = searchString.toLowerCase();
 
 		if(!searchString.startsWith(this.currentSearchString)) {
@@ -40,7 +39,6 @@ Ext.define('Zermelo.store.UserStore', {
 				return false;
 			}, this);
 		});
-		console.log('time spent', performance.now() - timer);
 		this.resumeEvents(true);
 		this.fireEvent('refresh');
 	},
