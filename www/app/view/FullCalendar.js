@@ -42,7 +42,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                     this.gotoWeek_Day();
                     this.updateView();
                     this.setUpdateViewInterval();
-                    console.error('painted');
                 },
                 options: {
                     order: 'before'
