@@ -91,5 +91,6 @@
     },
     "exit_msg":"Are you sure you want to close the app?",
     "own_schedule":"Own schedule",
-    "enter_user_code":"Please enter user code"
+    "enter_user_code":"Please enter user code",
+    "appointments": "appointments"
 }

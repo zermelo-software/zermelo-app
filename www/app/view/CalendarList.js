@@ -118,7 +118,6 @@ Ext.define("Zermelo.view.CalendarList", {
 						fn: function() {
 							localStorage.setItem('lastView', 'calendarList');
 							this.getStore().setWindowDay();
-							this.parent.setDateButtonText();
 						},
 						options: {
 							order: 'before'
@@ -133,6 +132,10 @@ Ext.define("Zermelo.view.CalendarList", {
 		]
 	},
 
+	initialize: function() {
+		Ext.getStore('Appointments').on('refresh', this.setDateButtonText, this);
+	},
+
 	getAppointmentDetailView: function() {
 		if (!this.appointmentDetailView) {
 			this.appointmentDetailView = Ext.getCmp('appointmentDetails_view');
@@ -144,18 +147,22 @@ Ext.define("Zermelo.view.CalendarList", {
 		return this.appointmentDetailView;
 	},
 
-	setDateButtonText: function() {
+	setDateButtonText: function(appointmentStore, data, eOpts) {
+		// Not sure why, but this sometimes gets called with {} which makes no sense...
+		if (!appointmentStore.windowStart)
+			return;
 		var formatString;
 		if(Ux.locale.Manager.getLanguage() == 'nl')
 			formatString = "l d F, Y";
 		else
 			formatString = "l, F d, Y";
 
-		this.down('#dateButton').setHtml(Ext.Date.format(Ext.getStore('Appointments').windowStart, formatString));
+		this.down('#dateButton').setHtml(
+			Ext.Date.format(appointmentStore.windowStart, formatString) +// 'hoi');
+			' <i>(<b>' + appointmentStore.getCount() + '</b> ' + Ux.locale.Manager.get('appointments') + ')</i>');
 	},
 
 	setWindow: function(direction) {
 		Ext.getStore('Appointments').setWindow(direction);
-		this.setDateButtonText();
 	}
 });
