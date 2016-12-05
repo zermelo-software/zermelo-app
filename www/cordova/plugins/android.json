@@ -15,9 +15,6 @@
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-dialogs": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "nl.zermelo.online.App"
         },
