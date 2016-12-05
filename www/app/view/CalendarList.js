@@ -149,13 +149,15 @@ Ext.define("Zermelo.view.CalendarList", {
 
 	setDateButtonText: function(appointmentStore, data, eOpts) {
 		// Not sure why, but this sometimes gets called with {} which makes no sense...
-		if (!appointmentStore.windowStart)
+		if (!appointmentStore.windowStart) {
+			console.log(arguments);
 			return;
+		}
 		var formatString;
 		if(Ux.locale.Manager.getLanguage() == 'nl')
-			formatString = "l d F, Y";
+			formatString = "l j F";
 		else
-			formatString = "l, F d, Y";
+			formatString = "l, F j";
 
 		this.down('#dateButton').setHtml(
 			Ext.Date.format(appointmentStore.windowStart, formatString) +// 'hoi');
