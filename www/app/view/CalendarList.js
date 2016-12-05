@@ -148,20 +148,15 @@ Ext.define("Zermelo.view.CalendarList", {
 	},
 
 	setDateButtonText: function(appointmentStore, data, eOpts) {
-		// Not sure why, but this sometimes gets called with {} which makes no sense...
-		if (!appointmentStore.windowStart) {
-			console.log(arguments);
-			return;
-		}
-		var formatString;
-		if(Ux.locale.Manager.getLanguage() == 'nl')
-			formatString = "l j F";
-		else
-			formatString = "l, F j";
+		// This sometimes gets called with {} rather than appointmentStore which makes no sense...
+		if (!appointmentStore.windowStart)
+			appointmentStore = Ext.getStore('Appointments');
+
+		var formatString = Ux.locale.Manager.getLanguage() == 'nl' ? formatString = "l j F" : formatString = "l, F j";
 
 		this.down('#dateButton').setHtml(
-			Ext.Date.format(appointmentStore.windowStart, formatString) +// 'hoi');
-			' <i>(<b>' + appointmentStore.getCount() + '</b> ' + Ux.locale.Manager.get('appointments') + ')</i>');
+			Ext.Date.format(appointmentStore.windowStart, formatString) +
+			': <b>' + appointmentStore.getValidCount() + '</b> ' + Ux.locale.Manager.get('appointments'));
 	},
 
 	setWindow: function(direction) {
