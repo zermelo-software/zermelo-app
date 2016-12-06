@@ -534,8 +534,11 @@ Ext.define('Zermelo.view.SlideView', {
             if (me.__init) {
                 me.fireAction('select', [me, me._cache[index], index], func, me);
             }
-            if (index == this.itemIds.weekView) {
-                Ext.getStore('Appointments').prepareData();
+            if (index == this.itemIds.fullCalendarView) {
+                Ext.getCmp('fullCalendarView').prepareToShow();
+            }
+            else if (index == this.itemIds.calendarList) {
+                this.down('CalendarList').prepareToShow();
             }
         }
         Zermelo.UserManager.setTitles();

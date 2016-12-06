@@ -43,6 +43,7 @@
         <preference name="StatusBarOverlaysWebView" value="false" />
 
         <preference name="ShowSplashScreen" value="true" />
+        <!-- The splashscreen is hidden programmatically once the app has loaded so this just needs to be long enough -->
         <preference name="SplashScreenDelay" value="10000"/>
         <preference name="FadeSplashScreen" value="false"/>
         <preference name="ShowSplashScreenSpinner" value="false"/>
@@ -59,7 +60,8 @@
             <icon src="www/resources/icons/Wide310x150Logo.png" target="Wide310x150Logo" />
             <splash src="www/resources/screens/SplashScreenPhone.png" target="SplashScreenPhone"/>
             <splash src="www/resources/screens/SplashScreen.png" target="SplashScreen"/>
-            <preference name="AutoHideSplashScreen" value="false"/>
+            <!-- splashscreen.hide() doesn't work on wp8.1, so we have to make a best guess for these devices -->
+            <preference name="SplashScreenDelay" value="5000"/>
         </platform>
 
         <platform name="android">

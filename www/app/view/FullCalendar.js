@@ -38,10 +38,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         listeners: {
             painted: {
                 fn: function() {
-                    localStorage.setItem('lastView', 'fullCalendarView');
-                    this.gotoWeek_Day();
                     this.updateView();
-                    this.setUpdateViewInterval();
                 },
                 options: {
                     order: 'before'
@@ -312,6 +309,14 @@ Ext.define('Zermelo.view.FullCalendar', {
         this.gotoWeek_Day();
         me.changeTitle();
     },
+
+    prepareToShow: function() {
+        this.getStore().prepareData();
+        localStorage.setItem('lastView', 'fullCalendarView');
+        this.gotoWeek_Day();
+        this.setUpdateViewInterval();
+    },
+
     renderCalendar: function () {
         var me = this;
         $('#' + me.getPlaceholderid()).fullCalendar('render');

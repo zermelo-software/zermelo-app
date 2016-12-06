@@ -32,6 +32,19 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	/**
+	 * Counts the number of non-cancelled, valid appointments in window
+	 *
+	 * @return: The number of valid, non-cancelled appointments
+	 */
+	getValidCount: function() {
+		var count = 0;
+		this.each(function(record) {
+			count += (record.get('valid') && !record.get('cancelled'))
+		});
+		return count;
+	},
+
+	/**
 	 * Delays cleaning and syncing localStorage
 	 *
 	 * @param: optional delay in milliseconds
