@@ -114,15 +114,6 @@ Ext.define("Zermelo.view.CalendarList", {
 					}
 				),
 				listeners: {
-					painted: {
-						fn: function() {
-							localStorage.setItem('lastView', 'calendarList');
-							this.getStore().setWindowDay();
-						},
-						options: {
-							order: 'before'
-						}
-					},
 					itemtap: function(scope, index, target, record, e, eOpts) {
 						var eventDetails = record.getData();
 						this.parent.getAppointmentDetailView().setAndShow(eventDetails, this.parent.parent.parent.parent);
@@ -134,6 +125,11 @@ Ext.define("Zermelo.view.CalendarList", {
 
 	initialize: function() {
 		Ext.getStore('Appointments').on('refresh', this.setDateButtonText, this);
+	},
+
+	prepareToShow: function() {
+		localStorage.setItem('lastView', 'calendarList');
+		Ext.getStore('Appointments').setWindowDay();
 	},
 
 	getAppointmentDetailView: function() {
