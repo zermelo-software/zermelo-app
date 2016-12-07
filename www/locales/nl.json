@@ -1,21 +1,21 @@
 {
     "login":{
-        "text":"Vul de naam van uw instelling in en de toegangscode uit het Portal. U kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op  \"Koppel App\".",
+        "text": "Vul de naam van je instelling in en de toegangscode uit het Portal. Je kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op \"Koppel App\".",
         "institution":"Instituut",
         "code":"Code",
         "login":"Login",
-        "institution_code_error_msg":"Vul alstublieft een geldige instelling in</br>Vul alstublieft een geldige code in",
-        "institution_error_msg":" Vul alstublieft een geldige instelling in ",
+        "institution_code_error_msg":"Vul alsjeblieft een geldige instelling in</br>Vul alstublieft een geldige code in",
+        "institution_error_msg":" Vul alsjeblieft een geldige instelling in ",
         "code_error_msg":" Vul alstublieft een geldige code in ",
         "upgrade": {
-            "intro_message": "Er is een nieuwe methode om gebruikers te kiezen. Als u van deze methode gebruik wilt maken moet u de app opnieuw koppelen.\
-                <br><br>Wilt u nu opnieuw koppelen?",
+            "intro_message": "Er is een nieuwe methode om gebruikers te kiezen. Als je van deze methode gebruik wilt maken moet je de app opnieuw koppelen.\
+                <br><br>Wil je nu opnieuw koppelen?",
             "new_code_message": "Haal een nieuwe code op uit het Portal (via Koppelingen > Koppel app) en voer deze hier in.",
             "upgrade": "Nu opnieuw koppelen",
             "later": "Later opnieuw koppelen",
             "never": "Niet opnieuw koppelen",
             "code": "Nieuwe code",
-            "failure": "Het lijkt er op dat uw account niet de roosters van anderen mag bekijken."
+            "failure": "Het lijkt er op dat je account niet de roosters van anderen mag bekijken."
             }
     },
     "menu":{
@@ -25,7 +25,7 @@
         "announcement_other": "Mededelingen voor ",
         "user_select": "Kies gebruiker",
         "Logout":"Uitloggen",
-        "logout_message":"Weet u zeker dat u de app wilt ontkoppelen? Voordat u hier uw rooster weer kunt zien dient u de app opnieuw te koppelen via Zermelo Portal."
+        "logout_message":"Weet je zeker dat je de app wilt ontkoppelen? Je dient de app daarna opnieuw te koppelen via Zermelo Portal."
     },
     "ok":"OK",
     "done":"OK",
@@ -47,9 +47,9 @@
         "startDate":"Startdatum: ",
         "endDate":"Einddatum: ",
         "description":"Omschrijving: ",
-        "no_announcement_msg":"Er zijn op dit moment geen mededelingen.",
+        "no_announcement_msg":"Er zijn geen mededelingen.",
         "no_permission_title":"Onvoldoende rechten",
-        "no_permission_message":"U heeft onvoldoende rechten om mededelingen te bekijken."
+        "no_permission_message":"Je hebt onvoldoende rechten om mededelingen te bekijken."
     },
     "back":{
         "Schedule_back":"Rooster",
@@ -65,11 +65,11 @@
         "other" : "Overig"
     },
     "error": {
-        "network": "Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
+        "network": "Kan geen verbinding maken met Zermelo. Ben je verbonden met het internet?",
         "permissions": "Je hebt onvoldoende rechten om dit rooster te bekijken.",
         "user": {
-            "some": "Niet alle gebruikers types konden worden opgehaald. U heeft mogelijk niet de juiste rechten.",
-            "all": "Gebruikers konden niet worden opgehaald. U heeft mogelijk niet de juiste rechten, of er is geen internetverbinding."
+            "some": "Niet alle gebruikers types konden worden opgehaald. Je hebt mogelijk niet de juiste rechten.",
+            "all": "Gebruikers konden niet worden opgehaald. Je hebt mogelijk niet de juiste rechten, of er is geen internetverbinding."
         }
     },
     "months" : {
@@ -86,7 +86,7 @@
         "11" : "November",
         "12" : "December"
     },
-    "exit_msg":"Wilt u de app verlaten?",
+    "exit_msg":"Wil je de app verlaten?",
     "own_schedule":"Eigen rooster",
     "enter_user_code":"Gebruikerscode",
     "appointments": "afspraken"

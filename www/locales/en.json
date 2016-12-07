@@ -25,7 +25,7 @@
         "announcement_other": "Announcements for ",
         "user_select": "Choose user",
         "Logout":"Logout",
-        "logout_message":"Are you sure that you want to disconnect from Zermelo Portal? You will have to link it again to view your schedule."
+        "logout_message": "Are you sure that you want to disconnect from Zermelo? You will have to link the app again to view your schedule."
     },
     "ok":"OK",
     "cancel":"Cancel",
@@ -47,7 +47,7 @@
         "startDate":"Start Date: ",
         "endDate":"End Date: ",
         "description":"Description: ",
-        "no_announcement_msg": "There are no announcements at this time.",
+        "no_announcement_msg": "There are no announcements.",
         "no_permission_title":"No permission",
         "no_permission_message":"You do not have permission to view announcements."
     },
@@ -66,7 +66,7 @@
     },
 
     "error": {
-        "network": "Error connecting to Zermelo Portal. Are you connected to the internet?",
+        "network": "Error while connecting to Zermelo. Are you connected to the internet?",
         "permissions": "You have insufficient permissions to view this schedule",
         "wrong_code": "The code was incorrect or it has already been used",
         "user": {
@@ -91,6 +91,6 @@
     },
     "exit_msg":"Are you sure you want to close the app?",
     "own_schedule":"Own schedule",
-    "enter_user_code":"Please enter user code",
+    "enter_user_code":"Please enter your user code",
     "appointments": "appointments"
 }
