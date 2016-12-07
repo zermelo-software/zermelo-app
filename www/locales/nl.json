@@ -1,6 +1,6 @@
 {
     "login":{
-        "text":"Vul de naam van uw instelling in en de toegangscode uit het Portal. U kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op  \"Koppel App\".",
+        "text":"Vul de naam van uw instelling in en de toegangscode uit het Portal. Je kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op  \"Koppel App\".",
         "institution":"Instituut",
         "code":"Code",
         "login":"Login",
@@ -14,7 +14,7 @@
         "announcement_self": "Mededelingen", 
         "announcement_other": "Mededelingen voor ",
         "Logout":"Uitloggen",
-        "logout_message":"Weet u zeker dat u de app wilt ontkoppelen? Voordat u hier uw rooster weer kunt zien dient u de app opnieuw te koppelen via Zermelo Portal."
+        "logout_message":"Weet je zeker dat je de app wilt ontkoppelen? Je dient de app daarna opnieuw te koppelen via Zermelo Portal."
     },
     "ok":"OK",
     "done":"OK",
@@ -36,9 +36,9 @@
         "startDate":"Startdatum: ",
         "endDate":"Einddatum: ",
         "description":"Omschrijving: ",
-        "no_announcement_msg":"Er zijn op dit moment geen mededelingen.",
         "no_permission_title":"Onvoldoende rechten",
-        "no_permission_message":"U heeft onvoldoende rechten om mededelingen te bekijken."
+        "no_permission_message":"U heeft onvoldoende rechten om mededelingen te bekijken.",
+         "no_announcement_msg":"Er zijn geen mededelingen."
     },
     "back":{
         "Schedule_back":"Rooster",
@@ -53,8 +53,8 @@
         "choice" : "Keuze",
         "other" : "Overig"
     },
-    "network_error":"Probleem met het verbinden met Zermelo Portal. Bent u verbonden met het internet?",
     "insufficient_permissions":"Je hebt onvoldoende rechten om dit rooster te bekijken",
+    "network_error":"Kan geen verbinding maken met Zermelo. Bent u verbonden met het internet?",
     "months" : {
         "1"  : "Januari",
         "2"  : "Februari",
@@ -69,7 +69,7 @@
         "11" : "November",
         "12" : "December"
     },
-    "exit_msg":"Wilt u de app verlaten?",
+    "exit_msg":"Wil je de app verlaten?",
     "own_schedule":"Eigen rooster",
     "enter_user_code":"Gebruikerscode",
     
