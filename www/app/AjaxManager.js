@@ -8,8 +8,7 @@ Ext.define('Zermelo.AjaxManager', {
 		if(!institution)
 			institution = Zermelo.UserManager.getInstitution();
 		return (
-			'http://ulbeportal.zermelo.local/api/v3/' +
-			// 'https://' + institution + '.zportal.nl/api/v3/' +
+			'https://' + institution + '.zportal.nl/api/v3/' +
 			target
 		)
 	},
@@ -294,15 +293,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsersByType: function(request) {
-		// Check whether at least one of the requires permissions is set to PORTAL
-		if(request.requires.split(',').every(function(permission) {
-				return Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission] < 5;
-			}))
-		{
-			this.userByTypeReturn(request.endpoint, 403);
-			return;
-		}
-
 		Ext.Ajax.request({			
 			url: this.getUrl(request.endpoint),
 			disableCaching: false,
@@ -489,7 +479,7 @@ Ext.define('Zermelo.AjaxManager', {
 				var tokenAttributes = JSON.parse(response.responseText).response.data[0];
 				Zermelo.UserManager.setTokenAttributes(tokenAttributes);
 				if(upgrade) {
-					if(tokenAttributes.effectivePermissions.readNames == 0) {
+					if(!tokenAttributes.schedule) {
 						localStorage.setItem('skipTokenUpgrade', 'true');
 						Zermelo.ErrorManager.showErrorBox('login.upgrade.failure');
 					}
