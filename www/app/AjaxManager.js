@@ -293,6 +293,15 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsersByType: function(request) {
+		// Check whether at least one of the requires permissions is set to PORTAL
+		if(request.requires.split(',').every(function(permission) {
+				return Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission] < 5;
+			}))
+		{
+			this.userByTypeReturn(request.endpoint, 403);
+			return;
+		}
+
 		Ext.Ajax.request({			
 			url: this.getUrl(request.endpoint),
 			disableCaching: false,
