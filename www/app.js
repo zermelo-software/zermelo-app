@@ -232,7 +232,9 @@ Ext.application({
 		Ext.fly('appLoadingIndicator').destroy();
 		// Initialize the main view
 		Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
-		if (!Ext.os.is.Windows)
+		if (!navigator.userAgent.toLowerCase().includes('windows')) {
+			console.log('this ain\'t windows', navigator.userAgent);
 			setTimeout(navigator.splashscreen.hide, 50);
+		}
 	}
 });
