@@ -436,6 +436,10 @@ Ext.define('Zermelo.AjaxManager', {
 			Ext.Viewport.unmask();
 			return;
 		}
+		if(!Zermelo.UserManager.getTokenAttributes().effectivePermissions) {
+			this.refreshUsers();
+			return;
+		}
 
 		// Creating the user list requires a join on multiple requests. Unformatted responses will be stored in userResponse.
 		// When a pair of responses is available, the correct formatting is applied by userByTypeReturn and appended to formattedArray.
