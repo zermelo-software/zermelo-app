@@ -4,7 +4,7 @@ Ext.define('Zermelo.UserManager', {
 	singleton: true,
 	code: window.localStorage.getItem('code') || '~me',
 	name: window.localStorage.getItem('name'),
-	type: window.localStorage.getItem('type'),
+	type: window.localStorage.getItem('type') || 'user',
 	institution: window.localStorage.getItem('institution'),
 	accessToken: window.localStorage.getItem('accessToken'),
 	tokenAttributes: JSON.parse(window.localStorage.getItem('tokenAttributes') || '{}'),
