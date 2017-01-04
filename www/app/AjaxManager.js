@@ -402,7 +402,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 			// This list is quite big so some webviews may not allow it to be stored.
 			try {
-				localStorage.setItem('Users', JSON.stringify(this.formattedArray));
+				localStorage.setItem('Users', JSON.stringify(this.formattedArray, Zermelo.model.User.getFields().keys));
 			}
 			catch (e) {
 				localStorage.removeItem('Users');
