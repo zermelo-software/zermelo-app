@@ -177,7 +177,7 @@ Ext.define('Zermelo.view.Home', {
             slideButton: true,
             urlLogo: 'resources/images/messages.' + imageType,
             title: 'Messages',
-            itemId: 'MessageList',
+            itemId: 'messageList',
             items: [{
                 // set toolbar with menu, refresh, announcement buttons
                 xtype: 'toolbar',
@@ -213,7 +213,7 @@ Ext.define('Zermelo.view.Home', {
         {
             urlLogo: 'resources/images/user_switch.' + imageType,
             title: 'Switch user',
-            itemId: 'UserSearch',
+            itemId: 'userChange',
             items: [{
                 xtype: 'toolbar',
                 cls: 'zermelo-toolbar-main',

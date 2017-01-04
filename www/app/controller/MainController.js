@@ -65,10 +65,19 @@ Ext.define('Zermelo.controller.MainController', {
     // tap back button on annoucement detail view
     onBackButton: function() {
         var item = Ext.Viewport.getActiveItem();
-        if(item.getItemId() != 'main')
+        if(item.getItemId() != 'main') {
             Ext.Viewport.setActiveItem(Ext.getCmp('main'));
-        else
-            navigator.Backbutton.goBack(function() {}, function() {});
+            return;
+        }
+        item = item.getActiveItem();
+        if(item.getItemId() != 'login') {
+            var itemName = item.getActiveItemName();
+            if(itemName == 'messageList' || itemName == 'userChange') {
+                item.selectItem(localStorage.getItem('lastView'));
+                return;
+            }
+        }
+        navigator.Backbutton.goBack(function() {}, function() {});
     },
 
     // Determines whether there are any pending announcements
