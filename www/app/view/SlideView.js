@@ -973,7 +973,7 @@ Ext.define('Zermelo.view.SlideView', {
         this.list.select(this.itemIds[itemName]);
     },
 
-    getActiveItemName: function(itemName) {
+    getActiveItemName: function() {
         var activeItem = this.getActiveItem().internalId;
         for(var key in this.itemIds) {
             if(this.itemIds[key] == activeItem)

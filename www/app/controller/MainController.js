@@ -46,8 +46,12 @@ Ext.define('Zermelo.controller.MainController', {
                 itemtap: 'onItemTap'
             },
             messageDetails_back: {
-                tap: 'back_messageList'
+                tap: 'onBackButton'
+            },
+            appointmentDetails_back: {
+                tap: 'onBackButton'
             }
+
         }
     },
     // Announcement list item tap
@@ -59,9 +63,12 @@ Ext.define('Zermelo.controller.MainController', {
     },
     
     // tap back button on annoucement detail view
-    back_messageList: function () {
-        var home = this.getHome() || Ext.create('Zermelo.view.Home');
-        Ext.Viewport.setActiveItem(home);
+    onBackButton: function() {
+        var item = Ext.Viewport.getActiveItem();
+        if(item.getItemId() != 'main')
+            Ext.Viewport.setActiveItem(Ext.getCmp('main'));
+        else
+            navigator.Backbutton.goBack(function() {}, function() {});
     },
 
     // Determines whether there are any pending announcements
@@ -88,6 +95,10 @@ Ext.define('Zermelo.controller.MainController', {
     },
 
     launch: function() {
+        if (Ext.os.is('Android')) {
+            document.addEventListener("backbutton", this.onBackButton, false);
+        }
+
         Ext.getStore('Announcements').addAfterListener('addrecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('removerecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);

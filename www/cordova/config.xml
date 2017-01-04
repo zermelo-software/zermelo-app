@@ -76,6 +76,7 @@
             <icon src="www/resources/icons/96.png" density="xhdpi" />
             <icon src="www/resources/icons/144.png" density="xxhdpi" />
             <icon src="www/resources/icons/192.png" density="xxxhdpi" />
+            <plugin name="cordova-plugin-backbutton" spec="~0" source="npm"/>
         </platform>
 
         <platform name="ios">

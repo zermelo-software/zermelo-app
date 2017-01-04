@@ -30,8 +30,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
     extend: 'Ext.Container',
     xtype: 'appointmentDetails',
     id: 'appointmentDetails_view',
-    setAndShow: function(eventDetails, parentView) {
-        this.parentView = parentView;
+    setAndShow: function(eventDetails) {
         this.eventDetails = eventDetails;
         Ext.Viewport.setActiveItem(this);
     },
@@ -320,9 +319,6 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                     },
                     locales: {
                         text: 'back.back'
-                    },
-                    handler: function() {
-                        Ext.Viewport.setActiveItem(this.parent.parent.parent.parentView);
                     }
                 }]
         }, {

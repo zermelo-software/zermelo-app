@@ -221,13 +221,7 @@ Ext.application({
 					"September", "Oktober", "November", "December" ];
 			Ext.Date.dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
 		}
-		// Back button handle for android
-		if (Ext.os.is('Android')) {
-			document.addEventListener("backbutton", function() {
-				Ext.Viewport.setActiveItem(Ext.getCmp('home'));
-			});
-		}
-
+		
 		// Destroy the #appLoadingIndicator element
 		Ext.fly('appLoadingIndicator').destroy();
 		// Initialize the main view
