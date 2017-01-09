@@ -361,7 +361,6 @@ Ext.define('Zermelo.AjaxManager', {
 						remoteId: item.id
 					});
 			}, this);
-
 			this.userResponse['locationofbranches'] = 200;
 		}
 
@@ -370,14 +369,15 @@ Ext.define('Zermelo.AjaxManager', {
 				var departmentOfBranch = this.userResponse['departmentsofbranches'].find(function(mapping) {return mapping.id == item.departmentOfBranch});
 				var branchOfSchool = this.userResponse['branchesofschools'].find(function(branch) {return branch.id == departmentOfBranch.branchOfSchool});
 				if(this.userResponse['schoolsinschoolyears'].find(function(school) {return school.id == branchOfSchool.schoolInSchoolYear}))
-					this.formattedArray.push({
-						type: 'group',
-						prefix: departmentOfBranch.schoolInSchoolYearName,
-						code: item.extendedName,
-						remoteId: item.id
-					});
+					if(!item.extendedName.toLowerCase().includes('uit')) {
+						this.formattedArray.push({
+							type: 'group',
+							prefix: departmentOfBranch.schoolInSchoolYearName,
+							code: item.extendedName,
+							remoteId: item.id
+						});
+					}
 			}, this);
-
 			this.userResponse['groupindepartments'] = 200;
 		}
 
