@@ -81,7 +81,6 @@ Ext.define('Zermelo.view.Login', {
                             },
                             listeners: {
                                 keyup: function (thisField, e) {
-                                    console.log(thisField.getValue());
                                     thisField.setValue(thisField.getValue().toLowerCase().trim());
                                     this.up('login').institution = thisField.getValue();
                                     if (e.browserEvent.keyCode == 13)
@@ -140,6 +139,6 @@ Ext.define('Zermelo.view.Login', {
             this.code = '0' + this.code;
         }
 
-        Zermelo.AjaxManager.getLogin(this.institution, this.code, this.destroy);
+        Zermelo.AjaxManager.getLogin(this.institution, this.code, Ext.bind(this.destroy, this));
     }
 });
