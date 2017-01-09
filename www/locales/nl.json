@@ -23,7 +23,7 @@
         "schedule_other": "Rooster van ",
         "announcement_self": "Mededelingen", 
         "announcement_other": "Mededelingen voor ",
-        "user_select": "Kies gebruiker",
+        "user_select": "Selecteer rooster",
         "Logout":"Uitloggen",
         "logout_message":"Weet je zeker dat je de app wilt ontkoppelen? Je dient de app daarna opnieuw te koppelen via Zermelo Portal."
     },
@@ -67,6 +67,7 @@
     "error": {
         "network": "Kan geen verbinding maken met Zermelo. Ben je verbonden met het internet?",
         "permissions": "Je hebt onvoldoende rechten om dit rooster te bekijken.",
+        "wrong_address": "Er kong geen Zermelo Portal met deze naam gevonden worden. Klopt de instituutscode?",
         "user": {
             "some": "Niet alle gebruikers types konden worden opgehaald. Je hebt mogelijk niet de juiste rechten.",
             "all": "Gebruikers konden niet worden opgehaald. Je hebt mogelijk niet de juiste rechten, of er is geen internetverbinding."

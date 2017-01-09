@@ -140,7 +140,6 @@ Ext.define('Zermelo.view.Login', {
             this.code = '0' + this.code;
         }
 
-        Zermelo.AjaxManager.getLogin(this.institution, this.code);
-        this.destroy();
+        Zermelo.AjaxManager.getLogin(this.institution, this.code, this.destroy);
     }
 });

@@ -45,7 +45,7 @@ Ext.define('Zermelo.AjaxManager', {
 		this.queuedRefresh = setInterval(Ext.bind(this.refresh, this), 1000 * 60 * 20);
 	},
 
-	getLogin: function(institution, code) {
+	getLogin: function(institution, code, callback) {
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -73,11 +73,19 @@ Ext.define('Zermelo.AjaxManager', {
 				Zermelo.AjaxManager.refresh();
 				Zermelo.AjaxManager.getSelf(upgrade);
 				Ext.Viewport.unmask();
+				if(callback)
+					callback();
 			},
 
 			failure: function (response) {
 				Ext.Viewport.unmask();
-				Zermelo.ErrorManager.showErrorBox(response.status == 400 ? 'error.wrong_code' : 'error.network');
+				console.log(response);
+				var errorKey = 'error.network';
+				if (response.status == 400)
+					errorKey = 'error.wrong_code'
+				if (response.status == 404 || response.status == 503)
+					errorKey = 'error.wrong_address'
+				Zermelo.ErrorManager.showErrorBox(errorKey);
 			}
 		});
 	},
