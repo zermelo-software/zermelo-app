@@ -35,6 +35,8 @@ Ext.define('Zermelo.UserManager', {
 			return this.getUser();
 		if(this.type == 'group')
 			return 'g' + this.getUser();
+		if(this.type == 'dept')
+			return 'd' + this.getUser();
 		return 'l' + this.getUser();
 	},
 

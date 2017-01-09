@@ -28,6 +28,8 @@ Ext.define('Zermelo.AjaxManager', {
 			params.user = user;
 		else if(type == 'group')
 			params.containsStudentsFromGroupInDepartment = user;
+		else if(type == 'dept')
+			params.departmentOfBranch = user;
 		else if(type == 'location')
 			params.locationsOfBranch = user;
 		return params;
@@ -364,12 +366,29 @@ Ext.define('Zermelo.AjaxManager', {
 			this.userResponse['locationofbranches'] = 200;
 		}
 
+		// Groups depend on all subtables of branches, so we can't set any subtable to complete to mark branches complete without also
+		// interrupting groups. We bundle them to save headaches.
 		if(allCompleted(['groupindepartments', 'departmentsofbranches', 'branchesofschools', 'schoolsinschoolyears'])) {
+			// Create an entry for each branch
+			this.userResponse['departmentsofbranches'].forEach(function(item) {
+				var branchOfSchool = this.userResponse['branchesofschools'].find(function(branch) {return branch.id == item.branchOfSchool});
+				if(this.userResponse['schoolsinschoolyears'].find(function(school) {return school.id == branchOfSchool.schoolInSchoolYear}))
+					if(!item.code.toLowerCase().includes('#uit')) {
+						this.formattedArray.push({
+							type: 'dept',
+							prefix: item.schoolInSchoolYearName,
+							code: branchOfSchool.branch + '.' + item.code,
+							remoteId: item.id
+						});
+					}
+			}, this);
+
+			// Create an entry for each group
 			this.userResponse['groupindepartments'].forEach(function(item) {
 				var departmentOfBranch = this.userResponse['departmentsofbranches'].find(function(mapping) {return mapping.id == item.departmentOfBranch});
 				var branchOfSchool = this.userResponse['branchesofschools'].find(function(branch) {return branch.id == departmentOfBranch.branchOfSchool});
 				if(this.userResponse['schoolsinschoolyears'].find(function(school) {return school.id == branchOfSchool.schoolInSchoolYear}))
-					if(!item.extendedName.toLowerCase().includes('uit')) {
+					if(!item.extendedName.toLowerCase().includes('#uit') && !item.extendedName.toLowerCase().includes('#allen')) {
 						this.formattedArray.push({
 							type: 'group',
 							prefix: departmentOfBranch.schoolInSchoolYearName,
@@ -469,12 +488,14 @@ Ext.define('Zermelo.AjaxManager', {
 
 			// groups
 			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}, requires: 'readScheduleGroups'},
-			{endpoint: 'departmentsofbranches', params: {fields: 'branchOfSchool,schoolInSchoolYearName,id'}, requires: 'readScheduleGroups'},
+
+			// departments (also required for groups)
+			{endpoint: 'departmentsofbranches', params: {fields: 'code,branchOfSchool,schoolInSchoolYearName,id'}, requires: 'readScheduleGroups'},
 
 			// locations
 			{endpoint: 'locationofbranches', params: {fields: 'branchOfSchool,name,id'}, requires: 'readScheduleLocations'},
 
-			// required for groups and locations
+			// required for groups, departments and locations
 			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}, requires: 'readScheduleGroups,readScheduleLocations'},
 			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}, requires: 'readScheduleGroups,readScheduleLocations'}
 		]
