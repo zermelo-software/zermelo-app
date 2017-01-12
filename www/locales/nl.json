@@ -28,8 +28,8 @@
         "logout_message":"Weet je zeker dat je de app wilt ontkoppelen? Je dient de app daarna opnieuw te koppelen via Zermelo Portal."
     },
     "ok":"OK",
-    "done":"OK",
     "cancel":"Annuleren",
+    "done":"OK",
     "loading":"Laden",
     "appointment":{
         "title":"Details",
@@ -67,6 +67,7 @@
     "error": {
         "network": "Kan geen verbinding maken met Zermelo. Ben je verbonden met het internet?",
         "permissions": "Je hebt onvoldoende rechten om dit rooster te bekijken.",
+        "wrong_code": "De koppelcode was onjuist, of al gebruikt.",
         "wrong_address": "Er kong geen Zermelo Portal met deze naam gevonden worden. Klopt de instituutscode?",
         "user": {
             "some": "Niet alle gebruikers types konden worden opgehaald. Je hebt mogelijk niet de juiste rechten.",

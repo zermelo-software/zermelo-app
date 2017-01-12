@@ -81,7 +81,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 			failure: function (response) {
 				Ext.Viewport.unmask();
-				console.log(response);
 				var errorKey = 'error.network';
 				if (response.status == 400)
 					errorKey = 'error.wrong_code'
