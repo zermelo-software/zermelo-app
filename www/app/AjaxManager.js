@@ -228,22 +228,22 @@ Ext.define('Zermelo.AjaxManager', {
 				};
 				decoded
 				.sort(function(a, b) {
-					var A_B = -1, B_A = 1;
+					var A_before_B = -1, B_before_A = 1;
 					// Sort the earliest start time first
 					if(a.start < b.start)
-						return A_B;
+						return A_before_B;
 					if(a.start > b.start)
-						return B_A;
+						return B_before_A;
 					// Then sort the highest priority first
 					if (getPriority(a) > getPriority(b))
-						return A_B;
+						return A_before_B;
 					if (getPriority(a) < getPriority(b))
-						return B_A;
+						return B_before_A;
 					// Then sort the latest end time first
 					if(a.end > b.end)
-						return A_B;
+						return A_before_B;
 					if(a.end < b.end)
-						return B_A;
+						return B_before_A;
 				})
 				.forEach(function(record) {
 					record.start = new Date(record.start * 1000);
@@ -259,22 +259,41 @@ Ext.define('Zermelo.AjaxManager', {
 					if(record.startTimeSlotName === undefined || record.startTimeSlotName === null)
 						record.startTimeSlotName = record.startTimeSlot;
 				});
-				var currentCollision, validCollisionCount, j, collisionEnd;
+				var currentCollision, validCollisionCount, j, collisionEnd, highestPrioIndex;
+				// Walk the list of appointments looking for collisions
+				// Starting from an element i, we determine the last element j that collides with it and log all elements in the range [i, j] as colliding
+				// Note that this algorithm depends on the sorting done above
 				for(var i = 0; i < decoded.length; i++) {
+					highestPrioIndex = i;
 					currentCollision = [];
 					validCollisionCount = 0;
+					// Determine the range that collides with the element at i
 					for(j = i;j < decoded.length && decoded[j].start >= decoded[i].start && decoded[j].end <= decoded[i].end; j++) {
 						currentCollision.push(decoded[j].id);
 						validCollisionCount += decoded[j].valid;
+						highestPrioIndex = getPriority(decoded[j]) > getPriority(decoded[highestPrioIndex]) ? j : highestPrioIndex;
 					}
 					j--;
 					collisionEnd = j;
+					// Move the element with the highest priority to the front
+					if(i != highestPrioIndex) {
+						var tmp = decoded[highestPrioIndex];
+						decoded[highestPrioIndex] = decoded[i];
+						decoded[i] = tmp;
+						// Also change the order of currentCollision
+						tmp = currentCollision[highestPrioIndex - i];
+						currentCollision[highestPrioIndex - i] = currentCollision[0];
+						currentCollision[0] = tmp;
+					}
 					currentCollision = currentCollision.join(',');
+					console.log(currentCollision);
+					// Move back from j to i and set the collision attributes on each element
 					while(j >= i) {
 						decoded[j].collidingIds = currentCollision;
 						decoded[j].validCollisionCount = validCollisionCount;
 						j--;
 					}
+					// Jump over all elements that were part of this collisison
 					i = collisionEnd;
 				}
 				
@@ -412,6 +431,17 @@ Ext.define('Zermelo.AjaxManager', {
 			var UserStore = Ext.getStore('Users');
 			UserStore.removeAll();
 			this.formattedArray.sort(function(a, b) {
+				var A_before_B = -1, B_before_A = 1;
+				if(a.type != b.type) {
+					if(a.type == 'user')
+						return A_before_B;
+					if(b.type == 'user')
+						return B_before_A;
+					if(a.type == 'location')
+						return A_before_B;
+					if(b.type == 'location')
+						return B_before_A;
+				}
 				if(a.firstName < b.firstName)
 					return -1;
 				if(a.firstName > b.firstName)
