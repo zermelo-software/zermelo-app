@@ -286,7 +286,6 @@ Ext.define('Zermelo.AjaxManager', {
 						currentCollision[0] = tmp;
 					}
 					currentCollision = currentCollision.join(',');
-					console.log(currentCollision);
 					// Move back from j to i and set the collision attributes on each element
 					while(j >= i) {
 						decoded[j].collidingIds = currentCollision;
