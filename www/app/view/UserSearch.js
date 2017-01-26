@@ -13,7 +13,7 @@ Ext.define("Zermelo.view.UserSearch", {
 					width: '100%',
 					autoCapitalize: false,
 					autoComplete: false,
-					autoCorrect: false
+					autoCorrect: false,
 				}
 			},
 			{
@@ -34,6 +34,9 @@ Ext.define("Zermelo.view.UserSearch", {
 					}
 				});
 				Ext.getStore('Users').on('clear', this.clear, this);
+				
+				var searchfield = this.down('searchfield');
+				this.onAfter('painted', function() {searchfield.focus()});
 			}
 		}
 	},
