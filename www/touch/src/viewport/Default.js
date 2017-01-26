@@ -382,6 +382,7 @@ Ext.define('Ext.viewport.Default', {
     },
 
     doPreventPanning: function(e) {
+        return;
         var target = e.target, touch;
 
         // If we have an interaction on a WebComponent we need to check the actual shadow dom element selected
@@ -401,6 +402,7 @@ Ext.define('Ext.viewport.Default', {
     },
 
     doPreventZooming: function(e) {
+        return;
         // Don't prevent right mouse event
         if ('button' in e && e.button !== 0) {
             return;
