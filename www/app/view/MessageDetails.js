@@ -38,6 +38,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                     var announcementStore = Ext.getStore('Announcements');
                     var announcement = announcementStore.getById(this.message.id);
                     announcement.set('read', true);
+                    announcementStore.mySort();
                 }
                 Ext.getCmp('messageDetails_title_lbl').setHtml(this.message.title);
                 //Ext.getCmp('messageDetails_startDate_lbl').setHtml(Ext.Date.format(new Date(messageDetails.start * 1000), 'F j, Y'));
@@ -86,55 +87,8 @@ Ext.define('Zermelo.view.MessageDetails', {
                     xtype: 'label',
                     id: 'messageDetails_title_lbl',
                     cls: 'zermelo-messagedetail-title'
-                }, /*{
-                    // start date container
-                    xtype: 'container',
-                    layout: 'hbox',
-                    style: {
-                        'margin-bottom': '10px'
-                    },
-                    items: [{
-                        //start date label
-                        xtype: 'label',
-                        flex: 1,
-                        locales: {
-                            html: 'announcement.startDate',
-                        },
-                        cls: 'zermelo-announcement-label',
-                    }, {
-                        // start date value label
-                        xtype: 'label',
-                        flex: 1.5,
-                        id: 'messageDetails_startDate_lbl',
-                        // html:'dfksf',
-                        cls: 'zermelo-announcement-label',
-                    }]
-                    //end start date container
-                }, {
-                    // end date container
-                    xtype: 'container',
-                    layout: 'hbox',
-                    style: {
-                        'margin-bottom': '20px'
-                    },
-                    items: [{
-                        //end date label
-                        xtype: 'label',
-                        flex: 1,
-                        locales: {
-                            html: 'announcement.endDate',
-                        },
-                        cls: 'zermelo-announcement-label',
-                    }, {
-                        //end date value label
-                        xtype: 'label',
-                        flex: 1.5,
-                        id: 'messageDetails_endDate_lbl',
-
-                        cls: 'zermelo-announcement-label',
-                    }]
-                    //end end date container
-                }, */{
+                }, 
+                {
                     //description label
                     xtype: 'label',
                     locales: {

@@ -27,6 +27,9 @@ Ext.define('Zermelo.store.UserStore', {
 
 		var searchComponents = searchString.split(' ');
 		this.filterBy(function(record) {
+			// if (record.get('prefix') == 'Eigen rooster')
+			// 	return true;
+			// Yes, it should be every() not some() because \ForAll searchComponents \Exists field : field.contains(searchComponent)
 			return searchComponents.every(function(searchComponent) {
 				if((record.get('firstName') || '').toLowerCase().startsWith(searchComponent))
 					return true;

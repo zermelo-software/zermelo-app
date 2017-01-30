@@ -8105,9 +8105,10 @@ $z-calendar-list-line-height: 18px;
 	border-width: 1px;
 }
 
+$z-red: #2d63e2;
 .z-calendar-list-number-valid{
 	@extend .z-calendar-list-number;
-	color: #2d63e2;
+	color: $z-red;
 }
 
 .z-calendar-list-number-invalid{
@@ -8182,4 +8183,18 @@ $z-msgbox-bg-color: #F7F7F7;
 
 .z-user-list-cell{
 	display: table-cell;
+}
+
+.z-center-text{
+	text-align: center;
+	vertical-align: middle;
+	line-height: 42px;
+}
+
+.z-border-top-bottom-narrow{
+	border-radius: 0;
+	-webkit-border-radius: 0;
+	border: 2px;
+	border-style: solid none;
+	border-color: $z-red;
 }

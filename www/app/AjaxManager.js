@@ -151,6 +151,7 @@ Ext.define('Zermelo.AjaxManager', {
 				});
 
 				announcementStore.resetFilters();
+				announcementStore.mySort();
 
 				announcementStore.resumeEvents(false);
 

@@ -32,15 +32,10 @@ Ext.define("Zermelo.view.MessageList", {
     config: {
         listeners: {
             painted: function() {
-                messageShow=true;
                 if(this.getStore().getCount() == 0)
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
-            }, //end show
-
-            hide:function(){
-                messageShow=false;
-            }
-        }, // end listeners
+            },
+        },
         layout: 'fit',
         style: {
             'background': '#F0F0F0'
@@ -54,6 +49,6 @@ Ext.define("Zermelo.view.MessageList", {
         selectedCls: 'zermelo-menu-list-item-select',
         grouped: false,
         store: 'Announcements',
-        itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
+        itemTpl: new Ext.XTemplate("<tpl if='!read'>{title} <img src='resources/images/new.svg' class='zermelo-message-list-read-unread-icon'> <tpl else>{title} </tpl>")
     }
 });

@@ -7,18 +7,35 @@ Ext.define("Zermelo.view.UserSearch", {
 		items: [
 			{
 				xtype: 'searchfield',
+				placeHolder: 'Zoeken...',
+
 				config: {
 					docked: 'bottom',
-					height: '47px',
+					height: '42px',
 					width: '100%',
 					autoCapitalize: false,
 					autoComplete: false,
-					autoCorrect: false,
+					autoCorrect: false
 				}
+			},
+			{
+				xtype: 'button',
+				ui: 'plain',
+				id: 'doei',
+				height: '47px',
+				width: '100%',
+				html: '<div class="z-calendar-list-parent z-center-text z-border-top-bottom-narrow">Eigen rooster</div>',
+				handler: function(dataview, ix, target, record, event, options) {
+					Zermelo.UserManager.setUser();
+					dataview.up('home').selectItem('lastView');
+					dataview.up('UserSearch').clear();
+				}
+
 			},
 			{
 				xtype: 'UserSelect',
 				flex: 1,
+				hidden: true,
 				config: {
 					docked: 'top'
 				}
@@ -26,17 +43,30 @@ Ext.define("Zermelo.view.UserSearch", {
 		],
 		listeners: {
 			initialize: function() {
+				var userStore = Ext.getStore('Users');
+				var selectList = this.down('UserSelect');
+				var searchfield = this.down('searchfield');
+
 				Zermelo.AjaxManager.getUsers();
-				this.down('searchfield').on({
+
+				searchfield.on({
 					action: {
-						fn: Ext.getStore('Users').onAction,
-						scope: Ext.getStore('Users')
+						fn: userStore.onAction,
+						scope: userStore
 					}
 				});
-				Ext.getStore('Users').on('clear', this.clear, this);
+
+				searchfield.on('clearicontap', function() {
+					selectList.hide();
+				});
+
+				userStore.on('refresh', function() {
+					selectList.setHidden(this.getCount() > 50);
+				}, userStore);
 				
-				var searchfield = this.down('searchfield');
-				this.onAfter('painted', function() {searchfield.focus()});
+				this.onAfter('painted', function() {
+					searchfield.focus()
+				});
 			}
 		}
 	},
