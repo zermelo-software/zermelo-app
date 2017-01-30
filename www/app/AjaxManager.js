@@ -363,8 +363,10 @@ Ext.define('Zermelo.AjaxManager', {
 		}, this);
 
 		if(allCompleted(['users'])) {
+			// If the first entry is an employee, they all are
+			var userType = this.userResponse['users'][0].isEmployee ? 'employee' : 'student';
 			this.userResponse['users'].forEach(function(item) {
-				item.type = 'user';
+				item.type = userType;
 				this.formattedArray.push(item);
 			}, this);
 
@@ -433,9 +435,13 @@ Ext.define('Zermelo.AjaxManager', {
 			this.formattedArray.sort(function(a, b) {
 				var A_before_B = -1, B_before_A = 1;
 				if(a.type != b.type) {
-					if(a.type == 'user')
+					if(a.type == 'employee')
 						return A_before_B;
-					if(b.type == 'user')
+					if(b.type == 'employee')
+						return B_before_A;
+					if(a.type == 'student')
+						return A_before_B;
+					if(b.type == 'student')
 						return B_before_A;
 					if(a.type == 'location')
 						return A_before_B;

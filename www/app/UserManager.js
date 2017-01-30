@@ -31,7 +31,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	getUserSuffix: function() {
-		if(this.type == 'user')
+		if(this.type == 'user' || this.type == 'student' || this.type == 'employee')
 			return this.getUser();
 		if(this.type == 'group')
 			return 'g' + this.getUser();
