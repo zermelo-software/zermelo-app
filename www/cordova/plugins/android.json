@@ -7,21 +7,12 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        },
-        "cordova-plugin-statusbar": {
+        "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "nl.zermelo.online.App"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        },
-        "cordova-plugin-app-event": {
+        "cordova-plugin-compat": {
             "PACKAGE_NAME": "nl.zermelo.online.App"
         }
     }

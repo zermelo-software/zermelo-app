@@ -115,15 +115,39 @@ Ext.define('Zermelo.view.Login', {
                 locales: {
                     text: 'login.login'
                 },
+                padding: '10 0',
                 cls: 'zermelo-login-button',
                 pressedCls: 'zermelo-login-button-pressed',
                 handler: function () {
                     this.parent.authenticate();
                 }
+            }, {
+                xtype: 'button',
+                // locales: {
+                    text: 'QR-code scannen',
+                // },
+                cls: 'zermelo-login-button',
+                pressedCls: 'zermelo-login-button-pressed',
+                handler: function() {
+                    var success = Ext.bind(function(result) {
+                        var creds = JSON.parse(result.text);
+                        this.institution = creds.institution;
+                        this.code = creds.code.replace(/ /g, '');
+                        this.authenticate();
+                    }, this.parent);
+                    var error = function(error) {
+                        alert("Scanning failed: " + error);
+                    };
+                    var options = {
+                        disableSuccessBeep: true
+                    };
+                    cordova.plugins.barcodeScanner.scan(success, error, options);
+                }
             }
         ]
     },
     authenticate: function() {
+        console.log(this.institution, this.code);
         var institution_regex = /^[a-z0-9-]*$/;
         var code_regex = /^[0-9]*$/;
 

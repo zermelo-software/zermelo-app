@@ -16,6 +16,7 @@
         <plugin name="cordova-plugin-whitelist" spec="~1" source="npm"/>
         <plugin name="cordova-plugin-statusbar" spec="~2" source="npm"/>
         <plugin name="cordova-plugin-splashscreen" spec="~4" source="npm"/>
+        <plugin name="phonegap-plugin-barcodescanner" spec="~6" source="npm"/>
 
         <preference name="orientation" value="portrait" />
         <preference name="autorotate" value="false" readonly="true"/> <!-- Lock screen rotation on Android -->
@@ -42,9 +43,10 @@
         <preference name="disable-cursor" value="false" />
         <preference name="StatusBarOverlaysWebView" value="false" />
 
-        <preference name="ShowSplashScreen" value="true" />
+        <preference name="ShowSplashScreen" value="false" />
         <!-- The splashscreen is hidden programmatically once the app has loaded so this just needs to be long enough -->
         <preference name="SplashScreenDelay" value="10000"/>
+        <preference name="AutoHideSplashScreen" value="false" />
         <preference name="FadeSplashScreen" value="false"/>
         <preference name="ShowSplashScreenSpinner" value="false"/>
 
@@ -66,7 +68,7 @@
 
         <platform name="android">
             <preference name="android-minSdkVersion" value="10" />
-            <preference name="android-targetSdkVersion" value="19" />
+            <preference name="android-targetSdkVersion" value="23" />
             <splash src="www/resources/screens/screen-iphone-portrait.png" density="port-mdpi"/>
             <splash src="www/resources/screens/SplashScreenPhone.scale-100.png" density="port-hdpi"/>
             <splash src="www/resources/screens/screen-iphone-portrait-667h.png" density="port-xhdpi"/>
@@ -110,6 +112,10 @@
             <icon src="www/resources/icons/120.png" width="120" height="120" />
             <icon src="www/resources/icons/144.png" width="144" height="144" />
             <icon src="www/resources/icons/152.png" width="152" height="152" />
+
+            <plugin name="cordova-plugin-camera" spec="https://github.com/apache/cordova-plugin-camera">
+                <variable name="CAMERA_USAGE_DESCRIPTION" value="your usage message" />
+            </plugin>
         </platform>
 
         <splash src="www/resources/screens/screen-iphone-portrait.png" />
