@@ -47,7 +47,7 @@ Ext.define("Zermelo.view.UserSearch", {
 				var selectList = this.down('UserSelect');
 				var searchfield = this.down('searchfield');
 
-				Zermelo.AjaxManager.getUsers();
+				Zermelo.AjaxManager.loadOrGetUsers();
 
 				searchfield.on({
 					action: {

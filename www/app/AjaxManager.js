@@ -320,6 +320,19 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
+	saveUsers: function(userArray, saveToDB) {
+		if(saveToDB)
+			localforage.setItem('Users', JSON.stringify(this.formattedArray, Zermelo.model.User.getFields().keys));
+
+		var UserStore = Ext.getStore('Users');
+
+		UserStore.addData(userArray);
+		UserStore.resumeEvents(true);
+		UserStore.fireEvent('refresh');
+		Ext.Viewport.unmask();
+		console.log('time spent', performance.now() - tmr);
+	},
+
 	getUsersByType: function(request) {
 		// Check whether at least one of the requires permissions is set to PORTAL
 		if(request.requires.split(',').every(function(permission) {
@@ -330,8 +343,11 @@ Ext.define('Zermelo.AjaxManager', {
 			return;
 		}
 
+		// We actually use the /users endpoint for employees and students, so we replace them here and undo the change in the success callback
+		var endpoint = (request.endpoint == 'students' || request.endpoint == 'employees') ? 'users' : request.endpoint;
+
 		Ext.Ajax.request({			
-			url: this.getUrl(request.endpoint),
+			url: this.getUrl(endpoint),
 			disableCaching: false,
 			params: this.addAccessTokenToParams(request.params),
 			userRequest: true,
@@ -339,6 +355,9 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 			scope: this,
 			success: function (response) {
+                // The employees and students endpoints were replaced with users above. We're undoing that change here
+                if(request.endpoint == 'user')
+                    request.endpoint = responseData[0].isEmployee ? 'employees' : 'students';
 				this.userByTypeReturn(request.endpoint, response.status, JSON.parse(response.responseText).response.data);
 			},
 			failure: function (response) {
@@ -362,16 +381,16 @@ Ext.define('Zermelo.AjaxManager', {
 			}, this);
 		}, this);
 
-		if(allCompleted(['users'])) {
-			// If the first entry is an employee, they all are
-			var userType = this.userResponse['users'][0].isEmployee ? 'employee' : 'student';
-			this.userResponse['users'].forEach(function(item) {
-				item.type = userType;
-				this.formattedArray.push(item);
-			}, this);
-
-			this.userResponse['users'] = 200;
-		}
+		['students', 'employees'].forEach(function(endpoint) {
+            if(allCompleted([endpoint])) {
+            	var type = (endpoint == 'students') ? 'student' : 'employee';
+                this.userResponse[endpoint].forEach(function(item) {
+                    item.type = type;
+                    this.formattedArray.push(item);
+                }, this);
+                this.userResponse[endpoint] = 200;
+            }
+		}, this);
 
 		if(allCompleted(['locationofbranches', 'branchesofschools', 'schoolsinschoolyears'])) {
 			this.userResponse['locationofbranches'].forEach(function(item) {
@@ -462,23 +481,14 @@ Ext.define('Zermelo.AjaxManager', {
 					return 1;
 			});
 
-			// This list is quite big so some webviews may not allow it to be stored.
-			try {
-				localStorage.setItem('Users', JSON.stringify(this.formattedArray, Zermelo.model.User.getFields().keys));
-			}
-			catch (e) {
-				localStorage.removeItem('Users');
-			}
-			UserStore.addData(this.formattedArray);
-			UserStore.resumeEvents(true);
-			UserStore.fireEvent('refresh');
-			Ext.Viewport.unmask();
+			this.saveUsers(this.formattedArray, true);
 			if(errorCount != 0)
 				Zermelo.ErrorManager.showErrorBox(errorCount == this.types.length ? 'error.user.all' : 'error.user.some');
 		}
 	},
 
-	getUsers: function() {
+	loadOrGetUsers: function() {
+		tmr = performance.now();
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
@@ -494,16 +504,26 @@ Ext.define('Zermelo.AjaxManager', {
 		// removeAll triggers clearing the current search value field so we allow it to fire before suspendEvents
 		UserStore.removeAll();
 		UserStore.suspendEvents();
-
-
-		var userArray = localStorage.getItem('Users')
-		if(userArray) {
-			UserStore.addData(JSON.parse(userArray));
-			UserStore.resumeEvents(true);
-			UserStore.fireEvent('refresh');
-			Ext.Viewport.unmask();
-			return;
+		// If Users is in localStorage, we remove it and save it to localforage
+		var fromLocalStorage = localStorage.getItem('Users');
+		if(fromLocalStorage) {
+			localStorage.removeItem('Users');
+			this.saveUsers(JSON.parse(fromLocalStorage), true);
 		}
+		else {
+			localforage.getItem('Users', function(err, value) {
+				if(err || (value == null)) {
+                    Zermelo.AjaxManager.getUsers();
+                }
+				else {
+                    Zermelo.AjaxManager.saveUsers(JSON.parse(value), false);
+                }
+			});
+		}
+	},
+
+	getUsers: function() {
+		// If we don't know what this token can do, we need to fetch that first
 		if(!Zermelo.UserManager.getTokenAttributes().effectivePermissions) {
 			this.refreshUsers();
 			return;
@@ -518,8 +538,8 @@ Ext.define('Zermelo.AjaxManager', {
 		this.formattedArray = [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}];
 		this.types = [
 			// users (students and teachers)
-			{endpoint: 'users', params: {archived: false, isStudent: true}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
-			{endpoint: 'users', params: {archived: false, isEmployee: true}, requires: 'readScheduleTeachers'}, // The field firstName isn't always available so we ask for everything and see what we get
+			{endpoint: 'students', params: {archived: false, isStudent: true}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
+			{endpoint: 'employees', params: {archived: false, isEmployee: true}, requires: 'readScheduleTeachers'}, // The field firstName isn't always available so we ask for everything and see what we get
 
 			// groups
 			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}, requires: 'readScheduleGroups'},
@@ -544,8 +564,8 @@ Ext.define('Zermelo.AjaxManager', {
 
 	refreshUsers: function() {
 		this.getSelf();
-		localStorage.removeItem('Users');
-		this.on('tokenupdated', this.getUsers, this, {single: true});
+		localforage.removeItem('Users');
+		this.on('tokenupdated', this.loadOrGetUsers, this, {single: true});
 	},
 
 	getSelf: function(upgrade) {
