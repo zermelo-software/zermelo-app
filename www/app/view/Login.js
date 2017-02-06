@@ -111,6 +111,8 @@ Ext.define('Zermelo.view.Login', {
                     }]
                 }]
             }, {
+                xtype: 'container', height: '10px'
+            }, {
                 xtype: 'button',
                 locales: {
                     text: 'login.login'
@@ -122,30 +124,46 @@ Ext.define('Zermelo.view.Login', {
                     this.parent.authenticate();
                 }
             }, {
+                xtype: 'container', height: '10px'
+            },{
                 xtype: 'button',
-                // locales: {
-                    text: 'QR-code scannen',
-                // },
+                locales: {
+                    text: 'login.qr.scan',
+                },
+                style: 'padding-top: 10px;',
                 cls: 'zermelo-login-button',
                 pressedCls: 'zermelo-login-button-pressed',
-                handler: function() {
-                    var success = Ext.bind(function(result) {
-                        var creds = JSON.parse(result.text);
-                        this.institution = creds.institution;
-                        this.code = creds.code.replace(/ /g, '');
-                        this.authenticate();
-                    }, this.parent);
-                    var error = function(error) {
-                        alert("Scanning failed: " + error);
-                    };
-                    var options = {
-                        disableSuccessBeep: true
-                    };
-                    cordova.plugins.barcodeScanner.scan(success, error, options);
-                }
             }
         ]
     },
+
+    initialize: function() {
+        this.query('button')[1].on('tap', this.scan, this);
+    },
+
+    scan: function() {
+        var success = Ext.bind(function(result) {
+            var codeStart = result.text.length - 12;
+            this.institution = result.text.substring(0, codeStart);
+            this.code = result.text.substring(codeStart, result.text.length);
+            this.authenticate();
+        }, this);
+        var error = function(error) {
+            alert("Scanning failed: " + error);
+        };
+        var options = {
+            disableSuccessBeep: true,
+            prompt: Ux.locale.Manager.get('login.qr.tooltip'),
+            resultDisplayDuration: 0,
+            disableAnimations: false,
+            formats: 'QR_CODE'
+        };
+        if (Ext.os.deviceType == 'Desktop')
+            console.log(this);
+        else
+            cordova.plugins.barcodeScanner.scan(success, error, options);
+    },
+
     authenticate: function() {
         console.log(this.institution, this.code);
         var institution_regex = /^[a-z0-9-]*$/;

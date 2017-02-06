@@ -16,7 +16,10 @@
             "never": "Niet opnieuw koppelen",
             "code": "Nieuwe code",
             "failure": "Het lijkt er op dat je account niet de roosters van anderen mag bekijken."
-            }
+            },
+        "qr": {
+            "scan": "QR-code scannen"
+        }
     },
     "menu":{
         "schedule_self": "Rooster", 

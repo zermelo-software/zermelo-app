@@ -16,7 +16,10 @@
             "never": "Never upgrade",
             "code": "New code",
             "failure": "Token upgrade failed. It appears you do not have permission to read names of students"
-            }
+            },
+        "qr": {
+            "scan": "Scan QR-code"
+        }
     },
     "menu":{
         "schedule_self": "Schedule", 
