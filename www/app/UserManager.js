@@ -166,7 +166,7 @@ Ext.define('Zermelo.UserManager', {
 		return Ux.locale.Manager.get('menu.schedule_self');
 	},
 
-	readLocalForage: function() {
+	loadFromLocalForage: function() {
 		var fields = ['code','name', 'type', 'institution', 'accessToken', 'tokenAttributes', 'userAttributes'];
 		var setFromLocalForage = function(field) {
 			var fromLocalStorage = localStorage.getItem(field);

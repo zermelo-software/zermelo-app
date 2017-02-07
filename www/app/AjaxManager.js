@@ -322,7 +322,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 	saveUsers: function(userArray, saveToDB) {
 		if(saveToDB)
-			localforage.setItem('Users', JSON.stringify(this.formattedArray, Zermelo.model.User.getFields().keys));
+			localforage.setItem('Users', this.formattedArray);
 
 		var UserStore = Ext.getStore('Users');
 
@@ -383,10 +383,15 @@ Ext.define('Zermelo.AjaxManager', {
 
 		['students', 'employees'].forEach(function(endpoint) {
             if(allCompleted([endpoint])) {
-            	var type = (endpoint == 'students') ? 'student' : 'employee';
+            	var userType = (endpoint == 'students') ? 'student' : 'employee';
                 this.userResponse[endpoint].forEach(function(item) {
-                    item.type = type;
-                    this.formattedArray.push(item);
+                    this.formattedArray.push({
+                    	type: userType,
+						code: item.code,
+						firstName: item.firstname,
+						lastName: item.lastName,
+						prefix: item.prefix
+					});
                 }, this);
                 this.userResponse[endpoint] = 200;
             }
@@ -516,7 +521,7 @@ Ext.define('Zermelo.AjaxManager', {
                     Zermelo.AjaxManager.getUsers();
                 }
 				else {
-                    Zermelo.AjaxManager.saveUsers(JSON.parse(value), false);
+                    Zermelo.AjaxManager.saveUsers(value, false);
                 }
 			});
 		}

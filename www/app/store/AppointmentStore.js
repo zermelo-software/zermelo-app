@@ -5,8 +5,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	config: {
 		model: 'Zermelo.model.Appointment',
 		storeId: 'Appointments',
-		autoLoad: true,
-		autoSync: false,
 		autoSort: false,
 		proxy: {
 			type: 'localstorage',
@@ -68,15 +66,32 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
 		upperBound = upperBound.setDate(upperBound.getDate() + 7 + (6 - upperBound.getDay()));
 
+		this.appointmentArray = [];
+
 		this.suspendEvents();
 		this.clearFilter();
 		this.each(function(record) {
 			if (record.get('end') < lowerBound || record.get('start') > upperBound) {
 				this.remove(record);
 			}
+			else
+				this.appointmentArray.push(record.getData());
 		}, this);
+		localforage.setItem('Zermelo.store.Appointments', this.appointmentArray, function() {Ext.getStore('Appointments').appointmentArray.length = 0;});
 		this.resetFilters();
 		this.resumeEvents(true);
+	},
+
+	loadFromLocalForage: function() {
+		this.suspendEvents();
+		this.clearFilter();
+		var successCallback = function(err, result) {
+			this.setData(result);
+			this.resetFilters();
+			this.resumeEvents();
+		};
+		successCallback = successCallback.bind(this);
+		localforage.getItem('Zermelo.store.Appointments', successCallback);
 	},
 
 	/**
@@ -102,6 +117,18 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	initialize: function() {
 		this.setWindowWeek(new Date());
+		// One time transition from localStorage to localforage
+		if(localStorage.getItem('AppointmentStore'))
+			this.load(function() {
+				this.pruneLocalStorage();
+				var entries = localStorage.getItem('AppointmentStore');
+				entries = entries ? entries.split(',') : [];
+				for(var key in entries) {
+					setTimeout(function() {localStorage.removeItem('AppointmentStore-' + key)}, 0);
+				}
+			});
+		else
+			this.loadFromLocalForage();
 	},
 
 	/**
