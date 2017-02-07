@@ -225,15 +225,13 @@ Ext.application({
 		}
 		
 		// Destroy the #appLoadingIndicator element
-		Ext.fly('appLoadingIndicator').destroy();
-		// Initialize the main view
-		// setTimeout(function() {
-            var mainView = Ext.create('Zermelo.view.Main');
-            Ext.Viewport.add(mainView);
-            if (!navigator.userAgent.toLowerCase().includes('windows')) {
-                console.log('this ain\'t windows', navigator.userAgent);
-                setTimeout(navigator.splashscreen.hide, 100);
-            }
-        // }, 100);
+
+		var mainView = Ext.create('Zermelo.view.Main');
+		Ext.Viewport.add(mainView);
+        Ext.fly('appLoadingIndicator').destroy();
+		if (!navigator.userAgent.toLowerCase().includes('windows')) {
+			console.log('this ain\'t windows', navigator.userAgent);
+			setTimeout(navigator.splashscreen.hide, 100);
+		}
 	}
 });

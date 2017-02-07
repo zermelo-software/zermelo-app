@@ -26,7 +26,7 @@
  */
 
 Ext.define('Zermelo.store.AnnouncementStore', {
-    extend: 'Ext.data.Store',
+    extend: 'Zermelo.store.ZStore',
     requires: ['Ext.data.proxy.LocalStorage', 'Zermelo.model.Announcement'],
     config: {
         model: 'Zermelo.model.Announcement',
@@ -35,8 +35,6 @@ Ext.define('Zermelo.store.AnnouncementStore', {
             type: 'localstorage',
             id: 'AnnouncementStore'
         },
-        autoLoad: true,
-        autoSync: true
     },
 
     mySort: function() {

@@ -1,5 +1,5 @@
 Ext.define('Zermelo.store.AppointmentStore', {
-	extend: 'Ext.data.Store',
+	extend: 'Zermelo.store.ZStore',
 	requires: ['Ext.data.proxy.LocalStorage'],
 	uses: 'Zermelo.model.Appointment',
 	config: {
@@ -10,6 +10,11 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			type: 'localstorage',
 			id: 'AppointmentStore'
 		}
+	},
+
+	initialize: function() {
+		this.setWindowWeek(new Date());
+        this.callParent();
 	},
 
 	/**
@@ -62,9 +67,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	pruneLocalStorage: function() {
 		var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
-		lowerBound = lowerBound.setDate(lowerBound.getDate() - 7 + (1 - lowerBound.getDay()));
+		lowerBound = lowerBound.setDate(lowerBound.getDate() - 35 + (1 - lowerBound.getDay()));
 		var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
-		upperBound = upperBound.setDate(upperBound.getDate() + 7 + (6 - upperBound.getDay()));
+		upperBound = upperBound.setDate(upperBound.getDate() + 21 + (6 - upperBound.getDay()));
 
 		this.appointmentArray = [];
 
@@ -82,18 +87,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.resumeEvents(true);
 	},
 
-	loadFromLocalForage: function() {
-		this.suspendEvents();
-		this.clearFilter();
-		var successCallback = function(err, result) {
-			this.setData(result);
-			this.resetFilters();
-			this.resumeEvents();
-		};
-		successCallback = successCallback.bind(this);
-		localforage.getItem('Zermelo.store.Appointments', successCallback);
-	},
-
 	/**
 	 * Filters the items in the store by the current user and the current window
 	 *
@@ -107,30 +100,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			var start = record.get('start');
 			return (record.get('user') == user && start > this.windowStart && start < this.windowEnd);
 		});
-	},
-
-	/**
-	 * Sets the date to the current week during object creation
-	 *
-	 * @param:
-	 * @return:
-	 */
-	initialize: function() {
-		this.setWindowWeek(new Date());
-		// One time transition from localStorage to localforage
-		if(localStorage.getItem('AppointmentStore'))
-			this.load(function() {
-				this.pruneLocalStorage();
-				var entries = localStorage.getItem('AppointmentStore');
-				entries = entries ? entries.split(',') : [];
-				for(var key in entries) {
-					setTimeout(function() {localStorage.removeItem('AppointmentStore-' + key)}, 0);
-				}
-				// The order of above removes and this one doesn't matter, so don't worry about the race condition
-				localStorage.removeItem('AppointmentStore');
-			});
-		else
-			this.loadFromLocalForage();
 	},
 
 	/**

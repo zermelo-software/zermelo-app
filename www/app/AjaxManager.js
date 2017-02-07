@@ -23,7 +23,7 @@ Ext.define('Zermelo.AjaxManager', {
 		var user = Zermelo.UserManager.getUser();
 
 		this.addAccessTokenToParams(params);
-
+        return params;
 		if(type == 'user')
 			params.user = user;
 		else if(type == 'group')
