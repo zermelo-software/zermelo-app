@@ -126,6 +126,8 @@ Ext.define('Zermelo.store.AppointmentStore', {
 				for(var key in entries) {
 					setTimeout(function() {localStorage.removeItem('AppointmentStore-' + key)}, 0);
 				}
+				// The order of above removes and this one doesn't matter, so don't worry about the race condition
+				localStorage.removeItem('AppointmentStore');
 			});
 		else
 			this.loadFromLocalForage();
