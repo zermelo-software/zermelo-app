@@ -2,6 +2,7 @@ Ext.define('Zermelo.UserManager', {
 	alternateClassName: 'UserManager',
 	requires: ['Ux.locale.Manager'],
 	singleton: true,
+	fields: ['code','name', 'type', 'institution', 'accessToken', 'tokenAttributes', 'userAttributes'],
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -16,7 +17,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	getName: function() {
-		return this.name;
+		return this.code == '~me' ? '' : this.name;
 	},
 
 	getType: function() {
@@ -58,38 +59,38 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	setCode: function(newCode) {
-		localforage.setItem('Zermelo.UserManager.code', newCode);
 		this.code = newCode;
+		this.saveToLocalForage();
 	},
 
 	setName: function(newName) {
-		localforage.setItem('Zermelo.UserManager.name', newName);
 		this.name = newName;
+        this.saveToLocalForage();
 	},
 
 	setType: function(type) {
-		localforage.setItem('Zermelo.UserManager.type', type);
 		this.type = type;
-	},	
+        this.saveToLocalForage();
+	},
 
 	setInstitution: function(newInstitution) {
 		this.institution = newInstitution;
-		window.localforage.setItem('Zermelo.UserManager.institution', newInstitution);
+        this.saveToLocalForage();
 	},
 
 	setAccessToken: function(newAccessToken) {
 		this.accessToken = newAccessToken;
-		window.localforage.setItem('Zermelo.UserManager.accessToken', newAccessToken);
+        this.saveToLocalForage();
 	},
 
 	setTokenAttributes: function(tokenAttributes) {
 		this.tokenAttributes = tokenAttributes;
-		window.localforage.setItem('Zermelo.UserManager.tokenAttributes', JSON.stringify(tokenAttributes));
+        this.saveToLocalForage();
 	},
 
 	setUserAttributes: function(userAttributes) {
 		this.userAttributes = userAttributes;
-		window.localforage.setItem('Zermelo.UserManager.userAttributes', JSON.stringify(userAttributes));
+        this.saveToLocalForage();
 	},
 
 	saveLogin: function(code, institution, accessToken) {
@@ -97,6 +98,7 @@ Ext.define('Zermelo.UserManager', {
 		this.setType('user');
 		this.setInstitution(institution);
 		this.setAccessToken(accessToken);
+        this.saveToLocalForage();
 	},
 
 	logout: function() {
@@ -159,36 +161,43 @@ Ext.define('Zermelo.UserManager', {
 		this.setName(newName);
 		this.setTitles();
 		Ext.getStore('Appointments').prepareData();
+        this.saveToLocalForage();
 	},
 
 	getScheduleTitle: function() {
 		return Ux.locale.Manager.get('menu.schedule_self');
 	},
 
-	loadFromLocalForage: function() {
-		var fields = ['code','name', 'type', 'institution', 'accessToken', 'tokenAttributes', 'userAttributes'];
-		var setFromLocalForage = function(field) {
-			var fromLocalStorage = localStorage.getItem(field);
-			if(fromLocalStorage) {
-				if(fromLocalStorage.startsWith('"{'))
-					fromLocalStorage = JSON.parse(fromLocalStorage);
-
-				localforage.setItem('Zermelo.UserManager.' + field, fromLocalStorage);
+	loadFromLocalForage: function(callback) {
+		if(localStorage.getItem('accessToken')) {
+			this.fields.forEach(function(field) {
+				this[field] = localStorage.getItem(field);
 				localStorage.removeItem(field);
-				this[field] = fromLocalStorage;
-			}
-			else {
-                localforage.getItem('Zermelo.UserManager.' + field, function (err, result) {
-                    if(result != null) {
-                        Zermelo.UserManager[field] = result;
-					if(field == 'accessToken')
-						Ext.getCmp('main').setActiveItem(1) // Main screen instead of login screen
-					if(field == 'name' || field == 'code')
-						Zermelo.UserManager.setTitles();
-                    }
-                });
-            }
-		};
-		fields.forEach(setFromLocalForage, this);
+			}, this);
+			this.saveToLocalForage();
+			if(typeof callback == 'function')
+				callback();
+		}
+		else {
+			var setFromLocalForage = function(err, result) {
+				if(result !== null) {
+                    this.fields.forEach(function (field) {
+                        this[field] = result[field];
+                    }, this);
+                }
+                if(typeof callback == 'function')
+                    callback();
+			};
+			setFromLocalForage = setFromLocalForage.bind(this);
+			localforage.getItem(Ext.getClassName(this), setFromLocalForage);
+		}
+	},
+
+	saveToLocalForage: function() {
+		var toSave = {};
+		this.fields.forEach(function(field) {
+			toSave[field] = this[field];
+		}, this);
+		localforage.setItem(Ext.getClassName(this), toSave);
 	}
 });

@@ -91,7 +91,7 @@ Ext.define('Zermelo.controller.MainController', {
             }
         });
 
-        var home = this.getHome() || Ext.create('Zermelo.view.Home');
+        var home = this.getHome() || Ext.getCmp('home');
         home._slideButtonConfig.setBadgeText(count);
 
         if(count != 0) {
@@ -111,8 +111,17 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('addrecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('removerecords', this.updateNewMessagesIndicator, this);
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
-        this.updateNewMessagesIndicator();
-        
-        Zermelo.AjaxManager.periodicRefresh();
+
+        var onLoaded = function() {
+            Zermelo.AjaxManager.periodicRefresh();
+            Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
+            Ext.fly('appLoadingIndicator').destroy();
+            if (!navigator.userAgent.toLowerCase().includes('windows')) {
+                console.log('this ain\'t windows', navigator.userAgent);
+                setTimeout(navigator.splashscreen.hide, 50);
+            }
+        };
+
+        Zermelo.UserManager.loadFromLocalForage(onLoaded);
     }
 });
