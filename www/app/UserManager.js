@@ -2,13 +2,6 @@ Ext.define('Zermelo.UserManager', {
 	alternateClassName: 'UserManager',
 	requires: ['Ux.locale.Manager'],
 	singleton: true,
-	code: window.localStorage.getItem('code') || '~me',
-	name: window.localStorage.getItem('name'),
-	type: window.localStorage.getItem('type') || 'user',
-	institution: window.localStorage.getItem('institution'),
-	accessToken: window.localStorage.getItem('accessToken'),
-	tokenAttributes: JSON.parse(window.localStorage.getItem('tokenAttributes') || '{}'),
-	userAttributes: JSON.parse(window.localStorage.getItem('userAttributes') || '{}'),
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -31,7 +24,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	getUserSuffix: function() {
-		if(this.type == 'user')
+		if(this.type == 'user' || this.type == 'student' || this.type == 'employee')
 			return this.getUser();
 		if(this.type == 'group')
 			return 'g' + this.getUser();
@@ -65,38 +58,38 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	setCode: function(newCode) {
-		localStorage.setItem('code', newCode);
+		localforage.setItem('Zermelo.UserManager.code', newCode);
 		this.code = newCode;
 	},
 
 	setName: function(newName) {
-		localStorage.setItem('name', newName);
+		localforage.setItem('Zermelo.UserManager.name', newName);
 		this.name = newName;
 	},
 
 	setType: function(type) {
-		localStorage.setItem('type', type);
+		localforage.setItem('Zermelo.UserManager.type', type);
 		this.type = type;
 	},	
 
 	setInstitution: function(newInstitution) {
 		this.institution = newInstitution;
-		window.localStorage.setItem('institution', newInstitution);
+		window.localforage.setItem('Zermelo.UserManager.institution', newInstitution);
 	},
 
 	setAccessToken: function(newAccessToken) {
 		this.accessToken = newAccessToken;
-		window.localStorage.setItem('accessToken', newAccessToken);
+		window.localforage.setItem('Zermelo.UserManager.accessToken', newAccessToken);
 	},
 
 	setTokenAttributes: function(tokenAttributes) {
 		this.tokenAttributes = tokenAttributes;
-		window.localStorage.setItem('tokenAttributes', JSON.stringify(tokenAttributes));
+		window.localforage.setItem('Zermelo.UserManager.tokenAttributes', JSON.stringify(tokenAttributes));
 	},
 
 	setUserAttributes: function(userAttributes) {
 		this.userAttributes = userAttributes;
-		window.localStorage.setItem('userAttributes', JSON.stringify(userAttributes));
+		window.localforage.setItem('Zermelo.UserManager.userAttributes', JSON.stringify(userAttributes));
 	},
 
 	saveLogin: function(code, institution, accessToken) {
@@ -109,7 +102,7 @@ Ext.define('Zermelo.UserManager', {
 	logout: function() {
 		navigator.splashscreen.show();
 		localStorage.clear();
-		window.location.reload();
+		localforage.clear(function() {window.location.reload()});
 	},
 
 	getTitle: function() {
@@ -170,5 +163,32 @@ Ext.define('Zermelo.UserManager', {
 
 	getScheduleTitle: function() {
 		return Ux.locale.Manager.get('menu.schedule_self');
+	},
+
+	loadFromLocalForage: function() {
+		var fields = ['code','name', 'type', 'institution', 'accessToken', 'tokenAttributes', 'userAttributes'];
+		var setFromLocalForage = function(field) {
+			var fromLocalStorage = localStorage.getItem(field);
+			if(fromLocalStorage) {
+				if(fromLocalStorage.startsWith('"{'))
+					fromLocalStorage = JSON.parse(fromLocalStorage);
+
+				localforage.setItem('Zermelo.UserManager.' + field, fromLocalStorage);
+				localStorage.removeItem(field);
+				this[field] = fromLocalStorage;
+			}
+			else {
+                localforage.getItem('Zermelo.UserManager.' + field, function (err, result) {
+                    if(result != null) {
+                        Zermelo.UserManager[field] = result;
+					if(field == 'accessToken')
+						Ext.getCmp('main').setActiveItem(1) // Main screen instead of login screen
+					if(field == 'name' || field == 'code')
+						Zermelo.UserManager.setTitles();
+                    }
+                });
+            }
+		};
+		fields.forEach(setFromLocalForage, this);
 	}
 });

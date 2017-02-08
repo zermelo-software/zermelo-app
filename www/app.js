@@ -162,6 +162,7 @@ Ext.application({
 	// Launch application
 
 	launch : function() {
+        Zermelo.UserManager.loadFromLocalForage();
 		Ext.Msg.defaultAllowedConfig.showAnimation = false;
 		// display magnified glass press on textbox
 		Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
@@ -223,12 +224,13 @@ Ext.application({
 		}
 		
 		// Destroy the #appLoadingIndicator element
-		Ext.fly('appLoadingIndicator').destroy();
-		// Initialize the main view
-		Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
+
+		var mainView = Ext.create('Zermelo.view.Main');
+		Ext.Viewport.add(mainView);
+        Ext.fly('appLoadingIndicator').destroy();
 		if (!navigator.userAgent.toLowerCase().includes('windows')) {
 			console.log('this ain\'t windows', navigator.userAgent);
-			setTimeout(navigator.splashscreen.hide, 50);
+			setTimeout(navigator.splashscreen.hide, 100);
 		}
 	}
 });

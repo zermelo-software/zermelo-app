@@ -7,9 +7,11 @@ Ext.define("Zermelo.view.UserSearch", {
 		items: [
 			{
 				xtype: 'searchfield',
+				placeHolder: 'Zoeken...',
+
 				config: {
 					docked: 'bottom',
-					height: '47px',
+					height: '42px',
 					width: '100%',
 					autoCapitalize: false,
 					autoComplete: false,

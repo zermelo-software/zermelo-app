@@ -38,6 +38,7 @@ Ext.define('Zermelo.view.MessageDetails', {
                     var announcementStore = Ext.getStore('Announcements');
                     var announcement = announcementStore.getById(this.message.id);
                     announcement.set('read', true);
+                    announcementStore.mySort();
                 }
                 Ext.getCmp('messageDetails_title_lbl').setHtml(this.message.title);
                 //Ext.getCmp('messageDetails_startDate_lbl').setHtml(Ext.Date.format(new Date(messageDetails.start * 1000), 'F j, Y'));

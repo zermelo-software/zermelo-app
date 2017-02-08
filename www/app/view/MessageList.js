@@ -54,6 +54,6 @@ Ext.define("Zermelo.view.MessageList", {
         selectedCls: 'zermelo-menu-list-item-select',
         grouped: false,
         store: 'Announcements',
-        itemTpl: new Ext.XTemplate("<tpl for='.'>", "<tpl if='read == 0'>{title} <img src='resources/images/new."+imageType+"' class='zermelo-message-list-read-unread-icon'>", "<tpl else>{title}", "</tpl>", "</tpl>")
+        itemTpl: new Ext.XTemplate("<tpl if='!read'>{title} <img src='resources/images/new.svg' class='zermelo-message-list-read-unread-icon'> <tpl else>{title} </tpl>")
     }
 });

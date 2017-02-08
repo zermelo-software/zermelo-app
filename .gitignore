@@ -28,3 +28,4 @@ scripts
 plugins/
 todo.txt
 response.json
+.idea*

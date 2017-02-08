@@ -105,6 +105,11 @@
             "path": "js/winstore-jscompat.js",
             "update": "full",
             "includeInBundle": false
+        },
+        {
+            "path": "js/localforage.min.js",
+            "update": "full",
+            "includeInBundle": false
         }
     ],
 
