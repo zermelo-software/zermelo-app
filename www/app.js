@@ -162,8 +162,6 @@ Ext.application({
 	// Launch application
 
 	launch : function() {
-        Zermelo.UserManager.loadFromLocalForage();
-        Ext.getStore('Appointments').loadFromLocalForage();
 		Ext.Msg.defaultAllowedConfig.showAnimation = false;
 		// display magnified glass press on textbox
 		Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
@@ -223,17 +221,6 @@ Ext.application({
 					"September", "Oktober", "November", "December" ];
 			Ext.Date.dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
 		}
-		
-		// Destroy the #appLoadingIndicator element
-		Ext.fly('appLoadingIndicator').destroy();
-		// Initialize the main view
-		// setTimeout(function() {
-            var mainView = Ext.create('Zermelo.view.Main');
-            Ext.Viewport.add(mainView);
-            if (!navigator.userAgent.toLowerCase().includes('windows')) {
-                console.log('this ain\'t windows', navigator.userAgent);
-                setTimeout(navigator.splashscreen.hide, 100);
-            }
         // }, 100);
 	}
 });

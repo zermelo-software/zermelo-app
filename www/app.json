@@ -107,7 +107,7 @@
             "includeInBundle": false
         },
         {
-            "path": "js/localforage.nopromises.min.js",
+            "path": "js/localforage.min.js",
             "update": "full",
             "includeInBundle": false
         }
