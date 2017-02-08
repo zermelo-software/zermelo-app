@@ -164,6 +164,7 @@ Ext.application({
 	launch : function() {
         Zermelo.UserManager.loadFromLocalForage();
         Ext.getStore('Appointments').loadFromLocalForage();
+        Ext.getStore('Announcements').loadFromLocalForage();
 		Ext.Msg.defaultAllowedConfig.showAnimation = false;
 		// display magnified glass press on textbox
 		Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;

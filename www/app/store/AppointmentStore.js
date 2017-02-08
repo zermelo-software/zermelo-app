@@ -66,23 +66,24 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 * @return:
 	 */
 	pruneLocalStorage: function() {
-		var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
-		lowerBound = lowerBound.setDate(lowerBound.getDate() - 35 + (1 - lowerBound.getDay()));
-		var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
-		upperBound = upperBound.setDate(upperBound.getDate() + 21 + (6 - upperBound.getDay()));
+        var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
+        lowerBound = lowerBound.setDate(lowerBound.getDate() - 35 + (1 - lowerBound.getDay()));
+        var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
+        upperBound = upperBound.setDate(upperBound.getDate() + 21 + (6 - upperBound.getDay()));
 
-		this.appointmentArray = [];
+        this.appointmentArray = [];
 
-		this.suspendEvents();
-		this.clearFilter();
-		this.each(function(record) {
-			if (record.get('end') < lowerBound || record.get('start') > upperBound) {
-				this.remove(record);
-			}
-			else
-				this.appointmentArray.push(record.getData());
-		}, this);
-		localforage.setItem('Zermelo.store.Appointments', this.appointmentArray, function() {Ext.getStore('Appointments').appointmentArray.length = 0;});
+        this.suspendEvents();
+        this.clearFilter();
+        this.each(function (record) {
+            if (record.get('end') < lowerBound || record.get('start') > upperBound) {
+                this.remove(record);
+            }
+            else {
+                this.appointmentArray.push(record.getData());
+            }
+        }, this);
+		this.saveToLocalForage(this.appointmentArray);
 		this.resetFilters();
 		this.resumeEvents(true);
 	},

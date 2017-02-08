@@ -117,7 +117,7 @@ Ext.define('Zermelo.AjaxManager', {
 			success: function (response, opts) {
 				var decoded = JSON.parse(response.responseText).response.data;
 				var announcementStore = Ext.getStore('Announcements');
-				announcementStore.suspendEvents(true);
+				announcementStore.suspendEvents();
 
 				// Update the stored announcements and remove the ones that no longer exist
 				announcementStore.each(function(record) {
@@ -322,7 +322,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 	saveUsers: function(userArray, saveToDB) {
 		if(saveToDB)
-			localforage.setItem('Users', this.formattedArray);
+			localforage.setItem('Zermelo.store.UserStore', JSON.stringify(this.formattedArray));
 
 		var UserStore = Ext.getStore('Users');
 
@@ -521,7 +521,7 @@ Ext.define('Zermelo.AjaxManager', {
                     Zermelo.AjaxManager.getUsers();
                 }
 				else {
-                    Zermelo.AjaxManager.saveUsers(value, false);
+                    Zermelo.AjaxManager.saveUsers(value.startsWith('"{' ? JSON.parse(value) : value), false);
                 }
 			});
 		}

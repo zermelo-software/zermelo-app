@@ -31,10 +31,12 @@ Ext.define('Zermelo.store.AnnouncementStore', {
     config: {
         model: 'Zermelo.model.Announcement',
         storeId: 'Announcements',
-        proxy: {
-            type: 'localstorage',
-            id: 'AnnouncementStore'
-        },
+    },
+
+    initialize: function() {
+        this.callParent();
+        this.on('updaterecord', this.saveToLocalForage.bind(this, null));
+        this.on('addrecords', this.saveToLocalForage.bind(this, null));
     },
 
     mySort: function() {
