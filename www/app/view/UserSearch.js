@@ -28,7 +28,7 @@ Ext.define("Zermelo.view.UserSearch", {
 		],
 		listeners: {
 			initialize: function() {
-				Zermelo.AjaxManager.getUsers();
+				Zermelo.AjaxManager.loadOrGetUsers();
 				this.down('searchfield').on({
 					action: {
 						fn: Ext.getStore('Users').onAction,

@@ -92,8 +92,10 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function() {
-		if (!Zermelo.UserManager.loggedIn())
-			return;
+		if (!Zermelo.UserManager.loggedIn()) {
+			console.log('meh');
+            return;
+        }
 
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
@@ -330,7 +332,6 @@ Ext.define('Zermelo.AjaxManager', {
 		UserStore.resumeEvents(true);
 		UserStore.fireEvent('refresh');
 		Ext.Viewport.unmask();
-		console.log('time spent', performance.now() - tmr);
 	},
 
 	getUsersByType: function(request) {
@@ -485,6 +486,8 @@ Ext.define('Zermelo.AjaxManager', {
 				if(a.code > b.code)
 					return 1;
 			});
+			// prepend 'Eigen rooster'
+			this.formattedArray.unshift({firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'});
 
 			this.saveUsers(this.formattedArray, true);
 			if(errorCount != 0)
@@ -493,7 +496,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	loadOrGetUsers: function() {
-		tmr = performance.now();
 		if (!Zermelo.UserManager.loggedIn())
 			return;
 
@@ -516,12 +518,13 @@ Ext.define('Zermelo.AjaxManager', {
 			this.saveUsers(JSON.parse(fromLocalStorage), true);
 		}
 		else {
-			localforage.getItem('Users', function(err, value) {
-				if(err || (value == null)) {
+			localforage.getItem('Zermelo.store.UserStore', function(err, value) {
+				if((value == null)) {
+					console.log('huh');
                     Zermelo.AjaxManager.getUsers();
                 }
 				else {
-                    Zermelo.AjaxManager.saveUsers(value.startsWith('"{' ? JSON.parse(value) : value), false);
+                    Zermelo.AjaxManager.saveUsers(JSON.parse(value), false);
                 }
 			});
 		}
@@ -540,7 +543,7 @@ Ext.define('Zermelo.AjaxManager', {
 		// The values requires and requireLevel are used to check whether the current token has the correct rights to view the schedules of this type
 		// We check that _token_[permissions.requires] >= requireLevel
 		this.userResponse = {};
-		this.formattedArray = [{firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'}];
+		this.formattedArray = [];
 		this.types = [
 			// users (students and teachers)
 			{endpoint: 'students', params: {archived: false, isStudent: true}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
@@ -568,9 +571,9 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	refreshUsers: function() {
-		this.getSelf();
-		localforage.removeItem('Users');
 		this.on('tokenupdated', this.loadOrGetUsers, this, {single: true});
+		localforage.removeItem('Zermelo.store.UserStore', this.getSelf.bind(this));
+		localStorage.removeItem('Users')
 	},
 
 	getSelf: function(upgrade) {
