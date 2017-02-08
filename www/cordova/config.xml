@@ -2,9 +2,9 @@
     <widget xmlns = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "nl.zermelo.online.App"
-        version   = "1.4.4"
-        android-versionCode="20170124"
-        ios-CFBundleVersion="20170124"
+        version   = "1.4.5"
+        android-versionCode="20170208"
+        ios-CFBundleVersion="20170208"
         packageName="6D7654C9.ZermeloRooster">
         <name>Zermelo</name>
         <description>Toont het schoolrooster en mededelingen van de school.</description>
