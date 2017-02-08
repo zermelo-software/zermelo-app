@@ -324,7 +324,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 	saveUsers: function(userArray, saveToDB) {
 		if(saveToDB)
-			localforage.setItem('Zermelo.store.UserStore', JSON.stringify(this.formattedArray));
+			localforage.setItem('Zermelo.store.UserStore', JSON.stringify(userArray));
 
 		var UserStore = Ext.getStore('Users');
 
