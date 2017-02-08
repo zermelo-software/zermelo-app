@@ -102,8 +102,7 @@ Ext.define('Zermelo.UserManager', {
 	logout: function() {
 		navigator.splashscreen.show();
 		localStorage.clear();
-		localforage.clear();
-		window.location.reload();
+		localforage.clear(function() {window.location.reload()});
 	},
 
 	getTitle: function() {
