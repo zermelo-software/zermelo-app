@@ -31,6 +31,12 @@ Ext.define('Zermelo.store.AnnouncementStore', {
     config: {
         model: 'Zermelo.model.Announcement',
         storeId: 'Announcements',
+        proxy: {
+            type: 'localstorage',
+            id: 'AnnouncementStore'
+        },
+        autoLoad: true,
+        autoSync: true
     },
 
     mySort: function() {

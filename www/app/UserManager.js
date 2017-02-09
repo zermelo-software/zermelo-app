@@ -17,7 +17,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	getName: function() {
-		return this.code == '~me' ? '' : this.name;
+		return this.name || '';
 	},
 
 	getType: function() {
