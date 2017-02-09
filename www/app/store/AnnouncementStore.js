@@ -37,13 +37,6 @@ Ext.define('Zermelo.store.AnnouncementStore', {
         this.callParent();
         this.on('updaterecord', this.saveToLocalForage.bind(this, null));
         this.on('addrecords', this.saveToLocalForage.bind(this, null));
-                    return a.get('read') ? 1 : -1;
-                if (a.get('start') != b.get('start'))
-                    return a.get('start') < b.get('start') ? -1 : 1;
-                if (a.get('end') != b.get('end'))
-                    return a.get('end') < b.get('end') ? -1 : 1;
-            }
-        });
     },
 
     mySort: function() {
