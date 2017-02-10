@@ -50,7 +50,9 @@ Ext.define('Zermelo.store.ZStore', {
 
 
     loadFromLocalForageOrStorage: function() {
-        var storeId = this.getProxy().getId();
+        var storeId = this.getStoreId();
+        storeId = storeId.slice(0, -1) + 'Store';
+        console.log(storeId);
         // One time transition from localStorage to localforage
         if (localStorage.getItem(storeId)) {
             this.loadFromLocalStorage(storeId);

@@ -22,6 +22,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		var appointmentArray = [];
 		this.each(function(record) {
 			if(record.get('collidingIds').startsWith(record.get('id'))) {
+				console.log(record.getData());
 				appointmentArray.push(record.getData());
 			}
 		});
