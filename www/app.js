@@ -123,7 +123,8 @@ Ext.application({
 	name : 'Zermelo',
 
 	//overriede component for multiple langauge
-	requires : [ 'Ux.locale.Manager',
+	requires : [
+			'Ux.locale.Manager',
 			'Ux.locale.override.st.Component',
 			'Ux.locale.override.st.Button',
 			'Ux.locale.override.st.Container',
@@ -162,6 +163,8 @@ Ext.application({
 	// Launch application
 
 	launch : function() {
+		// This should've been the name to begin with... grumble grumble
+		localForage = localforage;
 		Ext.Msg.defaultAllowedConfig.showAnimation = false;
 		// display magnified glass press on textbox
 		Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
@@ -221,6 +224,5 @@ Ext.application({
 					"September", "Oktober", "November", "December" ];
 			Ext.Date.dayNames = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
 		}
-        // }, 100);
 	}
 });

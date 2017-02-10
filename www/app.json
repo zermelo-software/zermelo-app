@@ -87,9 +87,9 @@
             "x-bootstrap": true
         },
         {
-            "path": "app.js",
-            "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when build */
-            "update": "full"
+            "path": "js/localforage.min.js",
+            "update": "full",
+            "includeInBundle": false
         },
         {
             "path": "js/jquery-1.7.2.js",
@@ -107,10 +107,11 @@
             "includeInBundle": false
         },
         {
-            "path": "js/localforage.min.js",
-            "update": "full",
-            "includeInBundle": false
+            "path": "app.js",
+            "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when build */
+            "update": "full"
         }
+
     ],
 
     /**

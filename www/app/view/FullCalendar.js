@@ -311,53 +311,15 @@ Ext.define('Zermelo.view.FullCalendar', {
     },
 
     prepareToShow: function() {
-        this.getStore().prepareData();
+        this.gotoWeek_Day();
         localStorage.setItem('lastView', 'fullCalendarView');
         this.gotoWeek_Day();
         this.setUpdateViewInterval();
     },
 
-    renderCalendar: function () {
-        var me = this;
-        $('#' + me.getPlaceholderid()).fullCalendar('render');
-    },
     destroyCalendar: function () {
         var me = this;
         $('#' + me.getPlaceholderid()).fullCalendar('destroy');
-    },
-    changeCalendarView: function (view) {
-        var me = this;
-        $('#' + me.getPlaceholderid()).fullCalendar('changeView', view);
-        // to fix issue regarding the scroll area of week and day not taking full height. 
-        if (view == "month") {
-            $(".fc-view-month").removeAttr("style");
-            $(".fc-view-agendaWeek").css({
-                "position": 'relative'
-            });
-            $(".fc-view-agendaDay").css({
-                "position": 'relative'
-            });
-            me.setDefaultview('month');
-        } else if (view == "agendaWeek") {
-            $(".fc-view-agendaWeek").removeAttr("style");
-            $(".fc-view-agendaDay").css({
-                "position": 'relative'
-            });
-            $(".fc-view-month").css({
-                "position": 'relative'
-            });
-            me.setDefaultview('week');
-        } else if (view == "agendaDay") {
-            $(".fc-view-agendaDay").removeAttr("style");
-            $(".fc-view-agendaWeek").css({
-                "position": 'relative'
-            });
-            $(".fc-view-month").css({
-                "position": 'relative'
-            });
-            me.setDefaultview('day');
-        }
-        me.changeTitle();
     },
     changeTitle: function () {
         var me = this;
@@ -365,10 +327,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         Ext.getCmp("btn_datePicker").setText(text);
     },
 
-    viewToday: function () {
-        $('#' + this.getPlaceholderid()).fullCalendar('today');
-        this.changeTitle();
-    },
     // navigate calendar next prev
     navigateCalendar: function (direction) {
         var me = this;
@@ -456,35 +414,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         week = appointmentStore.setWindowWeek(week);
         $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', week);
         this.changeTitle();
-    },
-
-    //Below function opens dayview with selected date
-    openDayView: function(selectedDate) {
-        if (!Ext.os.is.iOS) {
-            if (webkitVersion < 537.36) {
-                clickButton = true;
-                var timer = $.timer(function () {
-                    clickButton = false;
-                    timer.stop();
-                });
-                if (version == 2)
-                    timer.set({
-                        time: 6000,
-                        autostart: true
-                    });
-                else
-                    timer.set({
-                        time: 4000,
-                        autostart: true
-                    });
-            }
-        }
-        this.changeCalendarView('agendaDay');
-        $('#' + this.getPlaceholderid()).fullCalendar('gotoDate', selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-        this.day.hide();
-        Ext.getCmp('toolbar_main').setHidden(true);
-        Ext.getCmp('toolbar_day_back').setHidden(false);
-        // currentDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
     },
 
     getStore: function() {

@@ -108,20 +108,25 @@ Ext.define('Zermelo.controller.MainController', {
             document.addEventListener("backbutton", this.onBackButton, false);
         }
 
-        Ext.getStore('Announcements').addAfterListener('addrecords', this.updateNewMessagesIndicator, this);
-        Ext.getStore('Announcements').addAfterListener('removerecords', this.updateNewMessagesIndicator, this);
-        Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
-
-        var onLoaded = function() {
+        var onUsersLoaded = function() {
             Zermelo.AjaxManager.periodicRefresh();
             Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
+
+            var announcementStore = Ext.getStore('Announcements');
+            announcementStore.onAfter('addrecords', this.updateNewMessagesIndicator, this);
+            announcementStore.onAfter('removerecords', this.updateNewMessagesIndicator, this);
+            announcementStore.onAfter('updaterecord', this.updateNewMessagesIndicator, this);
+            announcementStore.loadFromLocalForageOrStorage();
+
+            Ext.getStore('Appointments').loadFromLocalForageOrStorage();
+
             Ext.fly('appLoadingIndicator').destroy();
             if (!navigator.userAgent.toLowerCase().includes('windows')) {
                 console.log('this ain\'t windows', navigator.userAgent);
                 setTimeout(navigator.splashscreen.hide, 50);
             }
-        };
+        }.bind(this);
 
-        Zermelo.UserManager.loadFromLocalForage(onLoaded);
+        Zermelo.UserManager.loadFromLocalForageOrStorage(onUsersLoaded);
     }
 });

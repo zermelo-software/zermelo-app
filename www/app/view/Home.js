@@ -165,7 +165,7 @@ Ext.define('Zermelo.view.Home', {
                         'padding-right': '4px'
                     },
                     handler: function () {
-                        Ext.getStore('Appointments').fetchWeek();
+                        Ext.getStore('Appointments').fetch();
                     }
                 }]
             }, {

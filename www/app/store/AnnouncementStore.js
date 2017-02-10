@@ -27,7 +27,7 @@
 
 Ext.define('Zermelo.store.AnnouncementStore', {
     extend: 'Zermelo.store.ZStore',
-    requires: ['Ext.data.proxy.LocalStorage', 'Zermelo.model.Announcement'],
+    requires: ['Zermelo.model.Announcement'],
     config: {
         model: 'Zermelo.model.Announcement',
         storeId: 'Announcements',
@@ -35,8 +35,6 @@ Ext.define('Zermelo.store.AnnouncementStore', {
 
     initialize: function() {
         this.callParent();
-        this.on('updaterecord', this.saveToLocalForage.bind(this, null));
-        this.on('addrecords', this.saveToLocalForage.bind(this, null));
     },
 
     mySort: function() {
@@ -52,13 +50,14 @@ Ext.define('Zermelo.store.AnnouncementStore', {
         });
     },
 
-    fetchAnnouncements: function() {
+    fetch: function() {
         Zermelo.AjaxManager.getAnnouncementData();
     },
 
     resetFilters: function() {
         this.clearFilter();
         this.filterBy(function(record) {
+            return record.valid() ? true : console.log('removed record', record);
             return record.valid();
         });
     }

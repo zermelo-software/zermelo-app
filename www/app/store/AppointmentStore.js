@@ -1,19 +1,14 @@
 Ext.define('Zermelo.store.AppointmentStore', {
 	extend: 'Zermelo.store.ZStore',
-	requires: ['Ext.data.proxy.LocalStorage'],
-	uses: 'Zermelo.model.Appointment',
+	requires: ['Zermelo.model.Appointment'],
 	config: {
 		model: 'Zermelo.model.Appointment',
-		storeId: 'Appointments',
-		autoSort: false,
-		proxy: {
-			type: 'localstorage',
-			id: 'AppointmentStore'
-		}
+		storeId: 'Appointments'
 	},
 
 	initialize: function() {
-		this.setWindowWeek(new Date());
+		this.windowStart = this.getMonday(new Date());
+		this.windowEnd = this.getSaturday(new Date());
         this.callParent();
 	},
 
@@ -109,7 +104,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 * @param:
 	 * @return:
 	 */
-	fetchWeek: function() {
+	fetch: function() {
 		var monday = this.getMonday();
 		var saturday = this.getSaturday();
 		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
@@ -139,23 +134,27 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	/**
-	 * Calculates the start of the week that contains the current view
+	 * Calculates the start of the week that contains the given date
+     * If no date is provided, the start of the current view is used
 	 *
 	 * @param:
 	 * @return: A Date object containing monday 00:00:00
 	 */
-	getMonday: function() {
-		return new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (1 - this.windowStart.getDay()));
+	getMonday: function(date) {
+		date = date || this.windowStart;
+		return new Date(date.getFullYear(), date.getMonth(), date.getDate() + (1 - date.getDay()));
 	},
 
 	/**
-	 * Calculates the end of the week that contains the current view
+	 * Calculates the end of the week that contains the given date
+	 * If no date is provided, the start of the current view is used
 	 *
 	 * @param:
 	 * @return: A Date object containing saturday 00:00:00
 	 */
-	getSaturday: function(monday) {
-		return new Date(this.windowStart.getFullYear(), this.windowStart.getMonth(), this.windowStart.getDate() + (6 - this.windowStart.getDay()));
+	getSaturday: function(date) {
+        date = date || this.windowStart;
+		return new Date(date.getFullYear(), date.getMonth(), date.getDate() + (6 - date.getDay()));
 	},
 
 	/**
@@ -165,9 +164,10 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 * @return:
 	 */
 	prepareData: function() {
+		console.log(this.prepareData.caller);
 		this.resetFilters();
 		if(this.getCount() == 0)
-			this.fetchWeek();
+			this.fetch();
 	},
 
 	getView: function() {

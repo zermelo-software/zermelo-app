@@ -690,6 +690,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Zermelo.model.Announcement": [],
   "Zermelo.model.Appointment": [],
   "Zermelo.model.User": [],
+  "Zermelo.proxy.LocalForage": [],
+  "Zermelo.storage.LocalForage": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
   "Zermelo.store.UserStore": [],
@@ -1451,6 +1453,10 @@ Ext.ClassManager.addNameAliasMappings({
   "Zermelo.model.Announcement": [],
   "Zermelo.model.Appointment": [],
   "Zermelo.model.User": [],
+  "Zermelo.proxy.LocalForage": [
+    "proxy.localforage"
+  ],
+  "Zermelo.storage.LocalForage": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
   "Zermelo.store.UserStore": [

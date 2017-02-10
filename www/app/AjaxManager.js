@@ -23,7 +23,6 @@ Ext.define('Zermelo.AjaxManager', {
 		var user = Zermelo.UserManager.getUser();
 
 		this.addAccessTokenToParams(params);
-        return params;
 		if(type == 'user')
 			params.user = user;
 		else if(type == 'group')
@@ -36,14 +35,15 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	refresh: function() {
-		Ext.getStore('Appointments').fetchWeek();
+		console.log('refresh');
+		Ext.getStore('Appointments').fetch();
 		this.getAnnouncementData();
 	},
 
 	periodicRefresh: function() {
 		if(this.queuedRefresh)
 			clearInterval(this.queuedRefresh);
-		this.refresh();
+		// this.refresh();
 		this.queuedRefresh = setInterval(Ext.bind(this.refresh, this), 1000 * 60 * 20);
 	},
 
@@ -92,6 +92,7 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function() {
+		// return;
 		if (!Zermelo.UserManager.loggedIn()) {
 			console.log('meh');
             return;
@@ -198,7 +199,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-
 		this.appointmentsPending = true;
 
 		Ext.Ajax.request({
