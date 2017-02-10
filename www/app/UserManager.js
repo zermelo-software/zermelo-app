@@ -115,7 +115,6 @@ Ext.define('Zermelo.UserManager', {
 
 	setTitles: function() {
 		var header;
-		var key_suffix = this.userIsSelf() ? 'self' : 'other';
 		var title = this.getTitle();
 
 		['toolbar_main', 'calendar_list_title'].forEach(function(field) {
@@ -162,10 +161,6 @@ Ext.define('Zermelo.UserManager', {
 		this.setTitles();
 		Ext.getStore('Appointments').prepareData();
         this.saveToLocalForage();
-	},
-
-	getScheduleTitle: function() {
-		return Ux.locale.Manager.get('menu.schedule_self');
 	},
 
 	loadFromLocalForageOrStorage: function(callback) {

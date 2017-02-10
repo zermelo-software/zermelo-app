@@ -14,7 +14,7 @@ Ext.define('Zermelo.store.ZStore', {
             entries = entries ? entries.split(',') : [];
             for (var key in entries) {
                 // setTimeout(0) to prevent long waits for the UI
-                setTimeout(function () {
+                setTimeout(function() {
                     localStorage.removeItem(storeId + '-' + key)
                 }, 0);
             }
