@@ -92,7 +92,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function() {
-		// return;
 		if (!Zermelo.UserManager.loggedIn()) {
 			console.log('meh');
             return;

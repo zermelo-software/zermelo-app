@@ -33,8 +33,10 @@ Ext.define('Zermelo.store.AnnouncementStore', {
         storeId: 'Announcements',
     },
 
-    initialize: function() {
-        this.callParent();
+    initialize: function () {
+        this.onAfter('addrecords', this.saveToLocalForage, this, {buffer: 5000});
+        this.onAfter('removerecords', this.saveToLocalForage, this, {buffer: 5000});
+        this.onAfter('updaterecord', this.saveToLocalForage, this, {buffer: 5000});
     },
 
     mySort: function() {

@@ -4,16 +4,8 @@ Ext.define('Zermelo.store.ZStore', {
     config: {
         proxy: {
             type: 'localstorage',
-            storeId: Ext.getClassName(this),
-            autoload: true
         },
         autoSort: false
-    },
-
-    initialize: function () {
-        this.onAfter('addrecords', this.saveToLocalForage, this, {buffer: 1000});
-        this.onAfter('removerecords', this.saveToLocalForage, this, {buffer: 1000});
-        this.onAfter('updaterecord', this.saveToLocalForage, this, {buffer: 1000});
     },
 
     loadFromLocalStorage: function (storeId) {
@@ -37,6 +29,11 @@ Ext.define('Zermelo.store.ZStore', {
         var successCallback = function (err, result) {
             if(result) {
                 var decoded = JSON.parse(result);
+                decoded.forEach(function(record) {
+                    record.start = new Date(record.start);
+                    record.end = new Date(record.end);
+                });
+                console.log(decoded[0], decoded[1]);
                 this.add(decoded);
             }
             console.log(Zermelo.UserManager.getUser(), this.getCount());
@@ -64,7 +61,7 @@ Ext.define('Zermelo.store.ZStore', {
     },
 
     saveToLocalForage: function(dataArray) {
-        console.log('saveToLocalForage');
+        console.log('saveToLocalForage ' + Ext.getClassName(this));
         dataArray = [];
         this.each(function(record) {
             var dateCleaned = record.getData();
