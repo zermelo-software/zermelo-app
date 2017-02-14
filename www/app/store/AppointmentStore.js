@@ -22,11 +22,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		var appointmentArray = [];
 		this.each(function(record) {
 			if(record.get('collidingIds').startsWith(record.get('id'))) {
-				console.log(record.getData());
 				appointmentArray.push(record.getData());
 			}
 		});
-
 		return appointmentArray;
 	},
 
@@ -63,11 +61,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	prune: function() {
         var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
-        lowerBound = lowerBound.setDate(lowerBound.getDate() - 35 + (1 - lowerBound.getDay()));
+        lowerBound = lowerBound.setDate(lowerBound.getDate() - 14 + (1 - lowerBound.getDay()));
         var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
-        upperBound = upperBound.setDate(upperBound.getDate() + 21 + (6 - upperBound.getDay()));
-
-        this.appointmentArray = [];
+        upperBound = upperBound.setDate(upperBound.getDate() + 14 + (6 - upperBound.getDay()));
 
         this.suspendEvents();
         this.clearFilter();
@@ -75,11 +71,8 @@ Ext.define('Zermelo.store.AppointmentStore', {
             if (record.get('end') < lowerBound || record.get('start') > upperBound) {
                 this.remove(record);
             }
-            else {
-                this.appointmentArray.push(record.getData());
-            }
         }, this);
-		this.saveToLocalForage(this.appointmentArray);
+		this.saveToLocalForage();
 		this.resetFilters();
 		this.resumeEvents(true);
 	},
@@ -95,7 +88,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		var user = Zermelo.UserManager.getUserSuffix();
 		this.filterBy(function(record) {
 			var start = record.get('start');
-			return (record.get('user') == user && start > this.windowStart && start < this.windowEnd);
+			if(record.get('user') == user && start > this.windowStart && start < this.windowEnd)
+				return true;
+			else {
+				console.log('deze gaat er uit ', start);
+				return false;
+			}
 		});
 	},
 

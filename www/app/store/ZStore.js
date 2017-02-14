@@ -28,15 +28,16 @@ Ext.define('Zermelo.store.ZStore', {
         this.clearFilter();
         var successCallback = function (err, result) {
             if(result) {
-                var decoded = JSON.parse(result);
-                decoded.forEach(function(record) {
-                    record.start = new Date(record.start);
-                    record.end = new Date(record.end);
+                var decoded = JSON.parse(result, function(key, value) {
+                    if(key == 'start' || key == 'end') {
+                        return new Date(value)
+                    }
+                    return value;
                 });
-                console.log(decoded[0], decoded[1]);
-                this.add(decoded);
+                decoded.forEach(function(record) {
+                    this.add(record);
+                }, this);
             }
-            console.log(Zermelo.UserManager.getUser(), this.getCount());
             this.resetFilters();
             this.resumeEvents();
             this.fireEvent('refresh');
@@ -52,7 +53,6 @@ Ext.define('Zermelo.store.ZStore', {
     loadFromLocalForageOrStorage: function() {
         var storeId = this.getStoreId();
         storeId = storeId.slice(0, -1) + 'Store';
-        console.log(storeId);
         // One time transition from localStorage to localforage
         if (localStorage.getItem(storeId)) {
             this.loadFromLocalStorage(storeId);
@@ -62,16 +62,27 @@ Ext.define('Zermelo.store.ZStore', {
         }
     },
 
-    saveToLocalForage: function(dataArray) {
-        console.log('saveToLocalForage ' + Ext.getClassName(this));
+    saveToLocalForage: function() {
         dataArray = [];
         this.each(function(record) {
-            var dateCleaned = record.getData();
-            dateCleaned.start = dateCleaned.start.valueOf();
-            dateCleaned.end = dateCleaned.end.valueOf();
-            dataArray.push(dateCleaned);
+            dataArray.push(record.getData());
         });
-        var toSave = JSON.stringify(dataArray, this.getModel().getFields().keys);
+        var keys = this.getModel().getFields().keys;
+        var toSave = JSON.stringify(dataArray, function(key, value) {
+            // Save the root object
+            if(!key)
+                return value;
+            // We're saving an array, so if key is a number, we're looking at a model instance
+            if(!isNaN(key))
+                return value;
+            // Drop unnecessary attributes
+            if(!keys.includes(key))
+                return;
+            // Serialize dates
+            if(key == 'start' || key == 'end')
+                return Date.parse(value);
+            return value;
+        });
         localforage.setItem(Ext.getClassName(this), toSave, function() {dataArray.length = 0;});
     }
 });

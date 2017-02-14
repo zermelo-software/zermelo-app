@@ -34,9 +34,9 @@ Ext.define('Zermelo.store.AnnouncementStore', {
     },
 
     initialize: function () {
-        this.onAfter('addrecords', this.saveToLocalForage, this, {buffer: 5000});
-        this.onAfter('removerecords', this.saveToLocalForage, this, {buffer: 5000});
-        this.onAfter('updaterecord', this.saveToLocalForage, this, {buffer: 5000});
+        this.onAfter('addrecords', this.saveToLocalForage, this, {buffer: 500});
+        this.onAfter('removerecords', this.saveToLocalForage, this, {buffer: 500});
+        this.onAfter('updaterecord', this.saveToLocalForage, this, {buffer: 500});
     },
 
     mySort: function() {
@@ -59,7 +59,6 @@ Ext.define('Zermelo.store.AnnouncementStore', {
     resetFilters: function() {
         this.clearFilter();
         this.filterBy(function(record) {
-            return record.valid() ? true : console.log('removed record', record);
             return record.valid();
         });
     }

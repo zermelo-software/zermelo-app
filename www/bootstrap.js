@@ -687,11 +687,12 @@ Ext.ClassManager.addNameAlternateMappings({
     "UserManager"
   ],
   "Zermelo.controller.MainController": [],
+  "Zermelo.data.proxy.LocalForage": [
+    "Zermelo.data.LocalForageProxy"
+  ],
   "Zermelo.model.Announcement": [],
   "Zermelo.model.Appointment": [],
   "Zermelo.model.User": [],
-  "Zermelo.proxy.LocalForage": [],
-  "Zermelo.storage.LocalForage": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
   "Zermelo.store.UserStore": [],
@@ -1450,13 +1451,12 @@ Ext.ClassManager.addNameAliasMappings({
   "Zermelo.ErrorManager": [],
   "Zermelo.UserManager": [],
   "Zermelo.controller.MainController": [],
+  "Zermelo.data.proxy.LocalForage": [
+    "proxy.localforage"
+  ],
   "Zermelo.model.Announcement": [],
   "Zermelo.model.Appointment": [],
   "Zermelo.model.User": [],
-  "Zermelo.proxy.LocalForage": [
-    "proxy.localforage"
-  ],
-  "Zermelo.storage.LocalForage": [],
   "Zermelo.store.AnnouncementStore": [],
   "Zermelo.store.AppointmentStore": [],
   "Zermelo.store.UserStore": [

@@ -43,7 +43,6 @@ Ext.define('Zermelo.AjaxManager', {
 	periodicRefresh: function() {
 		if(this.queuedRefresh)
 			clearInterval(this.queuedRefresh);
-		// this.refresh();
 		this.queuedRefresh = setInterval(Ext.bind(this.refresh, this), 1000 * 60 * 20);
 	},
 
@@ -92,7 +91,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function() {
-		return;
 		if (!Zermelo.UserManager.loggedIn()) {
 			console.log('meh');
             return;
