@@ -29,3 +29,7 @@ plugins/
 todo.txt
 response.json
 .idea*
+.project/
+.settings/
+changelog.md
+.project
