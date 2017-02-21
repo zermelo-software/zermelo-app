@@ -33,3 +33,4 @@ response.json
 .settings/
 changelog.md
 .project
+*.js.orig

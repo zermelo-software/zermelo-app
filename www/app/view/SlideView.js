@@ -107,7 +107,7 @@ Ext.define('Zermelo.view.SlideView', {
                 "<div style='text-align: center'>" +
                 "<input type='image' src='{urlLogo}' name='{title}' style='padding:3px;'>" +
                 "<tpl if='title == \"Messages\"'>" +
-                "<span class='circle' id='messageCount'></span>",
+                "<span class='circle' id='messageCount' style=\"display: none;\"></span>",
                 "</tpl>",
                 "</div>",
                 "</tpl>"),

@@ -75,7 +75,8 @@
         "user": {
             "some": "Niet alle gebruikers types konden worden opgehaald. Je hebt mogelijk niet de juiste rechten.",
             "all": "Gebruikers konden niet worden opgehaald. Je hebt mogelijk niet de juiste rechten, of er is geen internetverbinding."
-        }
+        },
+        "generic": "Er is iets fout gegaan. Je kunt proberen te verversen"
     },
     "months" : {
         "1"  : "Januari",
