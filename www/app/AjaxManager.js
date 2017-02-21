@@ -19,19 +19,22 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	addVieweeToParams: function(params) {
-		var type = Zermelo.UserManager.getType();
 		var user = Zermelo.UserManager.getUser();
+		var type = Zermelo.UserManager.getType();
+		if(!user || !type)
+			return null;
 
 		this.addAccessTokenToParams(params);
 
-		if(type == 'user')
-			params.user = user;
-		else if(type == 'group')
+		if(type == 'group')
 			params.containsStudentsFromGroupInDepartment = user;
 		else if(type == 'dept')
 			params.departmentOfBranch = user;
 		else if(type == 'location')
 			params.locationsOfBranch = user;
+		else
+			params.user = user;
+
 		return params;
 	},
 
@@ -313,6 +316,10 @@ Ext.define('Zermelo.AjaxManager', {
 				if (response.status == 403) {
 					error_msg = 'error.permissions';
 					Zermelo.UserManager.setUser();
+				}
+				if (response.status == 401) {
+					error_msg = 'error.generic';
+					Zermelo.UserManager.getuser();
 				}
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);

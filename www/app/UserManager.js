@@ -13,7 +13,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	getUser: function() {
-		return this.code;
+		return this.code || '~me';
 	},
 
 	getName: function() {
@@ -60,45 +60,39 @@ Ext.define('Zermelo.UserManager', {
 
 	setCode: function(newCode) {
 		this.code = newCode;
-		this.saveToLocalForage();
 	},
 
 	setName: function(newName) {
 		this.name = newName;
-        this.saveToLocalForage();
 	},
 
 	setType: function(type) {
 		this.type = type;
-        this.saveToLocalForage();
 	},
 
 	setInstitution: function(newInstitution) {
 		this.institution = newInstitution;
-        this.saveToLocalForage();
 	},
 
 	setAccessToken: function(newAccessToken) {
 		this.accessToken = newAccessToken;
-        this.saveToLocalForage();
 	},
 
 	setTokenAttributes: function(tokenAttributes) {
 		this.tokenAttributes = tokenAttributes;
-        this.saveToLocalForage();
 	},
 
 	setUserAttributes: function(userAttributes) {
 		this.userAttributes = userAttributes;
-        this.saveToLocalForage();
 	},
 
 	saveLogin: function(code, institution, accessToken) {
 		this.setCode(code);
 		this.setType('user');
+		this.setName('');
 		this.setInstitution(institution);
 		this.setAccessToken(accessToken);
-        this.saveToLocalForage();
+		this.saveToLocalForage();
 	},
 
 	logout: function() {
@@ -115,7 +109,6 @@ Ext.define('Zermelo.UserManager', {
 
 	setTitles: function() {
 		var header;
-		var key_suffix = this.userIsSelf() ? 'self' : 'other';
 		var title = this.getTitle();
 
 		['toolbar_main', 'calendar_list_title'].forEach(function(field) {
@@ -142,7 +135,7 @@ Ext.define('Zermelo.UserManager', {
 		}
 		// New user select input
 		else {
-			if(newUser.get('type') == 'user') {
+			if(newUser.get('type') == 'user' || newUser.get('type') == 'student' || newUser.get('type') == 'employee') {
 				newCode = newUser.get('code') || '~me';
 				newType = 'user';
 			}
@@ -159,9 +152,9 @@ Ext.define('Zermelo.UserManager', {
 		this.setCode(newCode);
 		this.setType(newType);
 		this.setName(newName);
+		this.saveToLocalForage();
 		this.setTitles();
 		Ext.getStore('Appointments').prepareData();
-        this.saveToLocalForage();
 	},
 
 	getScheduleTitle: function() {
