@@ -21,7 +21,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	getType: function() {
-		return this.type;
+		return this.type || 'user';
 	},
 
 	getUserSuffix: function() {

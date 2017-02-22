@@ -319,7 +319,7 @@ Ext.define('Zermelo.AjaxManager', {
 				}
 				if (response.status == 401) {
 					error_msg = 'error.generic';
-					Zermelo.UserManager.getuser();
+					Zermelo.UserManager.setUser();
 				}
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
