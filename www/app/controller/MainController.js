@@ -113,6 +113,8 @@ Ext.define('Zermelo.controller.MainController', {
         Ext.getStore('Announcements').addAfterListener('updaterecord', this.updateNewMessagesIndicator, this);
 
         var onLoaded = function() {
+            if(!Zermelo.UserManager.getTokenAttributes())
+                Zermelo.AjaxManager.getSelf();
             Zermelo.AjaxManager.periodicRefresh();
             Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
             Ext.fly('appLoadingIndicator').destroy();

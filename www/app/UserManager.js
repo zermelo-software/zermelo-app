@@ -80,10 +80,12 @@ Ext.define('Zermelo.UserManager', {
 
 	setTokenAttributes: function(tokenAttributes) {
 		this.tokenAttributes = tokenAttributes;
+		this.saveToLocalForage();
 	},
 
 	setUserAttributes: function(userAttributes) {
 		this.userAttributes = userAttributes;
+		this.saveToLocalForage();
 	},
 
 	saveLogin: function(code, institution, accessToken) {
