@@ -95,10 +95,8 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function() {
-		if (!Zermelo.UserManager.loggedIn()) {
-			console.log('meh');
-            return;
-        }
+		if (!Zermelo.UserManager.loggedIn())
+			return;
 
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
@@ -527,7 +525,6 @@ Ext.define('Zermelo.AjaxManager', {
 		else {
 			localforage.getItem('Zermelo.store.UserStore', function(err, value) {
 				if((value == null)) {
-					console.log('huh');
                     Zermelo.AjaxManager.getUsers();
                 }
 				else {
@@ -584,6 +581,8 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getSelf: function(upgrade) {
+		if(!Zermelo.UserManager.loggedIn())
+			return;
 		Ext.Ajax.request({
 			url: this.getUrl('tokens/~current'),
 			params: {
