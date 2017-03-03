@@ -29,3 +29,9 @@ plugins/
 todo.txt
 response.json
 .idea*
+store_text.txt
+/.project
+/changelog.md
+/.jsdtscope
+/org.eclipse.wst.jsdt.ui.superType.container
+/org.eclipse.wst.jsdt.ui.superType.name.settings
