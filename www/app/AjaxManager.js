@@ -361,10 +361,11 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 			scope: this,
 			success: function (response) {
+				var responseData = JSON.parse(response.responseText).response.data;
                 // The employees and students endpoints were replaced with users above. We're undoing that change here
-                if(request.endpoint == 'user')
+                if(request.endpoint == 'users')
                     request.endpoint = responseData[0].isEmployee ? 'employees' : 'students';
-				this.userByTypeReturn(request.endpoint, response.status, JSON.parse(response.responseText).response.data);
+				this.userByTypeReturn(request.endpoint, response.status, responseData);
 			},
 			failure: function (response) {
 				this.userByTypeReturn(request.endpoint, response.status);
@@ -568,7 +569,7 @@ Ext.define('Zermelo.AjaxManager', {
 		]
 
 		if(Zermelo.UserManager.isParentOnly()) {
-			this.types = [{endpoint: 'users', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: ''}];
+			this.types = [{endpoint: 'students', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: ''}];
 		}
 
 		this.types.forEach(this.getUsersByType, this);
