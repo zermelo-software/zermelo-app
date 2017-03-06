@@ -605,7 +605,14 @@ Ext.define('Zermelo.AjaxManager', {
 						Ext.getCmp('home').selectItem('userChange');
 					}
 				}
-				this.fireEvent('tokenupdated');
+
+				if(this.meReturned) {
+					this.meReturned = false;
+                    this.fireEvent('tokenupdated');
+                }
+                else {
+					this.tokenReturned = true;
+				}
 			},
 
 			failure: function (response) {
@@ -624,9 +631,18 @@ Ext.define('Zermelo.AjaxManager', {
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
+			scope:this,
 
 			success: function (response) {
 				Zermelo.UserManager.setUserAttributes(JSON.parse(response.responseText).response.data[0]);
+
+                if(this.tokenReturned) {
+                    this.tokenReturned = false;
+                    this.fireEvent('tokenupdated');
+                }
+                else {
+                    this.meReturned = true;
+                }
 			},
 
 			failure: function (response) {
