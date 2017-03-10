@@ -3,8 +3,8 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "nl.zermelo.online.App"
         version   = "1.4.7"
-        android-versionCode="20170303"
-        ios-CFBundleVersion="20170303"
+        android-versionCode="20170310"
+        ios-CFBundleVersion="20170310"
         packageName="6D7654C9.ZermeloRooster">
         <name>Zermelo</name>
         <description>Toont het schoolrooster en mededelingen van de school.</description>
