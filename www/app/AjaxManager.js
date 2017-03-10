@@ -395,7 +395,7 @@ Ext.define('Zermelo.AjaxManager', {
                     this.formattedArray.push({
                     	type: userType,
 						code: item.code,
-						firstName: item.firstname,
+						firstName: item.firstName,
 						lastName: item.lastName,
 						prefix: item.prefix
 					});
