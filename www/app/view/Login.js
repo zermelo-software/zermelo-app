@@ -96,14 +96,19 @@ Ext.define('Zermelo.view.Login', {
                         xtype: 'label',
                         html: '<img height="46px" src="resources/images/password_icon.png" style="margin-top: 1px;">'
                     }, {
-                        xtype: 'numberfield',
+                        xtype: 'textfield',
+                        component: {
+                            type: 'tel'
+                        },
                         locales: {
                             placeHolder: 'login.code'
                         },
                         flex: 1,
                         listeners: {
                             keyup: function (thisField, e) {
-                                this.up('login').code = (thisField.getValue() || 0).toString();
+                                var cleaned = (thisField.getValue() || '').replace(/[^0-9]/g, '');
+                                thisField.setValue(cleaned);
+                                this.up('login').code = cleaned;
                                 if (e.browserEvent.keyCode == 13)
                                     this.up('login').authenticate();
                             }
