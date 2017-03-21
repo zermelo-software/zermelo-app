@@ -12,6 +12,9 @@
         },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "nl.zermelo.online.App"
+        },
+        "cordova-plugin-nativestorage": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
         }
     },
     "dependent_plugins": {

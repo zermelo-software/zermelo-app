@@ -16,6 +16,7 @@
         <plugin name="cordova-plugin-whitelist" spec="~1" source="npm"/>
         <plugin name="cordova-plugin-statusbar" spec="~2" source="npm"/>
         <plugin name="cordova-plugin-splashscreen" spec="~4" source="npm"/>
+        <plugin name="cordova-plugin-nativestorage" spec="~2" source="npm"/>
 
         <preference name="orientation" value="portrait" />
         <preference name="autorotate" value="false" readonly="true"/> <!-- Lock screen rotation on Android -->

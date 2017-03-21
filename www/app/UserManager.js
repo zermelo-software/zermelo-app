@@ -80,12 +80,12 @@ Ext.define('Zermelo.UserManager', {
 
 	setTokenAttributes: function(tokenAttributes) {
 		this.tokenAttributes = tokenAttributes;
-		this.saveToLocalForage();
+		this.persist();
 	},
 
 	setUserAttributes: function(userAttributes) {
 		this.userAttributes = userAttributes;
-		this.saveToLocalForage();
+		this.persist();
 	},
 
 	saveLogin: function(code, institution, accessToken) {
@@ -94,13 +94,22 @@ Ext.define('Zermelo.UserManager', {
 		this.setName('');
 		this.setInstitution(institution);
 		this.setAccessToken(accessToken);
-		this.saveToLocalForage();
+		this.persist();
 	},
 
 	logout: function() {
 		navigator.splashscreen.show();
 		localStorage.clear();
-		localforage.clear(function() {window.location.reload()});
+		localforage.clear(function() {
+			NativeStorage.clear(
+				function() {
+					window.location.reload()
+				},
+				function() {
+					Zermelo.UserManager.logout();
+				}
+			)
+		});
 	},
 
 	getTitle: function() {
@@ -154,7 +163,7 @@ Ext.define('Zermelo.UserManager', {
 		this.setCode(newCode);
 		this.setType(newType);
 		this.setName(newName);
-		this.saveToLocalForage();
+		this.persist();
 		this.setTitles();
 		Ext.getStore('Appointments').prepareData();
 	},
@@ -169,30 +178,44 @@ Ext.define('Zermelo.UserManager', {
 				this[field] = localStorage.getItem(field);
 				localStorage.removeItem(field);
 			}, this);
-			this.saveToLocalForage();
+			this.persist();
 			if(typeof callback == 'function')
 				callback();
 		}
 		else {
+			var loadResult = function(result) {
+				this.fields.forEach(function (field) {
+					this[field] = result[field];
+				}, this);
+				this.persist();
+				if(typeof callback == 'function')
+					callback();
+			}
+			loadResult = loadResult.bind(this);
+
 			var setFromLocalForage = function(err, result) {
-				if(result !== null) {
-                    this.fields.forEach(function (field) {
-                        this[field] = result[field];
-                    }, this);
-                }
-                if(typeof callback == 'function')
-                    callback();
+				if(result != null && result.accessToken != null) {
+					loadResult(result)
+				}
+				else {
+					var setFromNativeStorage = function(result) {
+						loadResult(result);
+					}
+					setFromNativeStorage = setFromNativeStorage.bind(this);
+					NativeStorage.getItem(Ext.getClassName(this), setFromNativeStorage, callback());
+				}
 			};
 			setFromLocalForage = setFromLocalForage.bind(this);
 			localforage.getItem(Ext.getClassName(this), setFromLocalForage);
 		}
 	},
 
-	saveToLocalForage: function() {
+	persist: function() {
 		var toSave = {};
 		this.fields.forEach(function(field) {
 			toSave[field] = this[field];
 		}, this);
 		localforage.setItem(Ext.getClassName(this), toSave);
+		NativeStorage.setItem(Ext.getClassName(this), toSave, function() {}, function() {});
 	}
 });

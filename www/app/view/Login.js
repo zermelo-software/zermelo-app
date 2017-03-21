@@ -79,6 +79,10 @@ Ext.define('Zermelo.view.Login', {
                             locales: {
                                 placeHolder: 'login.institution'
                             },
+                            autocomplete: false,
+                            autocorrect: false,
+                            autocapitalize: false,
+                            spellcheck: false,
                             listeners: {
                                 keyup: function (thisField, e) {
                                     thisField.setValue(thisField.getValue().toLowerCase().trim());
@@ -132,11 +136,11 @@ Ext.define('Zermelo.view.Login', {
         var institution_regex = /^[a-z0-9-]*$/;
         var code_regex = /^[0-9]*$/;
 
-        if(!institution_regex.test(this.institution) || this.institution.length == 0) {
+        if(this.institution == undefined || !institution_regex.test(this.institution) || this.institution.length == 0) {
             Zermelo.ErrorManager.showErrorBox('login.institution_code_error_msg');
             return;
         }
-        if(!code_regex.test(this.code) || this.code.length == 0) {
+        if(this.code == undefined || !code_regex.test(this.code) || this.code.length == 0) {
             Zermelo.ErrorManager.showErrorBox('login.code_error_msg');
             return;
         }

@@ -4,9 +4,9 @@
         "institution":"Instituut",
         "code":"Code",
         "login":"Login",
-        "institution_code_error_msg":"Vul alsjeblieft een geldige instelling in</br>Vul alstublieft een geldige code in",
+        "institution_code_error_msg":"Vul alsjeblieft een geldige instelling in</br>Vul alsjeblieft een geldige code in",
         "institution_error_msg":" Vul alsjeblieft een geldige instelling in ",
-        "code_error_msg":" Vul alstublieft een geldige code in ",
+        "code_error_msg":" Vul alsjeblieft een geldige code in ",
         "upgrade": {
             "intro_message": "Er is een nieuwe methode om gebruikers te kiezen. Als je van deze methode gebruik wilt maken moet je de app opnieuw koppelen.\
                 <br><br>Wil je nu opnieuw koppelen?",
