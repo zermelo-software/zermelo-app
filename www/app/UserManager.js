@@ -202,7 +202,7 @@ Ext.define('Zermelo.UserManager', {
 						loadResult(result);
 					}
 					setFromNativeStorage = setFromNativeStorage.bind(this);
-					NativeStorage.getItem(Ext.getClassName(this), setFromNativeStorage, callback());
+					NativeStorage.getItem(Ext.getClassName(this), setFromNativeStorage, callback);
 				}
 			};
 			setFromLocalForage = setFromLocalForage.bind(this);
