@@ -549,6 +549,7 @@ Ext.define('Zermelo.AjaxManager', {
 		// We check that _token_[permissions.requires] >= requireLevel
 		this.userResponse = {};
 		this.formattedArray = [];
+		var schoolYear = (new Date()).getFullYear() - ((new Date()).getMonth() < 7);
 		this.types = [
 			// users (students and teachers)
 			{endpoint: 'students', params: {archived: false, isStudent: true}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
@@ -565,7 +566,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 			// required for groups, departments and locations
 			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}, requires: 'readScheduleGroups,readScheduleLocations'},
-			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}, requires: 'readScheduleGroups,readScheduleLocations'}
+			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id', year: schoolYear}, requires: 'readScheduleGroups,readScheduleLocations'}
 		]
 
 		if(Zermelo.UserManager.isParentOnly()) {
