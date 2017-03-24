@@ -79,13 +79,13 @@ Ext.define('Zermelo.view.Login', {
                             locales: {
                                 placeHolder: 'login.institution'
                             },
-                            autocomplete: false,
-                            autocorrect: false,
-                            autocapitalize: false,
+                            autocomplete: 'off',
+                            autocorrect: 'off',
+                            autocapitalize: 'off',
                             spellcheck: false,
                             listeners: {
                                 keyup: function (thisField, e) {
-                                    thisField.setValue(thisField.getValue().toLowerCase().trim());
+                                    thisField.setValue(thisField.getValue().toLowerCase().replace(/ /g, ''));
                                     this.up('login').institution = thisField.getValue();
                                     if (e.browserEvent.keyCode == 13)
                                         Ext.getCmp('number_login_code').focus();
@@ -135,6 +135,8 @@ Ext.define('Zermelo.view.Login', {
     authenticate: function() {
         var institution_regex = /^[a-z0-9-]*$/;
         var code_regex = /^[0-9]*$/;
+        this.institution = (this.institution || '').toLowerCase().replace(/ /g, '');
+        this.code = (this.code || '').replace(/[^0-9]/g, '');
 
         if(this.institution == undefined || !institution_regex.test(this.institution) || this.institution.length == 0) {
             Zermelo.ErrorManager.showErrorBox('login.institution_code_error_msg');
