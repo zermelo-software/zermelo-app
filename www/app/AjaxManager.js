@@ -94,10 +94,8 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function() {
-		if (!Zermelo.UserManager.loggedIn()) {
-			console.log('meh');
-            return;
-        }
+		if (!Zermelo.UserManager.loggedIn())
+			return;
 
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
@@ -362,10 +360,11 @@ Ext.define('Zermelo.AjaxManager', {
 			useDefaultXhrHeader: false,
 			scope: this,
 			success: function (response) {
+				var responseData = JSON.parse(response.responseText).response.data;
                 // The employees and students endpoints were replaced with users above. We're undoing that change here
-                if(request.endpoint == 'user')
+                if(request.endpoint == 'users')
                     request.endpoint = responseData[0].isEmployee ? 'employees' : 'students';
-				this.userByTypeReturn(request.endpoint, response.status, JSON.parse(response.responseText).response.data);
+				this.userByTypeReturn(request.endpoint, response.status, responseData);
 			},
 			failure: function (response) {
 				this.userByTypeReturn(request.endpoint, response.status);
@@ -395,7 +394,7 @@ Ext.define('Zermelo.AjaxManager', {
                     this.formattedArray.push({
                     	type: userType,
 						code: item.code,
-						firstName: item.firstname,
+						firstName: item.firstName,
 						lastName: item.lastName,
 						prefix: item.prefix
 					});
@@ -526,7 +525,6 @@ Ext.define('Zermelo.AjaxManager', {
 		else {
 			localforage.getItem('Zermelo.store.UserStore', function(err, value) {
 				if((value == null)) {
-					console.log('huh');
                     Zermelo.AjaxManager.getUsers();
                 }
 				else {
@@ -550,6 +548,7 @@ Ext.define('Zermelo.AjaxManager', {
 		// We check that _token_[permissions.requires] >= requireLevel
 		this.userResponse = {};
 		this.formattedArray = [];
+		var schoolYear = (new Date()).getFullYear() - ((new Date()).getMonth() < 7);
 		this.types = [
 			// users (students and teachers)
 			{endpoint: 'students', params: {archived: false, isStudent: true}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
@@ -566,11 +565,11 @@ Ext.define('Zermelo.AjaxManager', {
 
 			// required for groups, departments and locations
 			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}, requires: 'readScheduleGroups,readScheduleLocations'},
-			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id'}, requires: 'readScheduleGroups,readScheduleLocations'}
+			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id', year: schoolYear}, requires: 'readScheduleGroups,readScheduleLocations'}
 		]
 
 		if(Zermelo.UserManager.isParentOnly()) {
-			this.types = [{endpoint: 'users', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: ''}];
+			this.types = [{endpoint: 'students', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: ''}];
 		}
 
 		this.types.forEach(this.getUsersByType, this);
@@ -583,6 +582,8 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getSelf: function(upgrade) {
+		if(!Zermelo.UserManager.loggedIn())
+			return;
 		Ext.Ajax.request({
 			url: this.getUrl('tokens/~current'),
 			params: {
@@ -604,7 +605,14 @@ Ext.define('Zermelo.AjaxManager', {
 						Ext.getCmp('home').selectItem('userChange');
 					}
 				}
-				this.fireEvent('tokenupdated');
+
+				if(this.meReturned) {
+					this.meReturned = false;
+                    this.fireEvent('tokenupdated');
+                }
+                else {
+					this.tokenReturned = true;
+				}
 			},
 
 			failure: function (response) {
@@ -623,9 +631,18 @@ Ext.define('Zermelo.AjaxManager', {
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
+			scope:this,
 
 			success: function (response) {
 				Zermelo.UserManager.setUserAttributes(JSON.parse(response.responseText).response.data[0]);
+
+                if(this.tokenReturned) {
+                    this.tokenReturned = false;
+                    this.fireEvent('tokenupdated');
+                }
+                else {
+                    this.meReturned = true;
+                }
 			},
 
 			failure: function (response) {

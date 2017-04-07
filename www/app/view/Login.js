@@ -79,9 +79,13 @@ Ext.define('Zermelo.view.Login', {
                             locales: {
                                 placeHolder: 'login.institution'
                             },
+                            autocomplete: 'off',
+                            autocorrect: 'off',
+                            autocapitalize: 'off',
+                            spellcheck: false,
                             listeners: {
                                 keyup: function (thisField, e) {
-                                    thisField.setValue(thisField.getValue().toLowerCase().trim());
+                                    thisField.setValue(thisField.getValue().toLowerCase().replace(/ /g, ''));
                                     this.up('login').institution = thisField.getValue();
                                     if (e.browserEvent.keyCode == 13)
                                         Ext.getCmp('number_login_code').focus();
@@ -96,14 +100,19 @@ Ext.define('Zermelo.view.Login', {
                         xtype: 'label',
                         html: '<img height="46px" src="resources/images/password_icon.png" style="margin-top: 1px;">'
                     }, {
-                        xtype: 'numberfield',
+                        xtype: 'textfield',
+                        component: {
+                            type: 'tel'
+                        },
                         locales: {
                             placeHolder: 'login.code'
                         },
                         flex: 1,
                         listeners: {
                             keyup: function (thisField, e) {
-                                this.up('login').code = (thisField.getValue() || 0).toString();
+                                var cleaned = (thisField.getValue() || '').replace(/[^0-9]/g, '');
+                                thisField.setValue(cleaned);
+                                this.up('login').code = cleaned;
                                 if (e.browserEvent.keyCode == 13)
                                     this.up('login').authenticate();
                             }
@@ -168,12 +177,14 @@ Ext.define('Zermelo.view.Login', {
         console.log(this.institution, this.code);
         var institution_regex = /^[a-z0-9-]*$/;
         var code_regex = /^[0-9]*$/;
+        this.institution = (this.institution || '').toLowerCase().replace(/ /g, '');
+        this.code = (this.code || '').replace(/[^0-9]/g, '');
 
-        if(!institution_regex.test(this.institution) || this.institution.length == 0) {
+        if(this.institution == undefined || !institution_regex.test(this.institution) || this.institution.length == 0) {
             Zermelo.ErrorManager.showErrorBox('login.institution_code_error_msg');
             return;
         }
-        if(!code_regex.test(this.code) || this.code.length == 0) {
+        if(this.code == undefined || !code_regex.test(this.code) || this.code.length == 0) {
             Zermelo.ErrorManager.showErrorBox('login.code_error_msg');
             return;
         }

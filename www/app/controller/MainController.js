@@ -109,6 +109,8 @@ Ext.define('Zermelo.controller.MainController', {
         }
 
         var onUsersLoaded = function() {
+            if(!Zermelo.UserManager.getTokenAttributes())
+                Zermelo.AjaxManager.getSelf();
             Zermelo.AjaxManager.periodicRefresh();
             Ext.Viewport.add(Ext.create('Zermelo.view.Main'));
 

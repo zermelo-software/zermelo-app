@@ -34,3 +34,9 @@ response.json
 changelog.md
 .project
 *.js.orig
+store_text.txt
+/.project
+/changelog.md
+/.jsdtscope
+/org.eclipse.wst.jsdt.ui.superType.container
+/org.eclipse.wst.jsdt.ui.superType.name.settings
