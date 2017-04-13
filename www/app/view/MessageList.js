@@ -34,7 +34,7 @@ Ext.define("Zermelo.view.MessageList", {
             painted: function() {
                 if(this.getStore().getCount() == 0)
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
-            },
+            }
         },
         layout: 'fit',
         style: {

@@ -30,7 +30,7 @@ Ext.define('Zermelo.store.AnnouncementStore', {
     requires: ['Zermelo.model.Announcement'],
     config: {
         model: 'Zermelo.model.Announcement',
-        storeId: 'Announcements',
+        storeId: 'Announcements'
     },
 
     initialize: function () {

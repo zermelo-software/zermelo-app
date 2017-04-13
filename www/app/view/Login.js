@@ -137,11 +137,11 @@ Ext.define('Zermelo.view.Login', {
             },{
                 xtype: 'button',
                 locales: {
-                    text: 'login.qr.scan',
+                    text: 'login.qr.scan'
                 },
                 style: 'padding-top: 10px;',
                 cls: 'zermelo-login-button',
-                pressedCls: 'zermelo-login-button-pressed',
+                pressedCls: 'zermelo-login-button-pressed'
             }
         ]
     },
@@ -152,9 +152,10 @@ Ext.define('Zermelo.view.Login', {
 
     scan: function() {
         var success = Ext.bind(function(result) {
-            var codeStart = result.text.length - 12;
-            this.institution = result.text.substring(0, codeStart);
-            this.code = result.text.substring(codeStart, result.text.length);
+            console.log(result);
+            var creds = JSON.parse(result.text);
+            this.institution = creds.institution;
+            this.code = creds.code;
             this.authenticate();
         }, this);
         var error = function(error) {

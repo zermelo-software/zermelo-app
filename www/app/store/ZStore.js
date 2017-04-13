@@ -3,7 +3,7 @@ Ext.define('Zermelo.store.ZStore', {
     requires: ['Ext.data.proxy.LocalStorage'],
     config: {
         proxy: {
-            type: 'localstorage',
+            type: 'localstorage'
         },
         autoSort: false
     },

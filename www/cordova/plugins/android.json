@@ -7,16 +7,15 @@
         "files": {}
     },
     "installed_plugins": {
-        "phonegap-plugin-barcodescanner": {
+        "cordova-plugin-nativestorage": {
             "PACKAGE_NAME": "nl.zermelo.online.App"
         },
-        "cordova-plugin-nativestorage": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "nl.zermelo.online.App"
+        },
+        "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "nl.zermelo.online.App"
         }
     },
-    "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        }
-    }
+    "dependent_plugins": {}
 }
