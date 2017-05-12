@@ -96,7 +96,7 @@ OTHER DEALINGS IN THE SOFTWARE.
     };
     NativeStorage = {
         setItem: function(key, value, success, error) {if (typeof success == 'function') success();},
-        getItem: function(key, success, error) {if (typeof success == 'function') success();},
+        getItem: function(key, success, error) {if (typeof success == 'function') error();},
         remove: function(key, success, error) {if (typeof success == 'function') success();},
         clear: function(key, success, error) {if (typeof success == 'function') success();},
         version: 1

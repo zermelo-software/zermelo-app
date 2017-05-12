@@ -3,15 +3,15 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "nl.zermelo.online.App"
         version   = "1.5.0"
-        android-versionCode="20170408"
-        ios-CFBundleVersion="20170408"
+        android-versionCode="20170512"
+        ios-CFBundleVersion="20170512"
         packageName="6D7654C9.ZermeloRooster">
         <name>Zermelo</name>
         <description>Toont het schoolrooster en mededelingen van de school.</description>
         <author email="info@zermelo.nl" href="www.zermelo.nl">Zermelo Software B.V.</author>
         <preference name="phonegap-version" value="cli-6.3.0" />
         
-        <access origin="*" />
+        <access origin="https://*.zportal.nl/*" />
 
         <plugin name="cordova-plugin-whitelist" spec="~1" source="npm"/>
         <plugin name="cordova-plugin-statusbar" spec="~2" source="npm"/>

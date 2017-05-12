@@ -8,8 +8,7 @@ Ext.define('Zermelo.AjaxManager', {
 		if(!institution)
 			institution = Zermelo.UserManager.getInstitution();
 		return (
-			'http://ulbeportal.zermelo.network//api/v3/' +
-			// 'https://' + institution + '.zportal.nl/api/v3/' +
+			'https://' + institution + '.zportal.nl/api/v3/' +
 			target
 		)
 	},
