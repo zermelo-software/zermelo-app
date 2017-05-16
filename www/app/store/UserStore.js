@@ -48,11 +48,5 @@ Ext.define('Zermelo.store.UserStore', {
 
 	onAction: function(searchField) {
 		this.search(searchField.getValue());
-	},
-
-	launch: function() {
-		// This entry will always be first because nothing < something.
-		// Setting user to '' will set the user to '~me' in UserManager.
-		this.add({firstName: '', prefix: 'Eigen rooster', lastName: '', code: ''});
 	}
 });

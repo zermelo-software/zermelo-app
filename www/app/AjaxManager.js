@@ -331,6 +331,10 @@ Ext.define('Zermelo.AjaxManager', {
 
 		var UserStore = Ext.getStore('Users');
 
+		// Previous versions used a dummy user for own schedule, which might still be saved.
+		if (userArray[0] && userArray[0].prefix && userArray[0].prefix == "Eigen rooster")
+			userArray.shift();
+
 		UserStore.addData(userArray);
 		UserStore.resumeEvents(true);
 		UserStore.fireEvent('refresh');
@@ -491,8 +495,6 @@ Ext.define('Zermelo.AjaxManager', {
 				if(a.code > b.code)
 					return 1;
 			});
-			// prepend 'Eigen rooster'
-			this.formattedArray.unshift({firstName: '', lastName: '', prefix: 'Eigen rooster', code: '', type: 'user'});
 
 			this.saveUsers(this.formattedArray, true);
 			if(errorCount != 0)

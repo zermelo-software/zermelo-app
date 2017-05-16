@@ -8,20 +8,19 @@ Ext.define("Zermelo.view.UserSearch", {
 			{
 				xtype: 'searchfield',
 				placeHolder: 'Zoeken...',
-
+				autoComplete: false,
+				autoCorrect: false,
+				autoCapitalize: false,
+				spellcheck: false,
 				config: {
 					docked: 'bottom',
 					height: '42px',
-					width: '100%',
-					autoCapitalize: false,
-					autoComplete: false,
-					autoCorrect: false
+					width: '100%'
 				}
 			},
 			{
 				xtype: 'button',
 				ui: 'plain',
-				id: 'doei',
 				height: '47px',
 				width: '100%',
 				html: '<div class="z-calendar-list-parent z-center-text z-border-top-bottom-narrow">Eigen rooster</div>',
@@ -35,7 +34,6 @@ Ext.define("Zermelo.view.UserSearch", {
 			{
 				xtype: 'UserSelect',
 				flex: 1,
-				hidden: true,
 				config: {
 					docked: 'top'
 				}
@@ -56,14 +54,6 @@ Ext.define("Zermelo.view.UserSearch", {
 					}
 				});
 
-				searchfield.on('clearicontap', function() {
-					selectList.hide();
-				});
-
-				userStore.on('refresh', function() {
-					selectList.setHidden(this.getCount() > 50);
-				}, userStore);
-				
 				this.onAfter('painted', function() {
 					searchfield.focus()
 				});

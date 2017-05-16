@@ -79,9 +79,9 @@ Ext.define('Zermelo.view.Login', {
                             locales: {
                                 placeHolder: 'login.institution'
                             },
-                            autocomplete: 'off',
-                            autocorrect: 'off',
-                            autocapitalize: 'off',
+                            autoComplete: false,
+                            autoCorrect: false,
+                            autoCapitalize: false,
                             spellcheck: false,
                             listeners: {
                                 keyup: function (thisField, e) {

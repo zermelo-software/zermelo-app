@@ -230,7 +230,8 @@ Ext.define('Zermelo.view.Home', {
                     style: {
                         'padding-right': '4px'
                     },
-                    handler: function () {
+                    handler: function(self) {
+                        self.parent.parent.down('UserSearch').clear();
                         Zermelo.AjaxManager.refreshUsers();
                     }
                 }]
