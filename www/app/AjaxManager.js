@@ -325,17 +325,13 @@ Ext.define('Zermelo.AjaxManager', {
 		});
 	},
 
-	saveUsers: function(userArray, saveToDB) {
+	saveUsers: function(users, saveToDB) {
 		if(saveToDB)
-			localforage.setItem('Zermelo.store.UserStore', JSON.stringify(userArray));
+			localforage.setItem('Zermelo.store.UserStore', JSON.stringify({"createdAt": new Date().valueOf(), "data": users}));
 
 		var UserStore = Ext.getStore('Users');
 
-		// Previous versions used a dummy user for own schedule, which might still be saved.
-		if (userArray[0] && userArray[0].prefix && userArray[0].prefix == "Eigen rooster")
-			userArray.shift();
-
-		UserStore.addData(userArray);
+		UserStore.addData(users);
 		UserStore.resumeEvents(true);
 		UserStore.fireEvent('refresh');
 		Ext.Viewport.unmask();
@@ -518,6 +514,7 @@ Ext.define('Zermelo.AjaxManager', {
 		// removeAll triggers clearing the current search value field so we allow it to fire before suspendEvents
 		UserStore.removeAll();
 		UserStore.suspendEvents();
+
 		// If Users is in localStorage, we remove it and save it to localforage
 		var fromLocalStorage = localStorage.getItem('Users');
 		if(fromLocalStorage) {
@@ -530,8 +527,15 @@ Ext.define('Zermelo.AjaxManager', {
                     Zermelo.AjaxManager.getUsers();
                 }
 				else {
-                    Zermelo.AjaxManager.saveUsers(JSON.parse(value), false);
-                }
+					var userCache = JSON.parse(value);
+					var createdAt = userCache.createdAt || 0;
+					var maxAge = (7 * 24 * 60 * 60 * 1000);
+					if (createdAt < (new Date().valueOf() - maxAge))
+						Zermelo.AjaxManager.getUsers();
+					else {
+						Zermelo.AjaxManager.saveUsers(userCache.data, false);
+					}
+				}
 			});
 		}
 	},
