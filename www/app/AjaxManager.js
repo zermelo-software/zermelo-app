@@ -10,7 +10,6 @@ Ext.define('Zermelo.AjaxManager', {
 			institution = Zermelo.UserManager.getInstitution();
 		return (
 			'https://' + institution + '.zportal.nl/api/v3/' +
-			// "http://nightly-uvanderwerf.test/api/v3/" + 
 			target
 		)
 	},
