@@ -3,12 +3,14 @@ Ext.define('Zermelo.AjaxManager', {
 	requires: ['Zermelo.UserManager', 'Zermelo.ErrorManager'],
 	singleton: true,
 	mixins: ['Ext.mixin.Observable'],
+	pendingRequests: {},
 
 	getUrl: function(target, institution) {
 		if(!institution)
 			institution = Zermelo.UserManager.getInstitution();
 		return (
 			'https://' + institution + '.zportal.nl/api/v3/' +
+			// "http://nightly-uvanderwerf.test/api/v3/" + 
 			target
 		)
 	},
@@ -339,9 +341,9 @@ Ext.define('Zermelo.AjaxManager', {
 
 
 	getUsersByType: function(request) {
-		// Check whether at least one of the requires permissions is set to PORTAL
+		// // Check whether at least one of the requires permissions is set to PORTAL
 		if(request.requires.split(',').every(function(permission) {
-				return Zermelo.UserManager.getTokenAttributes().effectivePermissions[permission] < 5;
+				return Zermelo.UserManager.getPermission(permission) < 5;
 			}))
 		{
 			this.userByTypeReturn(request.endpoint, 403);
@@ -436,6 +438,7 @@ Ext.define('Zermelo.AjaxManager', {
 			// Create an entry for each group
 			this.userResponse['groupindepartments'].forEach(function(item) {
 				var departmentOfBranch = this.userResponse['departmentsofbranches'].find(function(mapping) {return mapping.id == item.departmentOfBranch});
+				if (departmentOfBranch == undefined) return;
 				var branchOfSchool = this.userResponse['branchesofschools'].find(function(branch) {return branch.id == departmentOfBranch.branchOfSchool});
 				if(this.userResponse['schoolsinschoolyears'].find(function(school) {return school.id == branchOfSchool.schoolInSchoolYear}))
 					if(!item.extendedName.toLowerCase().includes('#uit') && !item.extendedName.toLowerCase().includes('#allen')) {
@@ -541,8 +544,11 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getUsers: function() {
+		if (this.selfPending()) return;
+
+		var options = Zermelo.UserManager.getOptions();
 		// If we don't know what this token can do, we need to fetch that first
-		if(!Zermelo.UserManager.getTokenAttributes().effectivePermissions) {
+		if(options.refreshFirst) {
 			this.refreshUsers();
 			return;
 		}
@@ -555,10 +561,13 @@ Ext.define('Zermelo.AjaxManager', {
 		this.userResponse = {};
 		this.formattedArray = [];
 		var schoolYear = (new Date()).getFullYear() - ((new Date()).getMonth() < 7);
+		var studentFields = options.includeNames ? "code,firstName,prefix,lastName" : "code";
+		var employeeFields = options.includeNames ? (options.includeProjects ? "code,firstName,prefix,lastName" : "code,prefix,lastName") : "code";
+
 		this.types = [
 			// users (students and teachers)
-			{endpoint: 'students', params: {archived: false, isStudent: true}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
-			{endpoint: 'employees', params: {archived: false, isEmployee: true}, requires: 'readScheduleTeachers'}, // The field firstName isn't always available so we ask for everything and see what we get
+			{endpoint: 'students', params: {archived: false, isStudent: true, fields: studentFields}, requires: 'readScheduleStudents'}, // The field firstName isn't always available so we ask for everything and see what we get
+			{endpoint: 'employees', params: {archived: false, isEmployee: true, fields: employeeFields}, requires: 'readScheduleTeachers'}, // The field firstName isn't always available so we ask for everything and see what we get
 
 			// groups
 			{endpoint: 'groupindepartments', params: {fields: 'departmentOfBranch,extendedName,id'}, requires: 'readScheduleGroups'},
@@ -574,6 +583,16 @@ Ext.define('Zermelo.AjaxManager', {
 			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id', year: schoolYear}, requires: 'readScheduleGroups,readScheduleLocations'}
 		]
 
+		if (options.includeProjects) {
+			this.types.forEach(function(type) {
+				if (type.endpoint == "students" || type.endpoint == "employees") {
+					type.params.schoolInSchoolYear = options.projects.join(",");
+				}
+				// If rights to view this are obtained through SF settings, we don't need to check the requires permissions
+				type.requires = "";
+			});
+		}
+
 		if(Zermelo.UserManager.isParentOnly()) {
 			this.types = [{endpoint: 'students', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: ''}];
 		}
@@ -587,9 +606,33 @@ Ext.define('Zermelo.AjaxManager', {
 		localStorage.removeItem('Users')
 	},
 
+	selfPending: function() {
+		for (var key in this.pendingRequests) {
+			if (this.pendingRequests.hasOwnProperty(key) && this.pendingRequests[key] == "pending") {
+				return true;
+			}
+		}
+		return false;
+	},
+
 	getSelf: function(upgrade) {
 		if(!Zermelo.UserManager.loggedIn())
 			return;
+
+		if (this.selfPending()) return;
+
+		var requests = ['tokens/~current', 'users/~me', 'schoolfunctionsettings', 'schoolfunctiontasks'];
+
+		var handleReturn = function(endpoint, status) {
+			this.pendingRequests[endpoint] = status;
+			if (!this.selfPending()) {
+				this.pendingRequests = {};
+				this.fireEvent('tokenupdated');
+			}
+			
+		}.bind(this);
+
+		this.pendingRequests['tokens/~current'] = 'pending';
 		Ext.Ajax.request({
 			url: this.getUrl('tokens/~current'),
 			params: {
@@ -598,6 +641,7 @@ Ext.define('Zermelo.AjaxManager', {
 			method: "GET",
 			useDefaultXhrHeader: false,
 			scope: this,
+			handleReturn: handleReturn,
 
 			success: function (response) {
 				var tokenAttributes = JSON.parse(response.responseText).response.data[0];
@@ -612,16 +656,11 @@ Ext.define('Zermelo.AjaxManager', {
 					}
 				}
 
-				if(this.meReturned) {
-					this.meReturned = false;
-                    this.fireEvent('tokenupdated');
-                }
-                else {
-					this.tokenReturned = true;
-				}
+				handleReturn('tokens/~current', 'completed');
 			},
 
 			failure: function (response) {
+				handleReturn('tokens/~current', 'error');
 				var error_msg = response.status == 403 ? 'error.permissions' : 'error.network';
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
@@ -629,6 +668,7 @@ Ext.define('Zermelo.AjaxManager', {
 			}
 		});
 
+		this.pendingRequests['users/~me'] = 'pending';
 		Ext.Ajax.request({
 			url: this.getUrl('users/~me'),
 			params: {
@@ -638,20 +678,68 @@ Ext.define('Zermelo.AjaxManager', {
 			method: "GET",
 			useDefaultXhrHeader: false,
 			scope:this,
+			handleReturn: handleReturn,
 
 			success: function (response) {
 				Zermelo.UserManager.setUserAttributes(JSON.parse(response.responseText).response.data[0]);
 
-                if(this.tokenReturned) {
-                    this.tokenReturned = false;
-                    this.fireEvent('tokenupdated');
-                }
-                else {
-                    this.meReturned = true;
-                }
+				handleReturn('users/~me', 'completed');
 			},
 
 			failure: function (response) {
+				handleReturn('users/~me', 'error');
+				var error_msg = response.status == 403 ? 'error.permissions' : 'error.network';
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				Ext.Viewport.unmask();
+			}
+		});
+
+		this.pendingRequests['schoolfunctionsettings'] = 'pending';
+		Ext.Ajax.request({
+			url: this.getUrl('schoolfunctionsettings'),
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken()
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+			scope:this,
+			handleReturn: handleReturn,
+
+			success: function (response) {
+				Zermelo.UserManager.setSchoolFunctionSettings(JSON.parse(response.responseText).response.data);
+
+				handleReturn('schoolfunctionsettings', 'completed');
+			},
+
+			failure: function (response) {
+				handleReturn('schoolfunctionsettings', 'error');
+				var error_msg = response.status == 403 ? 'error.permissions' : 'error.network';
+
+				Zermelo.ErrorManager.showErrorBox(error_msg);
+				Ext.Viewport.unmask();
+			}
+		});
+
+		this.pendingRequests['schoolfunctiontasks'] = 'pending';
+		Ext.Ajax.request({
+			url: this.getUrl('schoolfunctiontasks'),
+			params: {
+				access_token: Zermelo.UserManager.getAccessToken()
+			},
+			method: "GET",
+			useDefaultXhrHeader: false,
+			scope:this,
+			handleReturn: handleReturn,
+
+			success: function (response) {
+				Zermelo.UserManager.setSchoolFunctionTasks(JSON.parse(response.responseText).response.data);
+
+				handleReturn('schoolfunctiontasks', 'completed');
+			},
+
+			failure: function (response) {
+				handleReturn('schoolfunctiontasks', 'error');
 				var error_msg = response.status == 403 ? 'error.permissions' : 'error.network';
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);

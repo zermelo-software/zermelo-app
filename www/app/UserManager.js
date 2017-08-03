@@ -2,7 +2,7 @@ Ext.define('Zermelo.UserManager', {
 	alternateClassName: 'UserManager',
 	requires: ['Ux.locale.Manager'],
 	singleton: true,
-	fields: ['code','name', 'type', 'institution', 'accessToken', 'tokenAttributes', 'userAttributes'],
+	fields: ['code','name', 'type', 'institution', 'accessToken', 'tokenAttributes', 'userAttributes', 'schoolFunctionSettings', 'schoolFunctionTasks'],
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -86,6 +86,56 @@ Ext.define('Zermelo.UserManager', {
 	setUserAttributes: function(userAttributes) {
 		this.userAttributes = userAttributes;
 		this.persist();
+	},
+
+	setSchoolFunctionSettings: function(schoolFunctionSettings) {
+		this.schoolFunctionSettings = schoolFunctionSettings;
+		this.persist();
+	},
+
+	setSchoolFunctionTasks: function(schoolFunctionTasks) {
+		this.schoolFunctionTasks = schoolFunctionTasks;
+		this.persist();
+	},
+
+	getOptions: function() {
+		var ret = {
+			includeProjects: false,
+			projects: [],
+			includeNames: true,
+			refreshFirst: false
+		}
+
+		if (!this.getTokenAttributes() || !this.getTokenAttributes().effectivePermissions || !this.schoolFunctionTasks || !this.schoolFunctionSettings) {
+			ret.refreshFirst = true;
+			return ret;
+		}
+
+		if (this.getPermission("readScheduleStudents") >= 5 && this.getPermission("readScheduleTeachers") >= 5) {
+			ret.includeNames = this.getPermission("readNames");
+			return ret;
+		}
+
+		var userType = this.getType();
+		var settingName = userType == "employee" ? "employeeCanViewProjectSchedules" : "studentCanViewProjectSchedules";
+
+		this.schoolFunctionTasks.forEach(function(task) {
+			if (task.task == "viewProjectSchedules") {
+				var project = task.selections.project.value;
+				this.schoolFunctionSettings.forEach(function(setting) {
+					if ((setting.schoolInSchoolYear == project) && setting[settingName]) {
+						ret.includeProjects = true;
+						ret.projects.push(project);
+						ret.includeNames &= ((userType == "employee") || setting["studentCanViewProjectNames"]);
+					}
+				});
+			}
+		}, this);
+		return ret;
+	},
+
+	getPermission: function(permissionName) {
+		return this.getTokenAttributes().effectivePermissions[permissionName];
 	},
 
 	saveLogin: function(code, institution, accessToken) {
