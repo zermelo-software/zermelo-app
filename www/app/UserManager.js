@@ -2,7 +2,7 @@ Ext.define('Zermelo.UserManager', {
 	alternateClassName: 'UserManager',
 	requires: ['Ux.locale.Manager'],
 	singleton: true,
-	fields: ['code','name', 'type', 'institution', 'accessToken', 'tokenAttributes', 'userAttributes', 'schoolFunctionSettings', 'schoolFunctionTasks'],
+	fields: ['code','name', 'type', 'institution', 'accessToken'],
 
 	loggedIn: function() {
 		return this.accessToken ? true : false;
@@ -80,22 +80,18 @@ Ext.define('Zermelo.UserManager', {
 
 	setTokenAttributes: function(tokenAttributes) {
 		this.tokenAttributes = tokenAttributes;
-		this.persist();
 	},
 
 	setUserAttributes: function(userAttributes) {
 		this.userAttributes = userAttributes;
-		this.persist();
 	},
 
 	setSchoolFunctionSettings: function(schoolFunctionSettings) {
 		this.schoolFunctionSettings = schoolFunctionSettings;
-		this.persist();
 	},
 
 	setSchoolFunctionTasks: function(schoolFunctionTasks) {
 		this.schoolFunctionTasks = schoolFunctionTasks;
-		this.persist();
 	},
 
 	getOptions: function() {
