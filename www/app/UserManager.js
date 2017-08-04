@@ -111,10 +111,6 @@ Ext.define('Zermelo.UserManager', {
 			return ret;
 		}
 
-		if (this.getPermission("readScheduleStudents") >= 5 && this.getPermission("readScheduleTeachers") >= 5) {
-			ret.includeNames = this.getPermission("readNames");
-			return ret;
-		}
 
 		var userType = this.getType();
 		var settingName = userType == "employee" ? "employeeCanViewProjectSchedules" : "studentCanViewProjectSchedules";
@@ -126,11 +122,14 @@ Ext.define('Zermelo.UserManager', {
 					if ((setting.schoolInSchoolYear == project) && setting[settingName]) {
 						ret.includeProjects = true;
 						ret.projects.push(project);
-						ret.includeNames &= ((userType == "employee") || setting["studentCanViewProjectNames"]);
+						ret.includeNames = ret.includeNames && ((userType == "employee") || setting["studentCanViewProjectNames"]);
 					}
 				});
 			}
 		}, this);
+
+		ret.includeNames = ret.includeNames || (this.getPermission("readNames") >= 5);
+
 		return ret;
 	},
 
