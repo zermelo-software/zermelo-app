@@ -102,14 +102,12 @@ Ext.define('Zermelo.UserManager', {
 			refreshFirst: false
 		}
 
-		if (!this.getTokenAttributes() || !this.getTokenAttributes().effectivePermissions || !this.schoolFunctionTasks || !this.schoolFunctionSettings) {
+		if (!this.getUserAttributes() || !this.getTokenAttributes() || !this.getTokenAttributes().effectivePermissions || !this.schoolFunctionTasks || !this.schoolFunctionSettings) {
 			ret.refreshFirst = true;
 			return ret;
 		}
-
-
-		var userType = this.getType();
-		var settingName = userType == "employee" ? "employeeCanViewProjectSchedules" : "studentCanViewProjectSchedules";
+		var userType = this.getUserAttributes().isEmployee ? "employee" : "student";
+		var settingName = userType + "CanViewProjectSchedules";
 
 		this.schoolFunctionTasks.forEach(function(task) {
 			if (task.task == "viewProjectSchedules") {

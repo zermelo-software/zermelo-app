@@ -561,7 +561,7 @@ Ext.define('Zermelo.AjaxManager', {
 		this.formattedArray = [];
 		var schoolYear = (new Date()).getFullYear() - ((new Date()).getMonth() < 7);
 		var studentFields = options.includeNames ? "code,firstName,prefix,lastName" : "code";
-		var employeeFields = options.includeNames ? "code,prefix,lastName" : "code";
+		var employeeFields = options.includeNames ? ("code,prefix,lastName" + (Zermelo.UserManager.getUserAttributes().isEmployee ? ",firstName" : "")) : "code";
 
 		this.types = [
 			// users (students and teachers)
