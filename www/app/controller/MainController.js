@@ -108,6 +108,8 @@ Ext.define('Zermelo.controller.MainController', {
             document.addEventListener("backbutton", this.onBackButton, false);
         }
 
+        document.addEventListener("resume", Zermelo.AjaxManager.refreshIfStale.bind(Zermelo.AjaxManager));
+
         var onUsersLoaded = function() {
             if(!Zermelo.UserManager.getTokenAttributes())
                 Zermelo.AjaxManager.getSelf();

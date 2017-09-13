@@ -39,7 +39,6 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	refresh: function() {
-		console.log('refresh');
 		Ext.getStore('Appointments').fetch();
 		this.getAnnouncementData();
 	},
@@ -48,6 +47,15 @@ Ext.define('Zermelo.AjaxManager', {
 		if(this.queuedRefresh)
 			clearInterval(this.queuedRefresh);
 		this.queuedRefresh = setInterval(Ext.bind(this.refresh, this), 1000 * 60 * 20);
+	},
+
+	refreshIfStale: function() {
+		var twentyMinutesAgo = Date.now() - 20 * 60 * 1000;
+		var lastRefresh = localStorage.getItem("lastRefresh");
+		if (!lastRefresh || (twentyMinutesAgo > lastRefresh)) {
+			this.refresh();
+			this.periodicRefresh();
+		}
 	},
 
 	getLogin: function(institution, code, callback) {
@@ -307,6 +315,7 @@ Ext.define('Zermelo.AjaxManager', {
 				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
+				localStorage.setItem("lastRefresh", Date.now());
 			},
 			failure: function (response) {
 				var error_msg = 'error.network';
