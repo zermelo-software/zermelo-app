@@ -10646,7 +10646,7 @@ Ext.define('Ext.env.Browser', {
             browserName = 'ChromeMobile';
         }
 
-        if (userAgent.match(/OPR/)) {
+        if (userAgent.match(/OPR\//)) {
             browserName = 'Opera';
             browserMatch = userAgent.match(/OPR\/(\d+.\d+)/);
             browserVersion = new Ext.Version(browserMatch[1]);
