@@ -36,7 +36,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         scrollable: 'vertical',
         store: 'Appointments',
         listeners: {
-            painted: {
+            show: {
                 fn: function() {
                     this.updateView();
                 },
@@ -278,7 +278,7 @@ Ext.define('Zermelo.view.FullCalendar', {
         this.getStore().on('refresh', this.handleRefresh, this, {buffer: 5});
         // this.up('home').onBefore('select', this.initScroller, this);
         this.initScroller();
-        // this.on('painted', this.renderFullCalendar, this, {single: true, buffer: 5});
+        this.on('painted', this.renderFullCalendar, this, {single: true, buffer: 5});
     },
 
     /**

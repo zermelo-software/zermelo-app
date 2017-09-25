@@ -103,8 +103,14 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 	
 	getAnnouncementData: function() {
-		if (!Zermelo.UserManager.loggedIn())
+		if (!Zermelo.UserManager.loggedIn()) {
 			return;
+		}
+		if (this.selfPending()) {
+			console.log("Delaying getAnnouncementData");
+			this.on('tokenupdated', function() {this.getAnnouncementData()}, this);
+			return;
+		}
 
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
@@ -197,8 +203,20 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(startTime, endTime) {
-		if (!Zermelo.UserManager.loggedIn() || this.appointmentsPending)
+		if (!Zermelo.UserManager.loggedIn() || this.appointmentsPending) {
 			return;
+		}
+		if (this.selfPending()) {
+			console.log("Delaying getAppointment");
+			this.on('tokenupdated', function() {this.getAppointment(startTime, endTime)}, this);
+			return;
+		}
+		if (Zermelo.UserManager.isParentOnly() && Zermelo.UserManager.userIsSelf()) {
+			console.log("Skipped getAppointment because we're a parent");
+			Ext.getStore('Appointments').fireEvent('refresh');
+			return;
+		}
+		console.log("Doing getAppointment");
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -312,7 +330,6 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.resumeEvents(true);
 				appointmentStore.fireEvent('refresh');
 				appointmentStore.queueDelayedEvents();
-				localStorage.setItem('refreshTime', Date.now());
 				Ext.Viewport.unmask();
 				this.appointmentsPending = false;
 				localStorage.setItem("lastRefresh", Date.now());

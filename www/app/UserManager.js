@@ -55,7 +55,7 @@ Ext.define('Zermelo.UserManager', {
 	},
 
 	isParentOnly: function() {
-		return this.userAttributes.isFamilyMember && !this.userAttributes.isStudent && !this.userAttributes.isEmployee;
+		return this.userAttributes && this.userAttributes.isFamilyMember && !this.userAttributes.isStudent && !this.userAttributes.isEmployee;
 	},
 
 	setCode: function(newCode) {

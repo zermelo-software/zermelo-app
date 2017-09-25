@@ -1,7 +1,7 @@
 {
     "login":{
         "text": "Vul de naam van je instelling in en de toegangscode uit het Portal. Je kunt deze toegangscode opvragen door in te loggen op Zermelo Portal en in het menu te klikken op \"Koppel App\".",
-        "institution":"Instituut",
+        "institution":"Schoolnaam",
         "code":"Code",
         "login":"Login",
         "institution_code_error_msg":"Vul alsjeblieft een geldige instelling in</br>Vul alsjeblieft een geldige code in",

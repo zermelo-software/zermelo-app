@@ -1,7 +1,7 @@
 {
     "login":{
         "text":"Please enter the name of your institution and your access code. You can obtain your access code through the menu item \"Link App\" in Zermelo Portal.",
-        "institution":"Institution",
+        "institution":"School name",
         "code":"Code",
         "login":"Login",
         "institution_code_error_msg":"Please enter a valid institution</br>Please enter a valid code",

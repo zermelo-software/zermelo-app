@@ -126,7 +126,6 @@ Ext.define('Zermelo.controller.MainController', {
 
             Ext.fly('appLoadingIndicator').destroy();
             if (!navigator.userAgent.toLowerCase().includes('windows')) {
-                console.log('this ain\'t windows', navigator.userAgent);
                 setTimeout(navigator.splashscreen.hide, 50);
             }
         }.bind(this);

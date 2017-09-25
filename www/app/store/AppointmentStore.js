@@ -91,7 +91,6 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			if(record.get('user') == user && start > this.windowStart && start < this.windowEnd)
 				return true;
 			else {
-				console.log('deze gaat er uit ', start);
 				return false;
 			}
 		});
