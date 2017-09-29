@@ -106,6 +106,18 @@ Ext.define('Zermelo.UserManager', {
 			ret.refreshFirst = true;
 			return ret;
 		}
+
+		var p = this.getTokenAttributes();
+		if (p.superPower >= 5 || (
+			p.readScheduleGroups >= 5 &&
+			p.readScheduleLocations >= 5 &&
+			p.readScheduleStudents >= 5 &&
+			p.readScheduleSubjects >= 5 &&
+			p.readScheduleTeachers >= 5)
+			) {
+			return ret;
+		}
+
 		var userType = this.getUserAttributes().isEmployee ? "employee" : "student";
 		var settingName = userType + "CanViewProjectSchedules";
 
