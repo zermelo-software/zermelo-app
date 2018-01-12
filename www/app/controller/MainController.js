@@ -103,6 +103,27 @@ Ext.define('Zermelo.controller.MainController', {
         }
     },
 
+    showTimeZoneWarningIfNeeded: function() {
+        if (localStorage.getItem("ignoreTimeZone")) return;
+        var refDate = new Date();
+        var offset = Ext.Date.getGMTOffset(refDate);
+        var dst = Ext.Date.isDST(refDate);
+        if (offset !== (dst ? "+0200" : "+0100")) {
+            var msgConfig = Zermelo.ErrorManager.getMsgConfig("error.timezone");
+            msgConfig.multiLine = true;
+            msgConfig.buttons = [
+                Zermelo.ErrorManager.getButton('ignore'),
+                Zermelo.ErrorManager.getButton('ok')
+            ];
+            msgConfig.fn = function(buttonTitle) {
+                if (buttonTitle === "ignore") {
+                    localStorage.setItem("ignoreTimeZone", true);
+                }
+            };
+            Ext.Msg.show(msgConfig);
+        }
+    },
+
     launch: function() {
         if (Ext.os.is('Android')) {
             document.addEventListener("backbutton", this.onBackButton, false);
@@ -128,6 +149,7 @@ Ext.define('Zermelo.controller.MainController', {
             if (!navigator.userAgent.toLowerCase().includes('windows')) {
                 setTimeout(navigator.splashscreen.hide, 50);
             }
+            this.showTimeZoneWarningIfNeeded();
         }.bind(this);
 
         Zermelo.UserManager.loadFromLocalForageOrStorage(onUsersLoaded);

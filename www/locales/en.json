@@ -32,6 +32,7 @@
     },
     "ok":"OK",
     "cancel":"Cancel",
+    "ignore": "Ignore permanently",
     "done":"Done",
     "loading":"Loading",
     "appointment":{
@@ -77,7 +78,9 @@
             "some": "Not all user types could be loaded. You may not have the right permissions",
             "all": "Could not load users. You may not have the right permissions or there may be a problem with your internet connection"
         },
-        "generic": "Something went wrong. You could try refreshing"
+        "generic": "Something went wrong. You could try refreshing",
+        "timezone": "Your device's timezone does not correspond to dutch time. This will cause times shown in your schedule to be shifted. \
+        If your device's timezone is correct, it may help to reboot your device."
     },
 
     "months" : {

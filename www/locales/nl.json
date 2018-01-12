@@ -32,6 +32,7 @@
     },
     "ok":"OK",
     "cancel":"Annuleren",
+    "ignore": "Permanent negeren",
     "done":"OK",
     "loading":"Laden",
     "appointment":{
@@ -44,7 +45,7 @@
         "startTime":"Begin: ",
         "endTime":"Eind: ",
         "changeDescription": "Wijziging: ",
-        "remark": "Opmerking: ",
+        "remark": "Opmerking: "
     },
     "announcement":{
         "startDate":"Startdatum: ",
@@ -76,7 +77,9 @@
             "some": "Niet alle gebruikers types konden worden opgehaald. Je hebt mogelijk niet de juiste rechten.",
             "all": "Gebruikers konden niet worden opgehaald. Je hebt mogelijk niet de juiste rechten, of er is geen internetverbinding."
         },
-        "generic": "Er is iets fout gegaan. Je kunt proberen te verversen"
+        "generic": "Er is iets fout gegaan. Je kunt proberen te verversen",
+        "timezone": "De tijdzone die de app ziet komt niet overeen met Nederlandse tijd. Hierdoor kloppen de tijden die in het rooster weergegeven zullen worden niet. \
+        Als de tijdzone van uw telefoon goed staat kan het helpen om de telefoon te herstarten."
     },
     "months" : {
         "1"  : "Januari",

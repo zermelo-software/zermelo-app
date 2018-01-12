@@ -97,15 +97,16 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	},
 
 	/**
-	 * Fetches events for the week that contains the current view
+	 * Fetches events for this week and next week
 	 *
 	 * @param:
 	 * @return:
 	 */
 	fetch: function() {
 		var monday = this.getMonday();
-		var saturday = this.getSaturday();
-		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturday.valueOf());
+		var saturdayAfterNext = this.getSaturday();
+		saturdayAfterNext.setDate(saturdayAfterNext.getDate() + 7);
+		Zermelo.AjaxManager.getAppointment(monday.valueOf(), saturdayAfterNext.valueOf());
 	},
 
 	/**
