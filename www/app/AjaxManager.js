@@ -76,6 +76,7 @@ Ext.define('Zermelo.AjaxManager', {
 			},
 			method: "POST",
 			useDefaultXhrHeader: false,
+			scope: this,
 			success: function (response) {
 				// If the user is already logged in, this is a token upgrade attempt
 				var upgrade = Zermelo.UserManager.loggedIn();
@@ -83,8 +84,8 @@ Ext.define('Zermelo.AjaxManager', {
 				Zermelo.UserManager.saveLogin('~me', institution, decoded.access_token);
 				Ext.getCmp('main').setActiveItem(1);
 				Ext.getCmp('fullCalendarView').updateView();
-				Zermelo.AjaxManager.refresh();
 				Zermelo.AjaxManager.getSelf(upgrade);
+				this.on('tokenupdated', this.refresh, this);
 				Ext.Viewport.unmask();
 				if(callback)
 					callback();
@@ -606,7 +607,7 @@ Ext.define('Zermelo.AjaxManager', {
 			// required for groups, departments and locations
 			{endpoint: 'branchesofschools', params: {fields: 'schoolInSchoolYear,branch,id'}, requires: 'readScheduleGroups,readScheduleLocations'},
 			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id', year: schoolYear}, requires: 'readScheduleGroups,readScheduleLocations'}
-		]
+		];
 
 		if (options.includeProjects) {
 			this.types.forEach(function(type) {
