@@ -75,10 +75,10 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         xtype: 'label',
                                         flex: 1.5,
                                         // css class resouces/css/app.css
-                                        html: appointmentData.teachers,
+                                        html: appointmentData.teachers.replace(/,/g, ', '),
                                         cls: 'zermelo-announcement-label'
                                     }]
-                                    //end teacher container   
+                                    //end teacher container
                             }, {
                                 // subject container with horizontal box
                                 xtype: 'container',
@@ -100,7 +100,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         // subject value label
                                         xtype: 'label',
                                         flex: 1.5,
-                                        html: appointmentData.subjects,
+                                        html: appointmentData.subjects.replace(/,/g, ', '),
                                         // css class resouces/css/app.css
                                         cls: 'zermelo-announcement-label'
                                     }]
@@ -126,7 +126,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         //room value lebel
                                         xtype: 'label',
                                         flex: 1.5,
-                                        html: appointmentData.locations,
+                                        html: appointmentData.locations.replace(/,/g, ', '),
                                         // css class resouces/css/app.css
                                         cls: 'zermelo-announcement-label'
                                     }]
@@ -152,7 +152,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                         // group value label
                                         xtype: 'label',
                                         flex: 1.5,
-                                        html: appointmentData.groups,
+                                        html: appointmentData.groups.replace(/,/g, ', '),
                                         // css class resouces/css/app.css
                                         cls: 'zermelo-announcement-label'
                                     }]

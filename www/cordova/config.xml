@@ -2,9 +2,9 @@
     <widget xmlns = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "nl.zermelo.online.App"
-        version   = "1.5.3"
-        android-versionCode="20170928"
-        ios-CFBundleVersion="20170928"
+        version   = "1.5.4"
+        android-versionCode="20180321"
+        ios-CFBundleVersion="20180321"
         packageName="6D7654C9.ZermeloRooster">
         <name>Zermelo</name>
         <description>Toont het schoolrooster en mededelingen van de school.</description>
@@ -116,6 +116,7 @@
             <icon src="www/resources/icons/120.png" width="120" height="120" />
             <icon src="www/resources/icons/144.png" width="144" height="144" />
             <icon src="www/resources/icons/152.png" width="152" height="152" />
+            <icon src="www/resources/icons/1024.png" width="1024" height="1024" />
 
             <plugin name="cordova-plugin-camera" spec="https://github.com/apache/cordova-plugin-camera">
                 <variable name="CAMERA_USAGE_DESCRIPTION" value="your usage message" />
