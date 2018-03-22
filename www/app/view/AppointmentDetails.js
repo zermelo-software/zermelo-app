@@ -255,7 +255,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                 style: {
                                     'margin-bottom': '20px'
                                 },
-                                html: appointmentData.remark,
+                                html: appointmentData.remark.replace(/[+-,\\.]/g, "$&&#8203;"),
                                 hidden: appointmentData.remark.length == 0
                             }, {
                                 //description label
@@ -274,7 +274,7 @@ Ext.define('Zermelo.view.AppointmentDetails', {
                                 style: {
                                     'margin-bottom': '20px'
                                 },
-                                html: appointmentData.changeDescription,
+                                html: appointmentData.changeDescription.replace(/[+-,\\.]/g, "$&&#8203;"),
                                 hidden: appointmentData.changeDescription.length == 0
                             },
                             {
