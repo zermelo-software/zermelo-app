@@ -5,19 +5,6 @@
 (function() {
     var head = document.head || document.getElementsByTagName('head')[0];
 
-    // WP8 doesn't allow direct calls to document.write
-    if(navigator.userAgent.match(/Windows Phone 8/))
-        function write(content) {
-            MSApp.execUnsafeLocalFunction(function () {
-                document.write(content);
-            });
-        }
-    else {
-        function write(content) {
-            document.write(content);
-        }
-    }
-
     function addMeta(name, content) {
         var meta = document.createElement('meta');
 
@@ -174,7 +161,7 @@
             }
         }
 
-        write('<link rel="stylesheet" href="'+path+'">');
+        document.write('<link rel="stylesheet" href="'+path+'">');
     }
 
     for (i = 0,ln = scripts.length; i < ln; i++) {
@@ -192,7 +179,7 @@
             }
         }
 
-        write('<script src="'+path+'"></'+'script>');
+        document.write('<script src="'+path+'"></'+'script>');
     }
 
 })();

@@ -4,4 +4,4 @@
  * combination of content from app.json, and all required package's package.json
  * files.  Customizations should be placed in app.json.
  */
-{"id":"82c6c4c2-fed0-40b4-a623-599728669ac6","js":[{"remote":true,"path":"cordova.js"},{"bootstrap":true,"isSdk":true,"path":"touch/sencha-touch.js"},{"update":"full","path":"js/localforage.min.js"},{"update":"full","path":"js/jquery-1.7.2.js"},{"update":"full","path":"js/fullcalendar.js"},{"update":"full","path":"js/winstore-jscompat.js"},{"update":"full","path":"app.js"}],"css":[{"update":"full","path":"resources/css/app.css"}]}
+{"id":"82c6c4c2-fed0-40b4-a623-599728669ac6","js":[{"remote":true,"path":"cordova.js"},{"bootstrap":true,"isSdk":true,"path":"touch/sencha-touch.js"},{"update":"full","path":"js/localforage.min.js"},{"update":"full","path":"js/jquery-1.7.2.js"},{"update":"full","path":"js/fullcalendar.js"},{"update":"full","path":"app.js"}],"css":[{"update":"full","path":"resources/css/app.css"}]}
