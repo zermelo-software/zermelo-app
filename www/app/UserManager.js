@@ -50,6 +50,10 @@ Ext.define('Zermelo.UserManager', {
 		return this.userAttributes;
 	},
 
+	getIsApplicationManager: function () {
+		return this.getUserAttributes() && this.getUserAttributes().applicationManager;
+	},
+
 	needsTokenUpgrade: function() {
 		return this.tokenAttributes.schedule == 0;
 	},
@@ -99,21 +103,27 @@ Ext.define('Zermelo.UserManager', {
 			includeProjects: false,
 			projects: [],
 			includeNames: true,
-			refreshFirst: false
-		}
+			refreshFirst: false,
+			skipRoleCheck: false
+		};
 
 		if (!this.getUserAttributes() || !this.getTokenAttributes() || !this.getTokenAttributes().effectivePermissions || !this.schoolFunctionTasks || !this.schoolFunctionSettings) {
 			ret.refreshFirst = true;
 			return ret;
 		}
 
+		if (this.getIsApplicationManager()) {
+			ret.skipRoleCheck = true;
+			return ret;
+		}
+
 		var p = this.getTokenAttributes();
 		if (p.superPower >= 5 || (
-			p.readScheduleGroups >= 5 &&
-			p.readScheduleLocations >= 5 &&
-			p.readScheduleStudents >= 5 &&
-			p.readScheduleSubjects >= 5 &&
-			p.readScheduleTeachers >= 5)
+				p.readScheduleGroups >= 5 &&
+				p.readScheduleLocations >= 5 &&
+				p.readScheduleStudents >= 5 &&
+				p.readScheduleSubjects >= 5 &&
+				p.readScheduleTeachers >= 5)
 			) {
 			return ret;
 		}
@@ -129,6 +139,7 @@ Ext.define('Zermelo.UserManager', {
 						ret.includeProjects = true;
 						ret.projects.push(project);
 						ret.includeNames = ret.includeNames && ((userType == "employee") || setting["studentCanViewProjectNames"]);
+						ret.skipRoleCheck = true;
 					}
 				});
 			}

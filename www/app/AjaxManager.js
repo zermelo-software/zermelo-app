@@ -609,15 +609,17 @@ Ext.define('Zermelo.AjaxManager', {
 			{endpoint: 'schoolsinschoolyears', params: {archived: false, fields: 'id', year: schoolYear}, requires: 'readScheduleGroups,readScheduleLocations'}
 		];
 
-		if (options.includeProjects) {
-			this.types.forEach(function(type) {
+		this.types.forEach(function(type) {
+			if (options.includeProjects) {
 				if (type.endpoint == "students" || type.endpoint == "employees") {
 					type.params.schoolInSchoolYear = options.projects.join(",");
 				}
+			}
+			if (options.skipRoleCheck) {
 				// If rights to view this are obtained through SF settings, we don't need to check the requires permissions
 				type.requires = "";
-			});
-		}
+			}
+		});
 
 		if(Zermelo.UserManager.isParentOnly()) {
 			this.types = [{endpoint: 'students', params: {archived: false, familyMember: Zermelo.UserManager.getUserAttributes().code}, requires: ''}];
@@ -699,7 +701,7 @@ Ext.define('Zermelo.AjaxManager', {
 			url: this.getUrl('users/~me'),
 			params: {
 				access_token: Zermelo.UserManager.getAccessToken(),
-				fields: 'code,isFamilyMember,isEmployee,isStudent'
+				fields: 'code,isFamilyMember,isEmployee,isStudent,isApplicationManager'
 			},
 			method: "GET",
 			useDefaultXhrHeader: false,
