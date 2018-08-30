@@ -226,7 +226,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-		this.appointmentsPending = true;
+		Zermelo.AjaxManager.appointmentsPending = true;
 
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
@@ -332,7 +332,7 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.fireEvent('refresh');
 				appointmentStore.queueDelayedEvents();
 				Ext.Viewport.unmask();
-				this.appointmentsPending = false;
+				Zermelo.AjaxManager.appointmentsPending = false;
 				localStorage.setItem("lastRefresh", Date.now());
 			},
 			failure: function (response) {
@@ -348,7 +348,7 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
-				this.appointmentsPending = false;
+				Zermelo.AjaxManager.appointmentsPending = false;
 			}
 		});
 	},

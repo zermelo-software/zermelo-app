@@ -65,108 +65,8 @@ if (typeof Ext.Logger === 'undefined') {
 
 //Global variable
 var loc = '';
-
-// IE is streets behind so we need to polyfill all these methods
-(function() {
-	if (!Array.prototype.find) {
-		Object.defineProperty(Array.prototype, 'find', {
-			value: function(predicate) {
-			 'use strict';
-			 if (this == null) {
-				 throw new TypeError('Array.prototype.find called on null or undefined');
-			 }
-			 if (typeof predicate !== 'function') {
-				 throw new TypeError('predicate must be a function');
-			 }
-			 var list = Object(this);
-			 var length = list.length >>> 0;
-			 var thisArg = arguments[1];
-			 var value;
-
-			 for (var i = 0; i < length; i++) {
-				 value = list[i];
-				 if (predicate.call(thisArg, value, i, list)) {
-					 return value;
-				 }
-			 }
-			 return undefined;
-			}
-		});
-	}
-
-	if (!String.prototype.startsWith) {
-		String.prototype.startsWith = function(searchString, position){
-			position = position || 0;
-			if(!searchString)
-				return true;
-			return this.substr(position, searchString.length) === searchString;
-		};
-	}
-
-	if (!String.prototype.includes) {
-		String.prototype.includes = function(search, start) {
-			'use strict';
-			if (typeof start !== 'number') {
-				start = 0;
-			}
-			
-			if (start + search.length > this.length) {
-				return false;
-			} else {
-				return this.indexOf(search, start) !== -1;
-			}
-		};
-	}
-
-    // https://tc39.github.io/ecma262/#sec-array.prototype.includes
-    if (!Array.prototype.includes) {
-        Object.defineProperty(Array.prototype, 'includes', {
-            value: function(searchElement, fromIndex) {
-
-                // 1. Let O be ? ToObject(this value).
-                if (this == null) {
-                    throw new TypeError('"this" is null or not defined');
-                }
-
-                var o = Object(this);
-
-                // 2. Let len be ? ToLength(? Get(O, "length")).
-                var len = o.length >>> 0;
-
-                // 3. If len is 0, return false.
-                if (len === 0) {
-                    return false;
-                }
-
-                // 4. Let n be ? ToInteger(fromIndex).
-                //    (If fromIndex is undefined, this step produces the value 0.)
-                var n = fromIndex | 0;
-
-                // 5. If n ≥ 0, then
-                //  a. Let k be n.
-                // 6. Else n < 0,
-                //  a. Let k be len + n.
-                //  b. If k < 0, let k be 0.
-                var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-                // 7. Repeat, while k < len
-                while (k < len) {
-                    // a. Let elementK be the result of ? Get(O, ! ToString(k)).
-                    // b. If SameValueZero(searchElement, elementK) is true, return true.
-                    // c. Increase k by 1.
-                    // NOTE: === provides the correct "SameValueZero" comparison needed here.
-                    if (o[k] === searchElement) {
-                        return true;
-                    }
-                    k++;
-                }
-
-                // 8. Return false
-                return false;
-            }
-        });
-    }
-})();
+var imageType = 'svg';
+var version = 3;
 
 Ext.application({
 	name : 'Zermelo',
@@ -217,43 +117,15 @@ Ext.application({
 		Ext.Msg.defaultAllowedConfig.showAnimation = false;
 		// display magnified glass press on textbox
 		Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
-		
+
 		// check device's default language
 
-		if (Ext.os.is('Android') && version == 2) { // only for android 2.3 os
-
-			if (navigator
-					&& navigator.userAgent
-					&& (loc = navigator.userAgent
-							.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
-				loc = loc[1];
-			}
-			if (!loc && navigator) {
-				if (navigator.language) {
-					loc = navigator.language;
-				} else if (navigator.browserLanguage) {
-					loc = navigator.browserLanguage;
-				} else if (navigator.systemLanguage) {
-					loc = navigator.systemLanguage;
-				} else if (navigator.userLanguage) {
-					loc = navigator.userLanguage;
-				}
-				loc = loc.substr(0, 2);
-			}
-			if (loc == 'en' || loc == 'nl') {
-				loc = loc;
-			} else {
-				loc = 'en';
-			}
-
+		if (navigator.language.split('-')[0] == 'en'
+				|| navigator.language.split('-')[0] == 'nl') {
+			loc = navigator.language.split('-')[0];
 		} else {
-			if (navigator.language.split('-')[0] == 'en'
-					|| navigator.language.split('-')[0] == 'nl') {
-				loc = navigator.language.split('-')[0];
-			} else {
-				//default set english
-				loc = 'en';
-			}
+			//default set english
+			loc = 'en';
 		}
 		// set locale file
 		Ux.locale.Manager.setConfig({

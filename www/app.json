@@ -1,4 +1,5 @@
 {
+    "framework": "touch",
     "builds": {
         "web": {"default": true},
         "android": {
@@ -24,18 +25,6 @@
                     "name": "Zermelo"
                 }
             }
-        },
-        "windows": {
-            "packager": "cordova",
-            "cordova" : {
-                "config": {
-                    // Uncomment the line below and add the platforms you wish to build for
-                    "platforms": "windows",
-
-                    "id": "nl.Zermelo.online.App",
-                    "name": "Zermelo"
-                }
-            }
         }
     },
 
@@ -44,8 +33,6 @@
      * The application's namespace, used by Sencha Command to generate classes
      */
     "name": "Zermelo",
-
-    "framework": "touch",
 
     /**
      * The file path to this application's front HTML document, relative to this app.json file
@@ -84,12 +71,13 @@
     "js": [
         {
             "path": "touch/sencha-touch.js",
-            "x-bootstrap": true
+            "includeInBundle": false,
+            "update": "full"
         },
         {
-            "path": "js/localforage.min.js",
+            "path": "js/localforage.js",
             "update": "full",
-            "includeInBundle": false
+            "includeInBundle": true
         },
         {
             "path": "js/jquery-1.7.2.js",

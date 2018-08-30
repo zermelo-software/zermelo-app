@@ -73,26 +73,10 @@ OTHER DEALINGS IN THE SOFTWARE.
             }
         }
     </style>
-    <script type="text/javascript">
 
-            var imageType = 'svg';
-    var ua = ua || navigator.userAgent;
-    var match = ua.match(/Android\s([0-9\.]*)/);
-    var result = /AppleWebKit\/([\d.]+)/.exec(navigator.userAgent);
-    // get webkit version of browser
-    var webkitVersion = result ? result[1] : 1;
-    // get android os version
-    if (match != null) {
-        var version = parseInt(match[1]);
-        if (version == 2)
-            imageType = 'png';
-    }
-
-    </script>
-    <script type="text/javascript" src="js/winstore-jscompat.js"></script>
-    <script id="microloader" type="text/javascript" src="touch/microloader/development.js"></script>
+    <script id="microloader" type="text/javascript" src="touch/microloader/production.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 </head>
-
 <body>
     <div id="appLoadingIndicator">
         <div></div>

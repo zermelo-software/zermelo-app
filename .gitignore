@@ -40,3 +40,5 @@ store_text.txt
 /.jsdtscope
 /org.eclipse.wst.jsdt.ui.superType.container
 /org.eclipse.wst.jsdt.ui.superType.name.settings
+*.orig
+.sencha_backup

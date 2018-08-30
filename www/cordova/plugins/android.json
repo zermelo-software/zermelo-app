@@ -1,21 +1,28 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-nativestorage": {
+      "PACKAGE_NAME": "nl.zermelo.online.App"
     },
-    "config_munge": {
-        "files": {}
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "nl.zermelo.online.App"
     },
-    "installed_plugins": {
-        "cordova-plugin-nativestorage": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        },
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        },
-        "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "nl.zermelo.online.App"
-        }
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "nl.zermelo.online.App"
     },
-    "dependent_plugins": {}
+    "phonegap-plugin-barcodescanner": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "nl.zermelo.online.App"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "nl.zermelo.online.App"
+    }
+  },
+  "dependent_plugins": {}
 }
