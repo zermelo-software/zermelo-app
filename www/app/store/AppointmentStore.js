@@ -10,6 +10,7 @@ Ext.define('Zermelo.store.AppointmentStore', {
 		this.windowStart = this.getMonday(new Date());
 		this.windowEnd = this.getSaturday(new Date());
         this.callParent();
+        this.onAfter('refresh', this.setRetrievalDate.bind(this, null));
 	},
 
 	/**
@@ -26,6 +27,14 @@ Ext.define('Zermelo.store.AppointmentStore', {
 			}
 		});
 		return appointmentArray;
+	},
+
+	getRetrievalDate() {
+		var first = this.first();
+		if (first) {
+			return first.get('receivedOn') || null;
+		}
+		return null;
 	},
 
 	/**
@@ -61,9 +70,9 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	prune: function() {
         var lowerBound = new Date(Math.min(this.windowStart.valueOf(), Date.now()));
-        lowerBound = lowerBound.setDate(lowerBound.getDate() - 14 + (1 - lowerBound.getDay()));
+        lowerBound = lowerBound.setDate(lowerBound.getDate() - 7 + (1 - lowerBound.getDay()));
         var upperBound = new Date(Math.max(this.windowEnd.valueOf(), Date.now()));
-        upperBound = upperBound.setDate(upperBound.getDate() + 14 + (6 - upperBound.getDay()));
+        upperBound = upperBound.setDate(upperBound.getDate() + 7 + (6 - upperBound.getDay()));
 
         this.suspendEvents();
         this.clearFilter();
@@ -164,8 +173,12 @@ Ext.define('Zermelo.store.AppointmentStore', {
 	 */
 	prepareData: function() {
 		this.resetFilters();
-		if(this.getCount() == 0)
+		if(this.getCount() === 0) {
 			this.fetch();
+		}
+		else {
+			this.setRetrievalDate();
+		}
 	},
 
 	getView: function() {

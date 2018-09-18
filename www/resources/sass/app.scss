@@ -1,8 +1,6 @@
 // The following two lines import the default Sencha Touch theme. If you are building
 // a new theme, remove them and the add your own CSS on top of the base CSS (which
 // is already included in your app.json file).
-@import 'sencha-touch/base';
-@import 'sencha-touch/base/all';
 
 /**
  * @class Global_CSS
@@ -8153,7 +8151,7 @@ $z-msgbox-bg-color: #F7F7F7;
 }
 
 .z-msgbox-button-narrow{
-	@extend .z-msgbox-buton;
+	@extend .z-msgbox-button;
 	display: inline !important;
 	width: 30%;
 }

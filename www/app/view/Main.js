@@ -25,10 +25,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 Ext.define('Zermelo.view.Main', {
     extend: 'Ext.Container',
     xtype: 'main',
     id: 'main',
+    requires: [
+        'Zermelo.view.SlideView',
+        'Zermelo.view.Home'
+    ],
     config: {
         listeners: {
             show: function () {
@@ -45,7 +50,80 @@ Ext.define('Zermelo.view.Main', {
         items: [{
             xtype: 'login'
         }, {
-            xtype: 'home'
+            xtype: 'container',
+			layout: 'vbox',
+            fullscreen: true,
+            items: [
+				{
+					// set toolbar with menu, refresh, announcement buttons
+					xtype: 'toolbar',
+					//css class resources/images/app.css
+					cls: 'zermelo-toolbar',
+					height: '47px',
+					width: '100%',
+					// title: Zermelo.UserManager ? Zermelo.UserManager.getTitle() : '',
+					docked: 'top',
+					// Add two buttons refresh and new announcement
+					items: [
+                        {
+							xtype: 'button',
+							iconMask: true,
+							ref: '../menuButton',
+							docked: 'left',
+							iconCls: 'zermelo-menu-button-' + imageType,
+							name: 'slidebutton',
+							style: {
+								'padding-left': '0px'
+							},
+							ui: 'plain',
+                            handler: function() {
+                                var home = Ext.getCmp('home');
+                                home.toggleContainer.bind(home, 100)();
+                            }
+                        },
+						{
+							xtype: 'container',
+							layout: 'vbox',
+							style: 'text-align: center;',
+							width: '100%',
+							align: 'center',
+							items: [
+								{
+									id: 'user_label',
+									xtype: 'label',
+									html: ''
+								},
+								{
+									id: 'refresh_time_label',
+									xtype: 'label',
+									style: 'font-size: 0.6em; font-weight: lighter',
+									html: ''
+								}
+							]
+						},
+						{
+							// refresh button
+							xtype: 'button',
+							//css class resources/images/app.css
+							iconCls: 'zermelo-refresh-button-' + imageType,
+							docked: 'right',
+							ui: 'plain',
+							id:'button_week_refresh',
+							style: {
+								'padding-right': '4px'
+							},
+							handler: function () {
+								Zermelo.AjaxManager.refresh();
+							}
+						}]
+				},
+				{
+				    id: 'home',
+					xtype: 'home',
+					width: '100%',
+					height: '100%'
+				}
+            ]
         }]
     }
 });

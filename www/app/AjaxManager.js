@@ -137,6 +137,8 @@ Ext.define('Zermelo.AjaxManager', {
 				var announcementStore = Ext.getStore('Announcements');
 				announcementStore.suspendEvents();
 
+				var receivedOn = new Date();
+
 				// Update the stored announcements and remove the ones that no longer exist
 				announcementStore.each(function(record) {
 					var stillExists = 
@@ -148,6 +150,7 @@ Ext.define('Zermelo.AjaxManager', {
 						record.set('end', new Date(entry.end * 1000));
 						record.set('title', entry.title);
 						record.set('text', entry.text);
+						record.set('receivedOn', receivedOn);
 						decoded.splice(index, 1);
 						return true;
 					});
@@ -163,13 +166,15 @@ Ext.define('Zermelo.AjaxManager', {
 						start: new Date(entry.start * 1000),
 						end: new Date(entry.end * 1000),
 						title: entry.title,
-						text: entry.text
+						text: entry.text,
+						receivedOn: receivedOn
 					};
 					announcementStore.add(record);
 				});
 
 				announcementStore.resetFilters();
 				announcementStore.mySort();
+				announcementStore.setRetrievalDate(new Date());
 
 				announcementStore.resumeEvents(false);
 
@@ -204,7 +209,7 @@ Ext.define('Zermelo.AjaxManager', {
 	},
 
 	getAppointment: function(startTime, endTime) {
-		if (!Zermelo.UserManager.loggedIn() || this.appointmentsPending) {
+		if (!Zermelo.UserManager.loggedIn()) {
 			return;
 		}
 		if (this.selfPending()) {
@@ -243,8 +248,10 @@ Ext.define('Zermelo.AjaxManager', {
 
 				var appointmentStore = Ext.getStore('Appointments');
 				appointmentStore.suspendEvents();
-
 				appointmentStore.clearWeek();
+
+				var receivedOn = new Date();
+
 				var getPriority = function(a) {
 					if(!a.valid) 				return 0;
 					if(a.cancelled) 			return 1;
@@ -280,6 +287,8 @@ Ext.define('Zermelo.AjaxManager', {
 					record.end = new Date(record.end * 1000);
 					record.user = Zermelo.UserManager.getUserSuffix();
 					record.id += Zermelo.UserManager.getUserSuffix();
+					record.receivedOn = receivedOn;
+
 					if(Array.isArray(record.groups))
 						record.groups.sort();
 					if(Array.isArray(record.locations))
@@ -330,6 +339,7 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.resetFilters();
 				appointmentStore.resumeEvents(true);
 				appointmentStore.fireEvent('refresh');
+				appointmentStore.setRetrievalDate(receivedOn);
 				appointmentStore.queueDelayedEvents();
 				Ext.Viewport.unmask();
 				Zermelo.AjaxManager.appointmentsPending = false;
@@ -649,8 +659,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 		if (this.selfPending()) return;
 
-		var requests = ['tokens/~current', 'users/~me', 'schoolfunctionsettings', 'schoolfunctiontasks'];
-
 		var handleReturn = function(endpoint, status) {
 			this.pendingRequests[endpoint] = status;
 			if (!this.selfPending()) {
@@ -775,4 +783,4 @@ Ext.define('Zermelo.AjaxManager', {
 			}
 		});
 	}
-})
+});

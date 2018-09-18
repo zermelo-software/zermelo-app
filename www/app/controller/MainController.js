@@ -131,6 +131,9 @@ Ext.define('Zermelo.controller.MainController', {
 
         document.addEventListener("resume", Zermelo.AjaxManager.refreshIfStale.bind(Zermelo.AjaxManager));
 
+		Ext.getStore('Appointments').loadFromLocalForageOrStorage();
+		Ext.getStore('Announcements').loadFromLocalForageOrStorage();
+
         var onUsersLoaded = function() {
             if(!Zermelo.UserManager.getTokenAttributes())
                 Zermelo.AjaxManager.getSelf();
@@ -141,14 +144,12 @@ Ext.define('Zermelo.controller.MainController', {
             announcementStore.onAfter('addrecords', this.updateNewMessagesIndicator, this);
             announcementStore.onAfter('removerecords', this.updateNewMessagesIndicator, this);
             announcementStore.onAfter('updaterecord', this.updateNewMessagesIndicator, this);
-            announcementStore.loadFromLocalForageOrStorage();
 
-            Ext.getStore('Appointments').loadFromLocalForageOrStorage();
+            Ext.getStore('Appointments').setRetrievalDate();
 
             Ext.fly('appLoadingIndicator').destroy();
-            if (!navigator.userAgent.toLowerCase().includes('windows')) {
-                setTimeout(navigator.splashscreen.hide, 50);
-            }
+            setTimeout(navigator.splashscreen.hide, 50);
+
             this.showTimeZoneWarningIfNeeded();
         }.bind(this);
 

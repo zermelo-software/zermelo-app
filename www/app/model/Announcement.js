@@ -7,7 +7,8 @@ Ext.define('Zermelo.model.Announcement', {
 			{name: 'end', 						type: 'date',		dateFormat: "l, F d, Y g:i:s A"},
 			{name: 'title', 					type: 'string'},
 			{name: 'text', 						type: 'string'},
-			{name: 'read', 						type: 'bool'}
+			{name: 'read', 						type: 'bool'},
+			{name: 'receivedOn',				type: 'date', dateFormat: "l, F d, Y g:i:s A"}
 		]
 	},
 	/**

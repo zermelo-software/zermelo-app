@@ -28,7 +28,9 @@ Ext.define('Zermelo.model.Appointment', {
 			{name: 'type', 						type: 'string'},
 			{name: 'user',						type: 'string'},
 			{name: 'valid', 					type: 'bool'},
-			{name: 'validCollisionCount',		type: 'int'}
+			{name: 'validCollisionCount',		type: 'int'},
+			{name: 'receivedOn',				type: 'date', dateFormat: "l, F d, Y g:i:s A"}
+
 		]
 	}
 });

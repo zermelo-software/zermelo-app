@@ -43,6 +43,7 @@ Ext.Loader.setPath({
 	'Ext' : 'touch/src',
 	'Ux' : 'Ux'
 });
+Ext.Loader.setConfig({ disableCaching:false });
 //</debug>
 
 // workaround for release mode
@@ -66,7 +67,6 @@ if (typeof Ext.Logger === 'undefined') {
 //Global variable
 var loc = '';
 var imageType = 'svg';
-var version = 3;
 
 Ext.application({
 	name : 'Zermelo',
@@ -119,14 +119,13 @@ Ext.application({
 		Ext.event.publisher.TouchGesture.prototype.isNotPreventable = /^(select|a|input|textarea)$/i;
 
 		// check device's default language
-
-		if (navigator.language.split('-')[0] == 'en'
-				|| navigator.language.split('-')[0] == 'nl') {
-			loc = navigator.language.split('-')[0];
-		} else {
-			//default set english
-			loc = 'en';
+		if (navigator.language.startsWith('nl')) {
+			loc = 'nl';
 		}
+		else {
+			loc = 'en'
+		}
+
 		// set locale file
 		Ux.locale.Manager.setConfig({
 			ajaxConfig : {
@@ -137,7 +136,7 @@ Ext.application({
 			type : 'ajax'
 		});
 		// Pass setTitles into init to run setTitles as soon as locale.Manager in initialized
-		Ux.locale.Manager.init(Ext.bind(Zermelo.UserManager.setTitles, Zermelo.UserManager));
+		Ux.locale.Manager.init();
 		//set datepicker months in Dutch
 		if (loc == 'nl') {
 			Ext.Date.monthNames = [ "Januari", "Februari", "Maart",

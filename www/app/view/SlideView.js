@@ -111,12 +111,7 @@ Ext.define('Zermelo.view.SlideView', {
                 "</tpl>",
                 "</div>",
                 "</tpl>"),
-            grouped: true,
-            items: [{
-                xtype: 'toolbar',
-                docked: 'top',
-                ui: 'light'
-            }]
+            grouped: true
         },
 
         /**
@@ -323,6 +318,8 @@ Ext.define('Zermelo.view.SlideView', {
         });
         this.list.select(selectedItemIndex);
 
+        this.updateToolbar();
+
         this.__init = true;
 
     },
@@ -366,32 +363,6 @@ Ext.define('Zermelo.view.SlideView', {
                 document.getElementsByTagName('head')[0].appendChild(style);
             }
         }
-    },
-
-    /**
-     *  @private
-     *
-     *  Creates a button that can toggle the navigation menu.  For an example
-     *  config, see ``slideButtonDefaults``.
-     */
-    createSlideButton: function(el, config) {
-        var me = this,
-            config = Ext.merge(me.getSlideButtonDefaults(),
-                Ext.isObject(config) ? config : {}),
-            parent = el.down(config.selector),
-            listPosition = this.getListPosition();
-
-        if (parent) {
-
-            // Make sure that the button is placed on the correct side of the toolbar
-            layout = parent.getLayout();
-            if (layout && Ext.isFunction(layout.setPack)) {
-                layout.setPack(listPosition);
-            }
-            return parent.add(Ext.merge(me._slideButtonConfig, config));
-        }
-
-        return false;
     },
 
     /**
@@ -500,7 +471,6 @@ Ext.define('Zermelo.view.SlideView', {
             container = me.container,
             func = Ext.emptyFn;
         if (index != this.itemIds.logout) {
-            // this.fireEvent('activeitemchange');
             if (me._cache[index] == undefined) {
                 // If the object has a handler defined, then we don't need to
                 // create an Ext object
@@ -524,7 +494,6 @@ Ext.define('Zermelo.view.SlideView', {
                     // Add a button for controlling the slide, if desired
                 }
             }
-            me.createSlideButton(me._cache[index], item.raw.slideButton);
             if (Ext.isFunction(me._cache[index])) {
                 func = me._cache[index];
             } else {
@@ -541,8 +510,43 @@ Ext.define('Zermelo.view.SlideView', {
                 this.down('CalendarList').prepareToShow();
             }
         }
-        Zermelo.UserManager.setTitles();
+        this.updateToolbar();
     },
+
+
+	getAppointmentsTitle: function() {
+		var key_suffix = Zermelo.UserManager.userIsSelf() ? 'self' : 'other';
+		var suffix = Zermelo.UserManager.userIsSelf() ? '' : Zermelo.UserManager.getName();
+		return Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
+	},
+
+	updateToolbar: function() {
+        var index = this.getActiveItem().internalId;
+        var title = '';
+        var store = null;
+        if (this.itemIds.fullCalendarView === index || this.itemIds.calendarList === index) {
+			title = this.getAppointmentsTitle();
+			store = Ext.getStore('Appointments');
+			store.setRetrievalDate();
+        }
+        else if (this.itemIds.messageList === index) {
+            title = Ux.locale.Manager.get('menu.announcement_self');
+            store = Ext.getStore('Announcements');
+			store.setRetrievalDate();
+        }
+        else if (this.itemIds.userChange === index) {
+			Ext.getCmp('refresh_time_label').setHtml('');
+			title = Ux.locale.Manager.get('menu.user_select');
+		}
+		var header = Ext.getCmp('user_label');
+		if (header) {
+			header.setHtml(
+				'<div style="font-size: 1em;">' +
+				title +
+				'</div>'
+			);
+		}
+	},
 
     /**
      *  @private
@@ -889,65 +893,6 @@ Ext.define('Zermelo.view.SlideView', {
                 }
             }
         }));
-
-        // Create optional drag-on-container functionality
-        /*        if (containerSlideDelay > -1) {
-                    container.element.on({
-                        drag: function (e, node, opts, eOpts) {
-                            deltaX = e.absDeltaX;
-                            deltaY = e.absDeltaY;
-
-                            // This essentally acts as a vertical 'scroll-lock'.  If the user drags more
-                            // than 10px vertically, we disable horizontal drag all together.
-                            if (deltaY > 10 && !container.dragAllowed) {
-                                container.dragAllowedForced = true;
-                                return false;
-                            };
-
-                            // If vertical scroll-lock hasn't been enforced (``dragAllowedForced``), and
-                            // ``deltaX`` is large enough, enable horizontal dragging
-                            if (deltaX > containerSlideDelay && !container.dragAllowed && !container.dragAllowedForced) {
-                                if (!container.dragAllowed) {
-                                    scrollParent = me.container.getActiveItem().down('component[scrollable]');
-                                    if (scrollParent) {
-                                        scrollable = scrollParent.getScrollable();
-                                        scroller = scrollable.getScroller();
-                                        scroller._scrollState = scroller.getDisabled();
-
-
-                                        if (scroller._scrollState != false) {
-                                            scroller.setDisabled(true);
-                                            scrollable.hideIndicators();
-                                        }
-                                    }
-                                }
-
-                                container.dragAllowed = true;
-                                container.element.fireEvent('dragstart');
-                            }
-                        },
-                        dragend: function () {
-                            if (container.dragAllowed) {
-                                // Re-enable scrolling on the child element
-                                scrollParent = me.container.getActiveItem().down('component[scrollable]');
-                                if (scrollParent) {
-                                    scrollable = scrollParent.getScrollable();
-                                    scroller = scrollable.getScroller();
-                                    scroller._scrollState = scroller.getDisabled();
-
-                                    if (scroller._scrollState != false) {
-                                        scroller.setDisabled(null);
-                                        scrollable.hideIndicators();
-                                    }
-                                }
-                            }
-
-                            container.dragAllowedForced = false;
-                            container.dragAllowed = false;
-                        }
-                    });
-                }*/
-
         return container;
     },
 

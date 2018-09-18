@@ -39,37 +39,11 @@
     var monthNameShort = {};
     var loc;
     // check device default language
-    if (Ext.os.is('Android') && version == 2) { // only for android 2.3 os
-
-        if (navigator && navigator.userAgent && (loc = navigator.userAgent
-            .match(/android.*\W(\w\w)-(\w\w)\W/i))) {
-            loc = loc[1];
-        }
-        if (!loc && navigator) {
-            if (navigator.language) {
-                loc = navigator.language;
-            } else if (navigator.browserLanguage) {
-                loc = navigator.browserLanguage;
-            } else if (navigator.systemLanguage) {
-                loc = navigator.systemLanguage;
-            } else if (navigator.userLanguage) {
-                loc = navigator.userLanguage;
-            }
-            loc = loc.substr(0, 2);
-        }
-        if (loc == 'en' || loc == 'nl') {
-            loc = loc;
-        } else {
-            loc = 'en';
-        }
-
+    if (navigator.language.split('-')[0] == 'en' || navigator.language.split('-')[0] == 'nl') {
+        loc = navigator.language.split('-')[0];
     } else {
-        if (navigator.language.split('-')[0] == 'en' || navigator.language.split('-')[0] == 'nl') {
-            loc = navigator.language.split('-')[0];
-        } else {
-            //default set english
-            loc = 'en';
-        }
+        //default set english
+        loc = 'en';
     }
     // english
     if (loc == 'en') {

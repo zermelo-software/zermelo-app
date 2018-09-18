@@ -98,5 +98,20 @@
     "exit_msg":"Wil je de app verlaten?",
     "own_schedule":"Eigen rooster",
     "enter_user_code":"Gebruikerscode",
-    "appointments": "afspraken"
+    "appointments": "afspraken",
+    "timer": {
+        "minutes": {
+            "single": " minuut geleden",
+            "multiple": " minuten geleden"
+        },
+        "hours": {
+            "single": " uur geleden",
+            "multiple": " uur geleden"
+        },
+        "days": {
+            "single": " dag geleden",
+            "multiple": " dagen geleden"
+        },
+        "retrieved": "Opgehaald op: "
+    }
 }

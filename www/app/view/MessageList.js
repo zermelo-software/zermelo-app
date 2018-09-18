@@ -1,6 +1,4 @@
 /* 
- * This file is part of the Zermelo App.
- * 
  * Copyright (c) Zermelo Software B.V. and contributors
  * 
  * Permission is hereby granted, free of charge, to any person
@@ -32,18 +30,17 @@ Ext.define("Zermelo.view.MessageList", {
     config: {
         listeners: {
             painted: function() {
-                if(this.getStore().getCount() == 0)
+                if(this.getStore().getCount() == 0) {
                     Zermelo.ErrorManager.showErrorBox('announcement.no_announcement_msg');
+				}
             }
         },
         layout: 'fit',
         style: {
-            'background': '#F0F0F0'
+            'background': '#F0F0F0',
+			'padding-bottom': '50px'
         },
         margin: '10 10 10 10',
-        style:{
-            'padding-bottom': '50px'
-        },
         cls: 'zermelo-message-list',
         itemCls: 'zermelo-message-list-item',
         selectedCls: 'zermelo-menu-list-item-select',

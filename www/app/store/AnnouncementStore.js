@@ -37,6 +37,19 @@ Ext.define('Zermelo.store.AnnouncementStore', {
         this.onAfter('addrecords', this.saveToLocalForage, this, {buffer: 500});
         this.onAfter('removerecords', this.saveToLocalForage, this, {buffer: 500});
         this.onAfter('updaterecord', this.saveToLocalForage, this, {buffer: 500});
+		this.onAfter('refresh', this.setRetrievalDate.bind(this, null));
+    },
+
+    getRetrievalDate() {
+        var max = 0;
+        this.each(
+            function(announcement) {
+				var receivedOn = announcement.get('receivedOn');
+				if (receivedOn) {
+				    max = Math.max(max, receivedOn.valueOf());
+                }
+            });
+        return max ? new Date(max) : null;
     },
 
     mySort: function() {

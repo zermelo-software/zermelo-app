@@ -178,24 +178,6 @@ Ext.define('Zermelo.UserManager', {
 		});
 	},
 
-	getTitle: function() {
-		var key_suffix = this.userIsSelf() ? 'self' : 'other';
-		var suffix = this.userIsSelf() ? '' : this.getName();
-		return Ux.locale.Manager.get('menu.schedule_' + key_suffix) + suffix;
-	},
-
-	setTitles: function() {
-		var header;
-		var title = this.getTitle();
-
-		['toolbar_main', 'calendar_list_title'].forEach(function(field) {
-			header = Ext.getCmp(field);
-			if (header) {
-				header.setTitle(title);
-			} 
-		});
-	},
-
 	setUser: function(newUser) {
 		var newCode, newType, newName;
 		// Empty input, set to self
@@ -230,7 +212,6 @@ Ext.define('Zermelo.UserManager', {
 		this.setType(newType);
 		this.setName(newName);
 		this.persist();
-		this.setTitles();
 		Ext.getStore('Appointments').prepareData();
 	},
 
@@ -252,7 +233,7 @@ Ext.define('Zermelo.UserManager', {
 				this.persist();
 				if(typeof callback == 'function')
 					callback();
-			}
+			};
 			loadResult = loadResult.bind(this);
 
 			var setFromLocalForage = function(err, result) {

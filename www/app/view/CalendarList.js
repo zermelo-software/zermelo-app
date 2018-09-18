@@ -1,6 +1,10 @@
 Ext.define("Zermelo.view.CalendarList", {
 	xtype: 'CalendarList',
 	extend: 'Ext.Container',
+	requires: [
+		'Zermelo.model.Appointment',
+		'Zermelo.store.AppointmentStore'
+	],
 	config: {
 		// height: '1000px',
 		layout: 'fit',

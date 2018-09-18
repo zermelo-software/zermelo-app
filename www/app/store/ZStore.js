@@ -1,6 +1,8 @@
 Ext.define('Zermelo.store.ZStore', {
     extend: 'Ext.data.Store',
-    requires: ['Ext.data.proxy.LocalStorage'],
+    requires: [
+        'Ext.data.proxy.LocalStorage'
+    ],
     config: {
         proxy: {
             type: 'localstorage'
@@ -29,7 +31,7 @@ Ext.define('Zermelo.store.ZStore', {
         var successCallback = function (err, result) {
             if(result) {
                 var decoded = JSON.parse(result, function(key, value) {
-                    if(key == 'start' || key == 'end') {
+                    if(['start', 'end', 'receivedOn'].includes(key)) {
                         return new Date(value)
                     }
                     return value;
@@ -79,10 +81,25 @@ Ext.define('Zermelo.store.ZStore', {
             if(!keys.includes(key))
                 return;
             // Serialize dates
-            if(key == 'start' || key == 'end')
+            if(value instanceof Date)
                 return Date.parse(value);
             return value;
         });
         localforage.setItem(Ext.getClassName(this), toSave, function() {dataArray.length = 0;});
-    }
+    },
+
+	setRetrievalDate: function(triggerDate) {
+		var date = this.getRetrievalDate() || (triggerDate instanceof Date ? triggerDate : null);
+		var label = Ext.getCmp('refresh_time_label');
+
+        var html = '';
+        if (date && label) {
+			var formattedDate = date.toLocaleString(loc === 'nl' ? 'nl-NL' : 'en-GB', {
+				weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+			});
+			html = '<div style="">' + Ux.locale.Manager.get('timer.retrieved') + formattedDate + '</div>';
+            console.log(html, date, JSON.stringify(formattedDate[0]));
+            label.setHtml(html);
+		}
+	}
 });

@@ -100,5 +100,20 @@
     "exit_msg":"Are you sure you want to close the app?",
     "own_schedule":"Own schedule",
     "enter_user_code":"Please enter your user code",
-    "appointments": "appointments"
+    "appointments": "appointments",
+    "timer": {
+        "minutes": {
+            "single": " minute ago",
+            "multiple": " minutes ago"
+        },
+        "hours": {
+            "single": " hour ago",
+            "multiple": " hours ago"
+        },
+        "days": {
+            "single": " day ago",
+            "multiple": " days ago"
+        },
+        "retrieved": "Retrieved on: "
+    }
 }
