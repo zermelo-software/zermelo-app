@@ -189,7 +189,6 @@ Ext.define('Zermelo.view.FullCalendar', {
                     currentDate.setDate(currentmonth);
                     currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 1)
 
-                    var defaultValue = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
                     //open custom week picker view
                     datePicker = Ext.create('Ext.Picker', {
                         modal: true,
@@ -205,17 +204,12 @@ Ext.define('Zermelo.view.FullCalendar', {
                             locales: {
                                 text: 'done'
                             },
-                            ui: 'noraml',
+                            ui: 'normal',
                             handler: function () {
-                                if (!Ext.os.is.iOS) {
-                                    if (webkitVersion < 537.36) {
-                                        setClickButton();
-                                    }
-                                }
                                 var week = datePicker.getValue().week;
                                 week = new Date(week);
                                 me.gotoWeek_Day(week);
-                                picker_open = false;
+                                datePicker.destroy();
                             }
                         },
                         cancelButton: {
@@ -223,12 +217,7 @@ Ext.define('Zermelo.view.FullCalendar', {
                                 text: 'cancel'
                             },
                             handler: function () {
-                                picker_open = false;
-                                if (!Ext.os.is.iOS) {
-                                    if (webkitVersion < 537.36) {
-                                        setClickButton();
-                                    }
-                                }
+                                datePicker.destroy();
                             }
                         }
                     });
@@ -420,17 +409,6 @@ Ext.define('Zermelo.view.FullCalendar', {
         return this.store;
     }
 });
-
-function setClickButton() {
-    var timer = $.timer(function () {
-        clickButton = false;
-        timer.stop();
-    });
-    timer.set({
-        time: 1000,
-        autostart: true
-    });
-}
 
 // Returns the ISO week of the date.
 Date.prototype.getWeek = function() {

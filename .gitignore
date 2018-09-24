@@ -42,3 +42,5 @@ store_text.txt
 /org.eclipse.wst.jsdt.ui.superType.name.settings
 *.orig
 .sencha_backup
+cordova/build.json
+*.css.map
