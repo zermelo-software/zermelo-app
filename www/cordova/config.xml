@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="20180918" id="nl.zermelo.online.App" ios-CFBundleVersion="20180918" packageName="6D7654C9.ZermeloRooster" version="1.5.5" xmlns="http://www.w3.org/ns/widgets">
+<widget android-versionCode="20180925" id="nl.zermelo.online.App" ios-CFBundleVersion="20180925" packageName="6D7654C9.ZermeloRooster" version="1.5.5" xmlns="http://www.w3.org/ns/widgets">
     <name>Zermelo</name>
     <description>Toont het schoolrooster en mededelingen van de school.</description>
     <author email="info@zermelo.nl" href="www.zermelo.nl">Zermelo Software B.V.</author>

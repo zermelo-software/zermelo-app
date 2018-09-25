@@ -97,8 +97,7 @@ Ext.define('Zermelo.store.ZStore', {
 			var formattedDate = date.toLocaleString(loc === 'nl' ? 'nl-NL' : 'en-GB', {
 				weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
 			});
-			html = '<div style="">' + Ux.locale.Manager.get('timer.retrieved') + formattedDate + '</div>';
-            console.log(html, date, JSON.stringify(formattedDate[0]));
+			html = '<div>' + Ux.locale.Manager.get('timer.retrieved') + formattedDate + '</div>';
             label.setHtml(html);
 		}
 	}

@@ -108,7 +108,6 @@ Ext.define('Zermelo.AjaxManager', {
 			return;
 		}
 		if (this.selfPending()) {
-			console.log("Delaying getAnnouncementData");
 			this.on('tokenupdated', function() {this.getAnnouncementData()}, this);
 			return;
 		}
@@ -213,7 +212,6 @@ Ext.define('Zermelo.AjaxManager', {
 			return;
 		}
 		if (this.selfPending()) {
-			console.log("Delaying getAppointment");
 			this.on('tokenupdated', function() {this.getAppointment(startTime, endTime)}, this);
 			return;
 		}
@@ -222,7 +220,6 @@ Ext.define('Zermelo.AjaxManager', {
 			Ext.getStore('Appointments').fireEvent('refresh');
 			return;
 		}
-		console.log("Doing getAppointment");
 		Ext.Viewport.setMasked({
 			xtype: 'loadmask',
 			locale: {
@@ -231,7 +228,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 			indicator: true
 		});
-		Zermelo.AjaxManager.appointmentsPending = true;
 
 		Ext.Ajax.request({
 			url: this.getUrl('appointments'),
@@ -342,7 +338,6 @@ Ext.define('Zermelo.AjaxManager', {
 				appointmentStore.setRetrievalDate(receivedOn);
 				appointmentStore.queueDelayedEvents();
 				Ext.Viewport.unmask();
-				Zermelo.AjaxManager.appointmentsPending = false;
 				localStorage.setItem("lastRefresh", Date.now());
 			},
 			failure: function (response) {
@@ -358,7 +353,6 @@ Ext.define('Zermelo.AjaxManager', {
 
 				Zermelo.ErrorManager.showErrorBox(error_msg);
 				Ext.Viewport.unmask();
-				Zermelo.AjaxManager.appointmentsPending = false;
 			}
 		});
 	},

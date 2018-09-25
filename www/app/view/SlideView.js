@@ -541,7 +541,7 @@ Ext.define('Zermelo.view.SlideView', {
 		var header = Ext.getCmp('user_label');
 		if (header) {
 			header.setHtml(
-				'<div style="font-size: 1em;">' +
+				'<div style="font-size: 1em; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">' +
 				title +
 				'</div>'
 			);

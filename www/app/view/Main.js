@@ -113,7 +113,13 @@ Ext.define('Zermelo.view.Main', {
 								'padding-right': '4px'
 							},
 							handler: function () {
-								Zermelo.AjaxManager.refresh();
+								var slideView = Ext.getCmp('home');
+								if (slideView && slideView.getActiveItemName() === 'userChange') {
+									Zermelo.AjaxManager.getUsers();
+								}
+								else {
+									Zermelo.AjaxManager.refresh();
+								}
 							}
 						}]
 				},
